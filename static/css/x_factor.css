@@ -1,0 +1,164 @@
+
+.nuam-header {
+  background-color: #e37854;
+  color: white;
+  padding: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.nuam-logo-header {
+  width: 60px;
+  height: auto;
+  margin: 0 15px;
+}
+
+.sii-logo-header {
+  width: 60px;
+  height: auto;
+  margin: 0 15px;
+}
+
+.nuam-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #414152;
+  margin: 0;
+}
+
+.main-content {
+  margin-left: 0;
+  padding: 20px;
+  min-height: 100vh;
+  background-color: #414152;
+}
+
+.section-title {
+  color: #e37854;
+  font-weight: bold;
+  border-bottom: 2px solid #e37854;
+  padding-bottom: 5px;
+}
+
+.table-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+.table th,
+.table td {
+  vertical-align: middle;
+  text-align: center;
+  padding: 10px;
+  font-size: 0.9rem;
+}
+
+.table th {
+  background-color: #e37854;
+  color: white;
+  font-weight: bold;
+  border-color: #ccc;
+}
+
+.table tbody tr td {
+  color: #414152;
+  border-color: #ddd;
+}
+
+.table thead th:first-child {
+  border-top-left-radius: 5px;
+}
+
+.table thead th:last-child {
+  border-top-right-radius: 5px;
+}
+
+.btn-primary {
+  background-color: #e37854;
+  border-color: #e37854;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #d06a48;
+  border-color: #d06a48;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+  color: white;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+  border-color: #218838;
+}
+
+.btn-outline-secondary {
+  border-color: #6c757d;
+  color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-outline-info {
+  border-color: #17a2b8;
+  color: #17a2b8;
+}
+
+.btn-outline-info:hover {
+  background-color: #17a2b8;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .nuam-title {
+    font-size: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+  }
+
+  .table th,
+  .table td {
+    padding: 8px;
+    font-size: 0.8rem;
+  }
+
+  .btn {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+}
+.btn-info {
+    display: inline-block;
+    color: white;               
+    font-weight: 600;
+    text-decoration: none;
+    background-color: #414152;   
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    margin: 20px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    border-color: #414152;
+}
+
+.btn-info:hover {
+    background-color: #414152; 
+    color: #fff;
+    border-color: #414152;
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.btn-info:active {
+    transform: scale(0.98);
+}

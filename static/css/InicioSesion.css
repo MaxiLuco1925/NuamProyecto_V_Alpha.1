@@ -1,0 +1,88 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #414152;
+    color: white;
+    font-family: system-ui, sans-serif;
+}
+
+.form-container {
+    min-height: 100vh;
+    position: relative;
+}
+
+.header-logos {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px;
+}
+
+.icon-small {
+    height: 100px;
+    width: auto;
+}
+
+.lightning {
+    height: 150px;
+    width: auto;
+}
+
+.footer-logo {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.nuam-text {
+    font-size: 70px;
+    font-weight: bold;
+    color: #e37854;
+    font-style: italic;
+    position: absolute;
+    bottom: 830px;
+    right: 1200px;  
+
+}
+
+
+.form-control {
+    background: transparent;
+    border: 1px solid #8aa8c4;
+    color: white;
+}
+
+.form-control:focus {
+    background: transparent;
+    color: white;
+    border-color: #e37854;
+    box-shadow: 0 0 0 0.25rem rgba(227, 120, 84, 0.25);
+}
+
+.form-label {
+    color: #ccc;
+}
+
+.text-danger {
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.btn-primary{
+    background-color: rgb(156, 196, 220);
+        margin-right:1100px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #8aa8c4;
+    background-color: white;
+    color: black; /* muy importante, para ver el texto */
+    border-radius: 5px;
+
+}

@@ -1,0 +1,152 @@
+
+.nuam-header {
+  background-color: #e37854;
+  color: white;
+  padding: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.nuam-logo-header {
+  width: 60px;
+  height: auto;
+  margin: 0 15px;
+}
+
+.sii-logo-header {
+  width: 60px;
+  height: auto;
+  margin: 0 15px;
+}
+
+.nuam-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #414152;
+  margin: 0;
+}
+
+.main-content {
+  margin-left: 0;
+  padding: 20px;
+  min-height: 100vh;
+  background-color: #414152;
+}
+
+
+.search-filters {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-filters .form-label {
+  font-weight: bold;
+  color: #414152;
+}
+
+.search-filters .form-select {
+  border-color: #ddd;
+}
+
+.search-filters .btn {
+  padding: 10px 20px;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.btn-primary {
+  background-color: #e37854;
+  border-color: #e37854;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #d06a48;
+  border-color: #d06a48;
+}
+
+.btn-secondary {
+  background-color: #414152;
+  border-color: #414152;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #5a6268;
+}
+
+.table-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+.table th,
+.table td {
+  vertical-align: middle;
+  text-align: center;
+  padding: 10px;
+}
+
+.table th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+  color: #414152;
+}
+
+.table tbody tr td {
+  color: #414152;
+}
+
+@media (max-width: 768px) {
+  .nuam-title {
+    font-size: 1.5rem;
+  }
+
+  .search-filters .form-label {
+    font-size: 0.9rem;
+  }
+
+  .search-filters .btn {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+  }
+
+  .table th,
+  .table td {
+    padding: 8px;
+    font-size: 0.85rem;
+  }
+}
+
+.btn-info {
+    display: inline-block;
+    color: white;               
+    font-weight: 600;
+    text-decoration: none;
+    background-color: #414152;   
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    margin: 20px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    border-color: #414152;
+}
+
+.btn-info:hover {
+    background-color: #414152; 
+    color: #fff;
+    border-color: #414152;
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.btn-info:active {
+    transform: scale(0.98);
+}
+
+

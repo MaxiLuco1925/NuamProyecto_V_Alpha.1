@@ -1,0 +1,129 @@
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #E57248;
+    color: #2E2E3A;
+    min-height: 100vh;
+}
+
+.encabezado {
+    background-color: #2E2E3A;
+    color: #E57248;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 10px 0;
+}
+
+.logo-izq {
+    position: absolute;
+    left: 20px;
+    width: 50px;
+}
+
+.logo-der {
+    position: absolute;
+    right: 20px;
+    width: 50px;
+}
+
+.titulo {
+    font-size: 60px;
+    font-style: italic;
+    font-weight: bold;
+    margin: 0;
+}
+
+.contenedor-reporte {
+    position: relative;
+    padding: 40px 100px;
+    background-color: #e37854;
+}
+
+.icono-usuario {
+    position: absolute;
+    top: 20px;
+    right: 40px;
+}
+
+.icono-usuario img {
+    width: 90px;
+    height: 60px;
+}
+
+.subtitulo {
+    color: #2E2E3A;
+    font-size: 26px;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+.form-reporte label {
+    font-weight: 500;
+    margin-top: 15px;
+}
+
+.form-control {
+    background: none;
+    border: none;
+    border-bottom: 1px solid #2E2E3A;
+    border-radius: 0;
+    padding: 5px 0;
+    color: #2E2E3A;
+}
+
+.form-control:focus {
+    outline: none;
+    box-shadow: none;
+    border-bottom: 2px solid #2E2E3A;
+}
+
+.icono-imagen {
+    width: 100px;
+}
+
+
+.boton-container {
+    text-align: center;
+    margin-top: 1px;
+}
+
+.btn-generar {
+    background-color: #70C3F5;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 40px;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.btn-generar:hover {
+    background-color: #4fa8e3;
+}
+
+.back-link {
+    display: inline-block;
+    color: #e37854;         
+    font-weight: 600;
+    text-decoration: none;
+    background-color: #2E2E3A; 
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    margin: 20px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+.back-link:hover {
+    background-color: #e37854;  
+    color: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.back-link:active {
+    transform: scale(0.98);
+}

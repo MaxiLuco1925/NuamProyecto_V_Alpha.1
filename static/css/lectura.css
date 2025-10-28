@@ -1,0 +1,151 @@
+
+.nuam-header {
+  background-color: #e37854;
+  color: white;
+  padding: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nuam-logo-header {
+  width: 60px;
+  height: auto;
+  margin: 0 15px;
+}
+
+.sii-logo-header {
+  width: 60px;
+  height: auto;
+  margin: 0 15px;
+}
+
+.nuam-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #414152;
+  margin: 0;
+  letter-spacing: 1px;
+}
+.nuam-header .container-fluid {
+  max-width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.section-title {
+  color: #e37854;
+  font-weight: bold;
+  border-bottom: 2px solid #e37854;
+  padding-bottom: 5px;
+  margin-top: 0;
+}
+
+.main-content {
+  margin-left: 0;
+  padding: 20px;
+  min-height: 100vh;
+  background-color: #414152;
+}
+
+.report-panel {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.accordion-item {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.accordion-button {
+  font-weight: bold;
+  color: #414152;
+  background-color: #f8f9fa;
+  border: none;
+  padding: 12px 20px;
+  transition: all 0.2s ease;
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: #e37854;
+  color: white;
+  box-shadow: none;
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+}
+
+.accordion-button::after {
+  filter: brightness(0) saturate(100%) invert(47%) sepia(14%) saturate(7452%) hue-rotate(349deg) brightness(97%) contrast(85%);
+}
+
+.accordion-button:not(.collapsed)::after {
+  filter: brightness(0) saturate(100%) invert(97%) sepia(0%) saturate(7452%) hue-rotate(349deg) brightness(97%) contrast(85%);
+}
+
+.accordion-body {
+  padding: 20px;
+  background-color: #fff;
+  border-top: 1px solid #dee2e6;
+}
+
+.btn-revisado {
+  background-color: #e37854;
+  border-color: #e37854;
+  color: white;
+  font-weight: bold;
+  padding: 8px 16px;
+  border-radius: 5px;
+}
+
+.btn-revisado:hover {
+  background-color: #d06a48;
+  border-color: #d06a48;
+}
+
+.btn-secondary {
+  background-color: #e37854;  
+  border-color: #e37854;
+  color: white;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+.btn-secondary:hover {
+  background-color: #e37854;
+  border-color: #e37854;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 15px;
+  }
+
+  .section-title {
+    font-size: 1.3rem;
+  }
+
+  .accordion-button {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+  }
+
+  .accordion-body {
+    padding: 15px;
+  }
+
+  .btn-revisado,
+  .btn-secondary {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+}
