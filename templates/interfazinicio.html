@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <link href="{% static 'css/interfaz.css' %}" rel="stylesheet">
+    <title>Inicio</title>
+</head>
+<body>
+    <div class="container-left">
+    <nav>
+        <div class="sidebar-header">
+        <img src="{% static 'image/USUARIO.png' %}" alt="Usuario" class="user-icon">
+        <span class="username">Maxi Luco Saires</span>
+        <div class="nuam-brand">
+            <img src="{% static 'image/NUAM.png' %}" alt="Logo NUAM" class="nuam-logo">
+            <div class="nuam-title">NUAM</div>
+        </div>
+    </div>
+        <a href="{% url 'Reportes' %}" class="nav-item">
+            <img src="{% static 'image/Reporte.png' %}" alt="Reportes" class="nav-icon">
+            <span>Reportes</span>
+        </a>
+        <a href="{% url 'Configuración' %}" class="nav-item">
+            <img src="{% static 'image/Settings.png' %}" alt="Configuración" class="nav-icon">
+            <span>Configuración</span>
+        </a>
+        <a href="https://www.nasdaq.com/" class="nav-item">
+            <img src="{% static 'image/descarga.png' %}" alt="Nasdaq" class="nav-icon">
+            <span>Nasdaq</span>
+        </a>
+        <a href="https://zeusr.sii.cl//AUT2000/InicioAutenticacion/IngresoRutClave.html?https://misiir.sii.cl/cgi_misii/siihome.cgi" class="nav-item">
+            <img src="{% static 'image/sii.png' %}" alt="SII" class="nav-icon">
+            <span>Servicio de impuestos internos</span>
+        </a>
+        <a href="{% url 'FactorImp' %}" class="nav-item">
+            <img src="{% static 'image/IMPUESTOS.png' %}" alt="Factor de impuestos" class="nav-icon">
+            <span>Factor de impuestos</span>
+        </a>
+        <a href="{% url 'iniciarSesion' %}" class="nav-item logout">
+            <img src="{% static 'image/Puerta.png' %}" alt="Cerrar sesión" class="nav-icon">
+            <span>Cerrar sesión</span>
+        </a>
+    </nav>
+</div>
+    <!-- CIERRE CONTENEDOR IZQUIERDO -->
+<div class="container mt-5" >
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-3 mb-4">
+            <button class="btn btn-primary w-100">Cantidad de archivos cargados</button>
+        </div>
+        <div class="col-12 col-md-3 mb-4">
+            <button class="btn btn-danger w-100">Cantidad de calificaciones tributarias</button>
+        </div>
+        <div class="col-12 col-md-3 mb-4">
+            <a href="{% url 'panelCalificacion' %}" class="btn btn-info">Panel de Calificaciones Tributarias</a>
+        </div> 
+        <div class="col-12 col-md-3 mb-4">
+            <a href="{% url 'ingresarCalificacion' %}" class="btn btn-info">Ingresar Nueva Calificación Tributaria</a>
+        </div>
+    </div>
+</div>
+    <!-- PANEL DE ACCIONES  / ÍNDICES -->
+<div class="market-panel">
+    <h4 class="text-center mb-3">Índices Financieros</h4>
+    <div class="row">
+        <div class="col-md-6">
+            <h5 class="region-title">América</h5>
+            <table class="table table-sm table-bordered">
+                <thead>
+                    <tr><th>Símbolo</th><th>Último</th><th>Cambio</th></tr>
+                </thead>
+                <tbody id="america-data">
+                    <tr><td colspan="3" class="text-center">Cargando...</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h5 class="region-title">Europa</h5>
+            <table class="table table-sm table-bordered">
+                <thead>
+                    <tr><th>Símbolo</th><th>Último</th><th>Cambio</th></tr>
+                </thead>
+                <tbody id="europe-data">
+                    <tr><td colspan="3" class="text-center">Cargando...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</div>
+
+</div>
+<!-- SCRIPTS -->
+<script src="{% static 'js/acciones_data.js' %}"></script>
+</body>
+</html>

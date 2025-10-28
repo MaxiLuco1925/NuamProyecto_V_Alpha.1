@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar reporte</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/reporte.css' %}">
+</head>
+<body>
+    <header class="encabezado">
+        <img src="{% static 'image/rayo.png' %}" alt="Logo izquierdo" class="logo-izq">
+        <h1 class="titulo">NUAM</h1>
+        <img src="{% static 'image/descarga.png' %}" alt="Logo derecho" class="logo-der">
+    </header>
+    <main class="contenedor-reporte">
+        <div class="icono-usuario">
+            <img src="{% static 'image/USUARIO.png' %}" alt="Usuario">
+        </div>
+
+        <h2 class="subtitulo"><em>Generar reporte</em></h2>
+
+        <form method="POST" enctype="multipart/form-data" class="form-reporte">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Nombre completo</label>
+                    <input type="text" class="form-control" name="nombre">
+
+                    <label>Fecha</label>
+                    <input type="date" class="form-control" name="fecha">
+
+                    <label>Descripción del problema</label>
+                    <textarea class="form-control" name="descripcion" rows="3"></textarea>
+
+                    <label>Cargar archivo o video como evidencia</label>
+                    <input type="file" class="form-control" name="archivo">
+                    <img src="{% static 'image/imagen.png' %}" alt="Subir imagen" class="icono-imagen">
+                </div>
+
+                <div class="col-md-6">
+                    <label>Tipo de error (ej. visual, funcional, conexión o seguridad)</label>
+                    <input type="text" class="form-control" name="tipo_error">
+
+                    <label>Nombre del área afectada</label>
+                    <input type="text" class="form-control" name="area">
+                </div>
+            </div>
+
+            <div class="boton-container">
+                <button type="submit" class="btn-generar">Generar reporte</button>
+            </div>
+        </form>
+    </main>
+    <div class="conainer">
+        <a href="{% url 'interfazinicio' %}" class="back-link">← Regresar</a>
+    </div>
+
+</body>
+</html>

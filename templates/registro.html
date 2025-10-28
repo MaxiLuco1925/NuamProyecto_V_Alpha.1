@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crea una cuenta - NUAM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/registro.css' %}" rel="stylesheet">
+</head>
+<body>
+    <div class="page-container">
+        <header class="header-logos">
+            <div class="logo-group">
+                <img src="{% static 'image/rayo.png' %}" alt="Rayo" class="lightning">
+                <img src="{% static 'image/descarga.png' %}" alt="Logo NUAM" class="icon-small">
+            </div>
+        </header>
+        <main class="form-container">
+            <h1 class="title">Crea una cuenta</h1>
+            <p class="subtitle">Crea tu cuenta, tarda menos de un minuto. Si ya tienes una cuenta</p>
+
+            <form method="post" class="register-form" id="registerForm">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                {% endif %}
+
+                <div class="row">
+                    <div class="col-md-6">
+                        {{ form.nombre.label_tag }} {{ form.nombre }}
+                        {{ form.email.label_tag }} {{ form.email }}
+                        <label for="id_password1">Contraseña</label> {{ form.password1 }}
+                        <label for="id_password2">Confirmar contraseña</label> {{ form.password2 }}
+                        {{ form.genero.label_tag }} {{ form.genero }}
+                        <label for="{{ form.documento_identidad.id_for_label }}" id="doc-label">Documento de identidad</label>
+                        {{ form.documento_identidad }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form.telefono.label_tag }} {{ form.telefono }}
+                        
+                        <div class="row">
+                            <div class="col-6">{{ form.edad.label_tag }} {{ form.edad }}</div>
+                            <div class="col-6">{{ form.pais.label_tag }} {{ form.pais }}</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">{{ form.region.label_tag }} {{ form.region }}</div>
+                            <div class="col-6">{{ form.comuna.label_tag }} {{ form.comuna }}</div>
+                        </div>
+                        
+                    </div>
+                </div>
+                {% for field in form %}
+                    {% if field.errors %}
+                        <small class="text-danger">{{ field.errors }}</small>
+                    {% endif %}
+                {% endfor %}
+
+                <div class="text-center mt-4">
+   
+                    <button type="submit" class="btn-register">Registrarse</button>
+                    </a>
+                </div>
+            </form>
+        </main>
+
+        <footer class="footer-logo">
+            <span class="nuam-text">NUAM</span>
+        </footer>
+
+        <div class="text-center mt-3">
+            <a href="{% url 'portada' %}" class="btn btn-primary">Volver al Menú Principal</a>
+        </div>
+    </div>
+</body>
+</html>

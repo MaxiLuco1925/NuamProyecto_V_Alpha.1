@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="{% static 'css/inicioSesion.css' %}" rel="stylesheet">
+    <title>Iniciar Sesión - NUAM</title>
+</head>
+<body>
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <div class="form-container">
+        <header class="header-logos">
+            <div class="logo-group">
+                <img src="{% static 'image/rayo.png' %}" alt="Rayo" class="lightning">
+                <img src="{% static 'image/descarga.png' %}" alt="Logo NUAM" class="icon-small">
+            </div>
+        </header>
+        <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+            <div class="card p-4" style="width: 100%; max-width: 400px; background: rgba(65, 65, 82, 0.8); border-radius: 12px; border: 1px solid #8aa8c4;">
+                <h2 class="text-center text-white mb-4">Iniciar Sesión</h2>
+
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="{{ form.documento_identidad.id_for_label }}" class="form-label text-white">RUT</label>
+                        {{ form.documento_identidad }}
+                        {% if form.documento_identidad.errors %}
+                            <div class="text-danger">{{ form.documento_identidad.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.contraseña.id_for_label }}" class="form-label text-white">Contraseña</label>
+                        {{ form.contraseña }}
+                        {% if form.contraseña.errors %}
+                            <div class="text-danger">{{ form.contraseña.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class=" btn btn-primary">Ingresar</button>
+                    </div>
+                </form>
+
+                <div class="text-center mt-3">
+                    <a href="#" class="text-light" style="text-decoration: none; font-size: 0.9em;">¿Olvidaste tu contraseña?</a>
+                </div>
+            </div>
+        </div>
+        <footer class="footer-logo">
+            <span class="nuam-text">NUAM</span>
+            <a href="{% url 'portada' %}" class="btn btn-primary">Volver al Menú Principal</a>
+        </footer>
+    </div>
+</body>
+</html>
