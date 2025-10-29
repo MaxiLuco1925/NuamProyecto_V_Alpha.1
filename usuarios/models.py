@@ -1,6 +1,5 @@
 from django.db import models
 
-from django.db import models
 
 class Rol(models.Model):
     descripcion = models.CharField(max_length=200)
@@ -46,6 +45,8 @@ class Usuario(models.Model):
         region = models.CharField(max_length=40, blank=True)
         comuna = models.CharField(max_length=70, blank=True)
         contraseña_hash = models.CharField(max_length=256)
+        estado = models.BooleanField()
+        rol = models.ForeignKey(Rol, on_delete=models.SET_NULL, blank= True, null=True)
 
         def __str__(self):
              return self.nombre 

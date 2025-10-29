@@ -1,15 +1,14 @@
-
 from django.shortcuts import render, redirect
-from . import forms
 from usuarios.forms import RegisterForm, InicioSesionForm
 from django.contrib import messages
 from usuarios.models import Usuario
 import yfinance as yf
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.hashers import make_password, check_password    
-
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth import login
 
 def portada(request):
     return render(request, "index.html")
@@ -23,11 +22,11 @@ def registro(request):
             messages.success(request, 'Registro exitoso')
             return redirect('iniciarSesion')
         else:
-            return render(request, 'registro.html', {'form' : form})     
+            return render(request, 'registro.html', {'form': form})
     else:
         form = RegisterForm()
-        return render(request, 'registro.html', {'form' : form})    
-    
+        return render(request, 'registro.html', {'form': form})
+
 def iniciarSesion(request):
     if request.method == 'POST':
         form = InicioSesionForm(request.POST)
@@ -41,9 +40,16 @@ def iniciarSesion(request):
                 return render(request, 'InicioSesion.html', {'form': form})
 
             if check_password(contraseña, usuario.contraseña_hash):
+                # Guardar el usuario en la sesión
+                request.session['usuario_id'] = usuario.id
+                request.session['usuario_nombre'] = usuario.nombre
+                request.session['usuario_documento'] = usuario.documento_identidad
+                request.session.modified = True  # Forzar que se guarde la sesión
+                messages.success(request, f"Bienvenido {usuario.nombre}")
                 return redirect("interfazinicio")
             else:
                 messages.error(request, "Contraseña incorrecta")
+                return render(request, 'InicioSesion.html', {'form': form})
         else:
             messages.error(request, "Credenciales inválidas")
             return render(request, 'InicioSesion.html', {'form': form})
@@ -51,28 +57,29 @@ def iniciarSesion(request):
         form = InicioSesionForm()
         return render(request, 'InicioSesion.html', {'form': form})
 
-           
-
-
-
-        
- 
-    return render(request, 'inicioSesion.html', {'form' : form})
 
 def interfazinicio(request):
-    return render(request, "interfazinicio.html")
-
+    usuario_id = request.session.get('usuario_id')
+    
+    if not usuario_id:
+        messages.error(request, "Debes iniciar sesión primero")
+        return redirect('iniciarSesion')
+    
+    try:
+        usuario = Usuario.objects.get(id=usuario_id)
+        context = {
+            'Usuario': usuario
+        }
+        return render(request, "interfazinicio.html", context)
+    except Usuario.DoesNotExist:
+        messages.error(request, "Usuario no encontrado")
+        return redirect('iniciarSesion')
 
 @require_http_methods(["GET"])
-
 def market_data_api(request):
-    """
-    Devuelve datos en tiempo real (o del último cierre) de índices financieros.
-    Usa símbolos de Yahoo Finance.
-    """
     indices = {
-        "America": ["^IXIC", "^NDX", "^GSPC"],     
-        "Europe": ["^OMX", "^STOXX50E", "^FTSE"]  
+        "America": ["^IXIC", "^NDX", "^GSPC"],
+        "Europe": ["^OMX", "^STOXX50E", "^FTSE"]
     }
 
     symbol_names = {
@@ -97,7 +104,7 @@ def market_data_api(request):
                     if hist.empty:
                         continue
                     last_price = hist['Close'].iloc[-1]
-                    prev_close = last_price  # Sin cambio
+                    prev_close = last_price
                 else:
                     last_price = hist['Close'].iloc[-1]
                     prev_close = hist['Close'].iloc[-2]
@@ -118,22 +125,13 @@ def market_data_api(request):
 
     return JsonResponse(result)
 
-
 def Administrador(request):
     return render(request, 'interfazAdministrador.html')
 
-###Modificar la descripcion, Valor historico,dividendo y ISFUT
 def panel(request):
     return render(request, 'panelCalificacion.html')
 
-
 def panelAdmin(request):
-    return render(request, 'panelCalificacionAdmin.html' )
-
-def cargaArchivos(request):
-    return render(request, 'cargaArchivos.html')
-
-
-
+    return render(request, 'panelCalificacionAdmin.html')
 
 
