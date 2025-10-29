@@ -132,7 +132,7 @@ DATABASES ={
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'Nuam_BD',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': 'Darklinkoscuroofward45@',
         'HOST':'localhost',
         'PORT':3306
 
