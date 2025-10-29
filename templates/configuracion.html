@@ -17,30 +17,28 @@
         <a href="{% url 'interfazinicio' %}" class="back-link">← Regresar</a>
     </div>
     <div class="main-container">
-        <form class="perfil-form">
+        <div class="perfil-form">
             <div class="form-fields">
                 <label>Nombre</label>
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" value="{{ Usuario.nombre }}" readonly>
 
                 <label>Correo electrónico</label>
-                <input type="email" class="form-control">
+                <input type="email" class="form-control" value="{{ Usuario.email }}" readonly>
 
                 <label>Número de teléfono</label>
-                <input type="tel" class="form-control">
+                <input type="tel" class="form-control" value="{{ Usuario.telefono|default:'No registrado' }}" readonly>
 
-                <label>RUT</label>
-                <input type="text" class="form-control">
+                <label>Documento de Identidad</label>
+                <input type="text" class="form-control" value="{{ Usuario.documento_identidad }}" readonly>
 
                 <label>Entidad emisora</label>
-                <input type="text" class="form-control">
-
-                <button type="submit" class="btn-guardar">Guardar</button>
+                <input type="text" class="form-control" value="{{ Usuario.entidad_emisora|default:'No registrado' }}" readonly>
             </div>
 
             <div class="profile-icon">
                 <img src="{% static 'image/USUARIO.png' %}" alt="Usuario">
             </div>
-        </form>
+        </div>
 
         <div class="brand-footer">NUAM</div>
     </div>

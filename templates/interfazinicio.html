@@ -14,7 +14,11 @@
     <nav>
         <div class="sidebar-header">
         <img src="{% static 'image/USUARIO.png' %}" alt="Usuario" class="user-icon">
-        <span class="username">Maxi Luco Saires</span>
+        {% if Usuario.documento_identidad %}
+        <span class="username">{{ Usuario.nombre }}</span>
+        {% else %}
+        <span class="username">Invitado</span>
+        {% endif %}
         <div class="nuam-brand">
             <img src="{% static 'image/NUAM.png' %}" alt="Logo NUAM" class="nuam-logo">
             <div class="nuam-title">NUAM</div>
