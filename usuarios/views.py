@@ -38,15 +38,18 @@ def iniciarSesion(request):
             except Usuario.DoesNotExist:
                 messages.error(request, "Documento no existe")
                 return render(request, 'InicioSesion.html', {'form': form})
-
+            
             if check_password(contraseña, usuario.contraseña_hash):
-                # Guardar el usuario en la sesión
                 request.session['usuario_id'] = usuario.id
                 request.session['usuario_nombre'] = usuario.nombre
                 request.session['usuario_documento'] = usuario.documento_identidad
-                request.session.modified = True  # Forzar que se guarde la sesión
-                messages.success(request, f"Bienvenido {usuario.nombre}")
-                return redirect("interfazinicio")
+                request.session.modified = True 
+                messages.success(request, f"Has cerrado sesion {usuario.nombre}")
+
+                if usuario.rol and usuario.rol.descripcion == "Administrador":
+                    return redirect("interfazAdmin")
+                else:
+                    return redirect("interfazinicio")
             else:
                 messages.error(request, "Contraseña incorrecta")
                 return render(request, 'InicioSesion.html', {'form': form})
@@ -126,6 +129,16 @@ def market_data_api(request):
     return JsonResponse(result)
 
 def Administrador(request):
+    if 'usuario_id' not in request.session:
+        return redirect('iniciarSesion')
+    try:
+        usuario = Usuario.objects.get(id=request.session['usuario_id'])
+        if not usuario.rol or usuario.rol.descripcion != "Administrador":
+            messages.error(request, "Debes ser Administrador !!!")
+            return redirect('interfazinicio')
+    except Usuario.DoesNotExist:
+        return redirect('iniciarSesion')
+    
     return render(request, 'interfazAdministrador.html')
 
 def panel(request):

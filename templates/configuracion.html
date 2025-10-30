@@ -14,13 +14,14 @@
         <div class="sidebar-logo">
             <img src="{% static 'image/NUAM.png' %}" alt="Logo NUAM">
         </div>
-        <a href="{% url 'interfazinicio' %}" class="back-link">← Regresar</a>
+        <a href="{% url 'interfazinicio' %}" class="back-link"> Regresar</a>
     </div>
     <div class="main-container">
+        {% if Usuario.documento_identidad %}
         <div class="perfil-form">
             <div class="form-fields">
                 <label>Nombre</label>
-                <input type="text" class="form-control" value="{{ Usuario.nombre }}" readonly>
+                <input type="text" class="form-control" value="{{ Usuario.nombre|default:Usuario.nombre }}" readonly>
 
                 <label>Correo electrónico</label>
                 <input type="email" class="form-control" value="{{ Usuario.email }}" readonly>
@@ -29,9 +30,9 @@
                 <input type="tel" class="form-control" value="{{ Usuario.telefono|default:'No registrado' }}" readonly>
 
                 <label>Documento de Identidad</label>
-                <input type="text" class="form-control" value="{{ Usuario.documento_identidad }}" readonly>
+                <input type="text" class="form-control" value="{{ Usuario.documento_identidad|default:'No registrado' }}" readonly>
 
-                <label>Entidad emisora</label>
+                <label>Rol</label>
                 <input type="text" class="form-control" value="{{ Usuario.entidad_emisora|default:'No registrado' }}" readonly>
             </div>
 
@@ -39,6 +40,12 @@
                 <img src="{% static 'image/USUARIO.png' %}" alt="Usuario">
             </div>
         </div>
+        {% else %}
+        <div class="alert alert-warning">
+            <p>Debes iniciar sesión para ver tu perfil.</p>
+            <a href="{% url 'iniciarSesion' %}" class="btn btn-primary">Iniciar Sesión</a>
+        </div>
+        {% endif %}
 
         <div class="brand-footer">NUAM</div>
     </div>

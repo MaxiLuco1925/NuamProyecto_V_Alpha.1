@@ -36,7 +36,7 @@ class Usuario(models.Model):
         ('MUJER', 'Mujer'),
     ]
         documento_identidad = models.CharField(max_length=100, blank=True, unique=True)
-        nombre = models.CharField(max_length=60)
+        nombre = models.CharField(max_length=100)
         email = models.EmailField(unique=True)
         genero = models.CharField(max_length=40, blank=True, choices= Genero_Choices)
         telefono = models.CharField(max_length=60)
@@ -45,7 +45,6 @@ class Usuario(models.Model):
         region = models.CharField(max_length=40, blank=True)
         comuna = models.CharField(max_length=70, blank=True)
         contraseña_hash = models.CharField(max_length=256)
-        estado = models.BooleanField()
         rol = models.ForeignKey(Rol, on_delete=models.SET_NULL, blank= True, null=True)
 
         def __str__(self):

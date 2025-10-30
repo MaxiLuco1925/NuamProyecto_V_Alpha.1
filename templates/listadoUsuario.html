@@ -34,7 +34,6 @@
                                 <th scope="col">Correo electrónico</th>
                                 <th scope="col">Género</th>
                                 <th scope="col">Edad</th>
-                                <th scope="col">Estado</th>
                                  <th scope="col">Rol</th>
                             </tr>
                         </thead>
@@ -46,7 +45,6 @@
                                 <td>{{ usu.email }}</td>
                                 <td>{{ usu.genero|default:"—" }}</td>
                                 <td>{{ usu.edad|default:"—" }}</td>
-                                <td>{{usu.estado}}</td>
                                 <td>{{usu.rol}}</td>
                             </tr>
                             {% endfor %}
