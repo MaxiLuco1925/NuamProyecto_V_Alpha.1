@@ -13,7 +13,7 @@ class IngresoCalificacionManualForm(forms.ModelForm):
     )
     instrumento = forms.ModelChoiceField(
         queryset= Instrumento.objects.all(),
-        label= "Instrumento",
+        empty_label= "Seleccione un instrumento",
         widget=forms.Select(attrs={'class' : 'form-control'})
     )
 

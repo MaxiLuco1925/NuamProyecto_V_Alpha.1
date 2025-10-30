@@ -55,7 +55,9 @@ class Reportes(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='reportes_creados')
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
+    area_afectada = models.CharField(max_length=90, default="Panel de calificacion")
     estado = models.CharField(max_length=20, choices= Estado_Choices, default='pendiente')
+    imagen = models.FileField(upload_to='reportes_evidencias/', null=True, blank=True)
 
     def __str__(self):
         return self.titulo
