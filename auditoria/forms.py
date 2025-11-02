@@ -1,29 +1,21 @@
+# forms.py
 from django import forms
 from auditoria.models import Reportes
-class ReporteForm(forms.Form):
-    titulo = forms.CharField(
-        label='Título',
-        widget=forms.TextInput(attrs={'class': 'form-control'})
-        )
-    descripcion = forms.CharField(
-        label='Descripción',
-        widget=forms.Textarea(attrs={'class': 'form-control'})
-        )
-    fecha = forms.DateField(
-        label='Fecha',
-        widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'})
-        )
-    area_afectada = forms.CharField(
-        label='Área Afectada',
-        widget=forms.TextInput(attrs={'class': 'form-control'})
-        )
-    
+
+
+class ReporteForm(forms.ModelForm):
     class Meta:
         model = Reportes
-        fields = ['titulo', 'descripcion', 'fecha', 'area_afectada', 'usuario']
+        fields = ['titulo', 'descripcion', 'area_afectada', 'imagen']  # Sin fecha
         widgets = {
             'titulo': forms.TextInput(attrs={'class': 'form-control'}),
-            'descripcion': forms.Textarea(attrs={'class': 'form-control'}),
-            'fecha': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'descripcion': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
             'area_afectada': forms.TextInput(attrs={'class': 'form-control'}),
+            'imagen': forms.FileInput(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'titulo': 'Título',
+            'descripcion': 'Descripción del error encontrado',
+            'area_afectada': 'Área Afectada',
+            'imagen': 'Evidencia (Imagen/Archivo)',
         }

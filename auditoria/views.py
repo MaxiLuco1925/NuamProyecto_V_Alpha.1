@@ -58,18 +58,26 @@ def verificacionUsuario(request):
 
 def reportes(request):
     if request.method == 'POST':
-        form = ReporteForm(request.POST)
+        form = ReporteForm(request.POST, request.FILES)  # Agregado request.FILES
         if form.is_valid():
-            usuario = Usuario.objects.get(id = request.session['usuario_id'])
-            reporte.usuario = usuario
-            messages.success(request, 'Reporte exitoso')
-            return redirect("Reportes")
+            try:
+                reporte = form.save(commit=False)
+                usuario = Usuario.objects.get(id=request.session['usuario_id'])
+                reporte.usuario = usuario
+                reporte.save()
+                messages.success(request, 'Reporte creado exitosamente')
+                return redirect("Reportes")
+            except Usuario.DoesNotExist:
+                messages.error(request, 'Usuario no encontrado')
+            except Exception as e:
+                messages.error(request, f'Error al enviar el reporte: {str(e)}')
         else:
-            messages.error(request, 'Error al enviar el reporte')
-        return redirect("Reportes")    
+            messages.error(request, 'Por favor corrige los errores del formulario')
+            return render(request, 'Reportes.html', {'form': form})
     else:
         form = ReporteForm()
-        return render(request, 'Reportes.html', {'form': form})
+    
+    return render(request, 'Reportes.html', {'form': form})
 
 def cargaArchivos(request):
     return render(request, 'cargaArchivos.html')
