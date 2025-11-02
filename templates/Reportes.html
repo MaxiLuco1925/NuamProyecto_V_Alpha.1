@@ -18,42 +18,59 @@
         <div class="icono-usuario">
             <img src="{% static 'image/USUARIO.png' %}" alt="Usuario">
         </div>
+        
         {% if messages %}
         <div class="container mt-3">
             {% for message in messages %}
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{message}}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
             </div>
             {% endfor %}
         </div>
         {% endif %}
+
         <h2 class="subtitulo"><em>Generar reporte</em></h2>
 
         <form method="POST" enctype="multipart/form-data" class="form-reporte">
             {% csrf_token %}
+            
             <div class="row">
                 <div class="col-md-6">
-                    <label>Nombre completo</label>
-                    <input type="text" class="form-control" name="nombre">
+                    <div class="mb-3">
+                        <label for="{{ form.titulo.id_for_label }}" class="form-label">{{ form.titulo.label }}</label>
+                        {{ form.titulo }}
+                        {% if form.titulo.errors %}
+                            <div class="text-danger">{{ form.titulo.errors }}</div>
+                        {% endif %}
+                    </div>
 
-                    <label>Fecha</label>
-                    <input type="date" class="form-control" name="fecha">
+                    <div class="mb-3">
+                        <label for="{{ form.descripcion.id_for_label }}" class="form-label">Descripción del problema</label>
+                        {{ form.descripcion }}
+                        {% if form.descripcion.errors %}
+                            <div class="text-danger">{{ form.descripcion.errors }}</div>
+                        {% endif %}
+                    </div>
 
-                    <label>Descripción del problema</label>
-                    <textarea class="form-control" name="descripcion" rows="3"></textarea>
-
-                    <label>Cargar archivo o video como evidencia</label>
-                    <input type="file" class="form-control" name="archivo">
-                    <img src="{% static 'image/imagen.png' %}" alt="Subir imagen" class="icono-imagen">
+                    <div class="mb-3">
+                        <label for="{{ form.imagen.id_for_label }}" class="form-label">Cargar archivo o video como evidencia</label>
+                        {{ form.imagen }}
+                        <img src="{% static 'image/imagen.png' %}" alt="Subir imagen" class="icono-imagen">
+                        {% if form.imagen.errors %}
+                            <div class="text-danger">{{ form.imagen.errors }}</div>
+                        {% endif %}
+                    </div>
                 </div>
 
                 <div class="col-md-6">
-                    <label>Tipo de error (ej. visual, funcional, conexión o seguridad)</label>
-                    <input type="text" class="form-control" name="tipo_error">
-
-                    <label>Nombre del área afectada</label>
-                    <input type="text" class="form-control" name="area">
+                    <div class="mb-3">
+                        <label for="{{ form.area_afectada.id_for_label }}" class="form-label">Nombre del área afectada</label>
+                        {{ form.area_afectada }}
+                        {% if form.area_afectada.errors %}
+                            <div class="text-danger">{{ form.area_afectada.errors }}</div>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
 
@@ -62,7 +79,8 @@
             </div>
         </form>
     </main>
-    <div class="conainer">
+    
+    <div class="container">
         <a href="{% url 'interfazinicio' %}" class="back-link">← Regresar</a>
     </div>
 
