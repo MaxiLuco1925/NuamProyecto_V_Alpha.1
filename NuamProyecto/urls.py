@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from usuarios.views import portada, iniciarSesion, registro, interfazinicio, market_data_api, Administrador, panel, panelAdmin
+from usuarios.views import portada, iniciarSesion, registro, interfazinicio, market_data_api, Administrador, panel, panelAdmin, EditarRolusuario, adminEliminarUsuario, listausuarios
 from auditoria.views import cargaArchivos,x_factor, Configuración, ConfiguraciónAdmin, verificacionUsuario, reportes, Factor, x_monto, x_factor_Admin, x_monto_Admin,lecturaReportes,listadoUsuario
 from declaraciones.views  import ingresarCalificacion
 
@@ -40,6 +40,9 @@ urlpatterns = [
     path('x_monto/', x_monto, name='x_monto'),
     path('x_monto_Admin/', x_monto_Admin, name='x_monto_Admin'),
     path('listadoUsuario/', listadoUsuario, name='listadoUsuario'),
+    path('listausuarios/<int:pk>/editar/', EditarRolusuario, name='EditarRolusuario'),
+    path('listausuarios/<int:pk>/eliminar/', adminEliminarUsuario, name='adminEliminarUsuario'),
+    path('listausuarios/', listausuarios, name='listausuarios'),
     path('lecturaReportes/', lecturaReportes, name='lecturaReportes'),
     path('cargaArchivos', cargaArchivos, name='cargaArchivos'),
     path('ingresarCalificacion/', ingresarCalificacion, name='ingresarCalificacion'),

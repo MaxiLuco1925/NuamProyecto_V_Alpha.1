@@ -3,6 +3,8 @@ from usuarios.models import Usuario
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import ReporteForm
+from auditoria.models import Reportes
+from django.http import JsonResponse
 
 
 def x_factor(request):
@@ -23,7 +25,16 @@ def listadoUsuario(request):
     return render(request, 'listadoUsuario.html', data)
 
 def lecturaReportes(request):
-    return render(request, 'lecturaReportes.html')
+    reportes = Reportes.objects.all()
+    data = {'reportes' : reportes}
+    return render(request, 'lecturaReportes.html', data)
+
+def revisado(request, reporte_id):
+    if request.method == 'POST':
+        reporte = Reportes.objects.get(id = reporte_id) 
+        reporte.estado = "Revisado"
+        reporte.save()
+        return JsonResponse({'success' : True})
 
 def Factor(request):
     factores = range(8, 38)
