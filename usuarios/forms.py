@@ -105,3 +105,12 @@ class InicioSesionForm(forms.Form):
             if not check_password(contraseña,usuario.contraseña_hash):
                 raise forms.ValidationError("Contraseña incorrecta")
         return cleaned_data
+
+class UsuarioRolForm(forms.ModelForm):
+    class Meta:
+        model = Usuario
+        fields = ['rol']
+        widgets = {
+            'rol': forms.Select(attrs={'class': 'form-select'})
+        }
+
