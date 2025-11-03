@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from usuarios.forms import RegisterForm, InicioSesionForm
 from django.contrib import messages
 from usuarios.models import Usuario
@@ -9,6 +9,7 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import login
+from usuarios.forms import UsuarioRolForm
 
 def portada(request):
     return render(request, "index.html")
@@ -146,5 +147,40 @@ def panel(request):
 
 def panelAdmin(request):
     return render(request, 'panelCalificacionAdmin.html')
+                                                  
+def listausuarios(request):                                               
+    usuarios = Usuario.objects.select_related('rol').order_by('nombre')  
+    return render(request, 'adminlista.html', {'usuarios': usuarios})    
+
+def EditarRolusuario(request, pk):
+    usuario = get_object_or_404(Usuario, pk = pk)
+    if request.method == 'POST':
+        form = UsuarioRolForm(request.POST, instance=usuario)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Rol actualizado correctamente.")
+            return redirect('listausuarios')
+        else:
+            messages.error(request, "Error al actualizar el rol.")
+    else:
+        form = UsuarioRolForm(instance=usuario)
+    
+    return render(request, 'adminEditarRoles.html', {'form': form, 'usuario': usuario}) 
+
+                                                   
+def adminEliminarUsuario(request, pk):                                   
+    try:
+        usuario = Usuario.objects.get(pk=pk)                               
+    except Usuario.DoesNotExist:                                        
+        messages.error(request, "El usuario no existe.")                   
+        return redirect('listausuarios')                                  
+
+    if request.method == 'POST':                                         
+        messages.success(request, "Usuario eliminado correctamente.")    
+        return redirect('listausuarios')                               
+
+    return render(request, 'adminDeleteUser.html', {'usuario': usuario})
+
+
 
 
