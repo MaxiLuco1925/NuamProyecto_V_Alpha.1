@@ -1,0 +1,110 @@
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #2E2E3A;
+    color: white;
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    background-color: #E57248;
+    width: 18%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+}
+
+.sidebar-logo img {
+    width: 60px;
+    margin-top: 10px;
+}
+
+.back-link {
+    color: #fff;
+    font-style: italic;
+    text-decoration: none;
+    font-weight: 500;
+    align-self: flex-start;
+    margin-left: 15px;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.main-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 50px 100px;
+    position: relative;
+}
+
+.perfil-form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form-fields {
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-fields label {
+    margin-top: 15px;
+    font-weight: 600;
+    color: #CFCFCF;
+}
+
+.form-fields input {
+    background: none;
+    border: none;
+    border-bottom: 1px solid #CFCFCF;
+    color: white;
+    padding: 5px 0;
+    outline: none;
+}
+
+.form-fields input:focus {
+    border-bottom: 1px solid #E57248;
+}
+
+.btn-guardar {
+    background-color: #E57248;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 8px 30px;
+    margin-top: 25px;
+    width: 50%;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.btn-guardar:hover {
+    background-color: #cf6037;
+}
+
+.profile-icon img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 3px solid white;
+    object-fit: cover;
+}
+
+.brand-footer {
+    position: absolute;
+    bottom: 20px;
+    right: 50px;
+    font-size: 40px;
+    font-weight: bold;
+    color: #E57248;
+}

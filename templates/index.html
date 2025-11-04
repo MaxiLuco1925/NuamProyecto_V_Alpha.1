@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'css/portada.css' %}">
+    <title>Pagina de inicio</title>
+</head>
+<body>
+    <div class="page-container">
+        <header class="top-bar">
+            <div class="logo-container">
+                <img src="{% static 'image/descarga.png' %}" alt="Logo NUAM" class="logo-blue">
+            </div>
+            <div class="title-container">
+                <h1 class="title-nuam">NUAM</h1>
+            </div>
+            <div class="buttons-container">
+                <a href="{% url 'iniciarSesion' %}" class="btn btn-orange">Iniciar Sesión</a>
+                <a href="{% url 'registro' %}" class="btn btn-orange">Registrarse</a>
+            </div>
+        </header>
+        <div class="lightning-container">
+            <img src="{% static 'image/rayo.png' %}" alt="rayo" class="lightning-icon">
+        </div>
+        <main class="content-section">
+            <div class="text-block left-text">
+                 Un nuevo paso hacia un mercado único.<br>
+                Ya puedes consultar en un solo lugar la<br>
+                información relevante de emisores con valores.<br>
+                Centralizada, clasificada y accesible para todos. 
+            </div>
+            <div class="text-block right-text">
+                  Nuam es un holding regional que integra las bolsas<br>
+                de valores de Chile, Perú y Colombia en un único<br>
+                mercado financiero. Su objetivo principal es<br>
+                fortalecer las economías locales y facilitar el<br>
+                crecimiento empresarial mediante una plataforma<br>
+                de negociación común y más eficiente.
+            </div>
+
+        </main>
+        <div class="graph-placeholder">
+            <div class="graph-line line-1"></div>
+            <div class="graph-line line-2"></div>
+            <div class="graph-line line-3"></div>
+        </div>
+    </div>
+</body>
+</html>

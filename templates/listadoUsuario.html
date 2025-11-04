@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="{% static 'css/listado.css' %}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <title>Listado de usuario</title>
+</head>
+ <title>Listado de Usuarios</title>
+</head>
+<body>
+    <header class="nuam-header">
+        <div class="container-fluid d-flex justify-content-between align-items-center p-3">
+            <img src="{% static 'image/NUAM.png' %}" alt="Logo NUAM" class="nuam-logo-header">
+            <h1 class="nuam-title">NUAM</h1>
+            <a href="{% url 'interfazAdmin' %}" class="btn btn-info">Regresar al Menú Principal</a>
+        </div>
+    </header>
+<body>
+   <div class="main-content">
+        <h2 class="section-title mb-4">Listado de Usuarios</h2>
+
+        {% if usuarios %}
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Correo electrónico</th>
+                                <th scope="col">Género</th>
+                                <th scope="col">Edad</th>
+                                 <th scope="col">Rol</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for usu in usuarios %}
+                            <tr>
+                                <td>{{ usu.id }}</td>
+                                <td>{{ usu.nombre }}</td>
+                                <td>{{ usu.email }}</td>
+                                <td>{{ usu.genero|default:"—" }}</td>
+                                <td>{{ usu.edad|default:"—" }}</td>
+                                <td>{{usu.rol}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-info text-center py-4">
+                No hay usuarios registrados dentro del sistema.
+            </div>
+        {% endif %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

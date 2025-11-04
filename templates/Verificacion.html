@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificación de Usuario</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/verificacion.css' %}">
+</head>
+<body>
+    <div class="header-lines">
+        <img src="{% static 'image/lineas_superiores.png' %}" alt="Decoración líneas">
+    </div>
+    <div class="verificacion-container">
+        <h1 class="logo-text">NUAM</h1>
+        <p class="texto-principal"><strong>Escribe el código</strong></p>
+        <p class="texto-secundario">
+            para proteger tu cuenta. Nuam quiere verificar que eres tú quien está intentando iniciar sesión.<br>
+            <em>Se acaba de enviar un código de 6 dígitos de verificación a tu correo</em>
+        </p>
+        <form class="codigo-form" method="POST">
+            {% csrf_token %}
+            <div class="input-group">
+                <span class="input-group-text">
+                    <img src="{% static 'image/rayo.png' %}" alt="Ícono NUAM" class="icono-input">
+                </span>
+                <input type="text" name="codigo" class="form-control" placeholder="Escribe el código" maxlength="6" required>
+            </div>
+
+            <button type="submit" class="btn-siguiente">Siguiente</button>
+        </form>
+    </div>
+
+</body>
+</html>

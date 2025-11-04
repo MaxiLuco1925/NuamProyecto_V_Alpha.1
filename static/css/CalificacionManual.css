@@ -1,0 +1,143 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #414152;
+    color: white;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    overflow-x: hidden;
+    line-height: 1.5;
+}
+
+/* Header styling */
+.nuam-header {
+    background-color: #333344;
+    border-bottom: 1px solid #555;
+}
+
+.nuam-logo-header {
+    height: 60px;
+    width: auto;
+}
+
+.nuam-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #e37854;
+    margin: 0;
+    letter-spacing: 1px;
+}
+
+/* Main container */
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+h2 {
+    font-size: 28px;
+    margin-bottom: 24px;
+    color: white;
+}
+
+/* Form styling */
+form {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 24px;
+    border-radius: 8px;
+    border: 1px solid #5a5a6e;
+}
+
+form p {
+    margin-bottom: 20px;
+}
+
+form label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: white;
+    font-weight: 500;
+}
+
+form input,
+form select,
+form textarea {
+    width: 100%;
+    padding: 10px 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #8aa8c4;
+    color: white;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.25s ease;
+}
+
+form input:focus,
+form select:focus,
+form textarea:focus {
+    border-bottom: 1px solid #e37854;
+}
+
+/* Remove Bootstrap default button styles */
+.btn {
+    background-color: rgb(156, 196, 220);
+    color: white;
+    border: none;
+    padding: 12px 36px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn:hover {
+    background-color: #0b5ed7;
+    transform: translateY(-1px);
+}
+
+.btn-info {
+    background-color: #17a2b8;
+}
+
+.btn-info:hover {
+    background-color: #138496;
+}
+
+/* Error and validation messages */
+ul.errorlist {
+    list-style: none;
+    padding: 0;
+    margin-top: 5px;
+}
+
+ul.errorlist li {
+    color: #ff6b6b;
+    font-size: 13px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .nuam-header .container-fluid {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+    }
+
+    .nuam-title {
+        font-size: 22px;
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+}

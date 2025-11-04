@@ -1,0 +1,181 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #414152;
+    color: white;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    overflow-x: hidden;
+    line-height: 1.5;
+}
+
+.page-container {
+    min-height: 100vh;
+    position: relative;
+    padding: 0;
+}
+
+
+.header-logos {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px 20px 0 20px;
+}
+
+
+
+.icon-small {
+    height: 120px;
+    width: auto;
+}
+
+.lightning{
+    height: 180px;
+    width: auto;
+}
+
+
+.title {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: white;
+}
+
+.subtitle {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    color: white;
+}
+
+.link-login {
+    color: #8aa8c4;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.link-login:hover {
+    text-decoration: underline;
+}
+
+
+.form-container {
+    padding: 40px 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: white;
+    font-weight: 500;
+}
+
+
+.form-input,
+.form-select {
+    width: 100%;
+    padding: 10px 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #8aa8c4;
+    color: white;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.25s ease;
+}
+
+.form-input:focus,
+.form-select:focus {
+    border-bottom: 1px solid #e37854;
+}
+
+.form-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    padding-right: 20px; 
+}
+
+
+.error {
+    color: #ff6b6b;
+    font-size: 13px;
+    margin-top: 5px;
+    display: block;
+}
+
+.alert-danger {
+    background-color: #414152;
+    border: 1px solid #ff6b6b;
+    color: #ff6b6b;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 15px;
+}
+
+
+.btn-register {
+    background-color: #0d6efd;
+    color: white;
+    border: none;
+    padding: 12px 36px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: 10px;
+}
+
+.btn-register:hover {
+    background-color: #0b5ed7;
+    transform: translateY(-1px);
+}
+
+
+.footer-logo {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.nuam-text {
+    font-size: 24px;
+    font-weight: bold;
+    color: #e37854;
+    letter-spacing: 1px;
+}
+
+.btn-register{
+    background-color: rgb(156, 196, 220);  
+}
+.btn-primary{
+    background-color: rgb(156, 196, 220);
+        margin-right:1300px;
+
+    
+}
+.nuam-text{
+    font-size: 70px;
+    font-style: italic;
+}

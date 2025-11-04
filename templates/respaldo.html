@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Reportes - NUAM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/lectura.css' %}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.js"></script>
+</head>
+<body>
+    <header class="nuam-header">
+        <div class="container-fluid d-flex justify-content-between align-items-center p-3">
+            <img src="{% static 'image/NUAM.png' %}" alt="Logo NUAM" class="nuam-logo-header">
+            <h1 class="nuam-title">NUAM</h1>
+            <img src="{% static 'image/sii.png' %}" alt="Logo SII" class="sii-logo-header">
+        </div>
+    </header>
+    <div class="main-content">
+        <h2 class="section-title mb-4">Listado de reportes</h2>
+        <div class="report-panel">
+            <div class="accordion" id="reportAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                            <span class="text-danger me-2">⚠️</span> Error al cargar la página
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#reportAccordion">
+                        <div class="accordion-body">
+                            <p><strong>Detalles del error encontrado por x usuario:</strong></p>
+                            <pre class="bg-light p-3 border rounded">Error: No se pudo cargar el módulo de autenticación. Por favor, intente nuevamente.</pre>
+                            <div class="text-end mt-3">
+                                <button class="btn btn-primary btn-revisado" style="display: none;">
+                                    <i class="bi bi-check-circle me-2"></i>Revisado
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            <span class="text-danger me-2">⚠️</span> Error al revisar una calificación tributaria
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#reportAccordion">
+                        <div class="accordion-body">
+                            <p><strong>Detalles del error encontrado por x usuario:</strong></p>
+                            <pre class="bg-light p-3 border rounded">Error: El sistema no encontró el registro correspondiente. Verifique el ID ingresado.</pre>
+                            <div class="text-end mt-3">
+                                <button class="btn btn-primary btn-revisado" style="display: none;">
+                                    <i class="bi bi-check-circle me-2"></i>Revisado
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            <span class="text-danger me-2">⚠️</span> Error al modificar una calificación tributaria
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#reportAccordion">
+                        <div class="accordion-body">
+                            <p><strong>Detalles del error encontrado por x usuario:</strong></p>
+                            <pre class="bg-light p-3 border rounded">Error: El campo "Factor-09" no puede estar vacío. Por favor, complete todos los campos obligatorios.</pre>
+                            <div class="text-end mt-3">
+                                <button class="btn btn-primary btn-revisado" style="display: none;">
+                                    <i class="bi bi-check-circle me-2"></i>Revisado
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingFour">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            <span class="text-danger me-2">⚠️</span> Error al ingresar una nueva calificación tributaria
+                        </button>
+                    </h2>
+                    <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#reportAccordion">
+                        <div class="accordion-body">
+                            <p><strong>Detalles del error encontrado por x usuario:</strong></p>
+                            <pre class="bg-light p-3 border rounded">Error: El archivo subido no tiene el formato correcto. Por favor, use el formato .csv o .xlsx.</pre>
+                            <div class="text-end mt-3">
+                                <button class="btn btn-primary btn-revisado" style="display: none;">
+                                    <i class="bi bi-check-circle me-2"></i>Revisado
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-end mt-4">
+            <a href="{% url 'interfazAdmin' %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Volver al menú principal
+            </a>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
