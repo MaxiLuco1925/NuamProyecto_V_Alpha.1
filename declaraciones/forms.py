@@ -79,3 +79,14 @@ class IngresoCalificacionManualForm(forms.ModelForm):
 
     
     
+class factoresForm(forms. ModelForm):
+    class Meta:
+        model = FactorMensual
+        fields = [
+            'descripcion','valor_factor','fecha_factor'
+        ]
+        widgets = {
+            'descripcion' : forms.TextInput(attrs={'class' : 'form-control'}),
+            'valor_factor' : forms.NumberInput(attrs={'class' : 'form-control', 'step' : '0.01'}),
+            'fecha_factor' : forms.DateInput(attrs={'type' : 'date', 'class' : 'form-control'}),
+        }

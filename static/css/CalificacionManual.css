@@ -87,7 +87,7 @@ form textarea:focus {
 
 /* Remove Bootstrap default button styles */
 .btn {
-    background-color: rgb(156, 196, 220);
+    background-color: #9cc4dc;
     color: white;
     border: none;
     padding: 12px 36px;
@@ -106,11 +106,11 @@ form textarea:focus {
 }
 
 .btn-info {
-    background-color: #17a2b8;
+    background-color: #9cc4dc;
 }
 
 .btn-info:hover {
-    background-color: #138496;
+    background-color: #9cc4dc;
 }
 
 /* Error and validation messages */

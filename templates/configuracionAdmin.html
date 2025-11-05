@@ -33,7 +33,7 @@
                 <input type="text" class="form-control" value="{{ Usuario.documento_identidad|default:'No registrado' }}" readonly>
 
                 <label>Rol</label>
-                <input type="text" class="form-control" value="{{ Usuario.entidad_emisora|default:'No registrado' }}" readonly>
+                <input type="text" class="form-control" value="{{ Usuario.rol.descripcion|default:'No registrado' }}" readonly>
             </div>
 
             <div class="profile-icon">

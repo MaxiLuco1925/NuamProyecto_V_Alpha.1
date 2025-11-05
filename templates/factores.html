@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="{% static 'js/eliminar.js' %}"></script>
+
+
+    <title>Factores</title>
+</head>
+<body class="container mt-5">
+    <div class="alert alert-info display-1 text-center">Lista de Factores</div>
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if factores %}
+    <table class="table table-striped table-inverse table-responsive">
+        <thead class="thead-inverse">
+            <tr>
+                <th>ID</th>
+                <th>Descripcion</th>
+                <th>Valor del factor</th>
+                <th>Fecha</th>
+                <th>Responsable</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for factor in factores %}
+            <tr>
+                <td>{{factor.id}}</td>
+                <td>{{factor.descripcion}}</td>
+                <td>{{factor.valor_factor}}</td>
+                <td>{{factor.fecha_factor}}</td>
+                <td>{{factor.usuario.nombre}}</td>
+                <td>
+                    <form method="post" action="{% url 'actualizar' factor.id %}" onsubmit="return actualizar()" style="display : inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success btn-sm">Actualizar</button> 
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% else %}
+
+    <div class="alert alert-primary" role="alert">
+        <strong>No se encuentran proyectos en el sistema</strong>
+    </div>
+
+    {% endif %}
+    <a href="../ingresarCalificacion" class="btn btn-danger">Volver</a>
+    <a href="../agregarFactores" class="btn btn-primary">Agregar nuevo Factores Tributarios</a>
+    
+    <script src="{% static 'js/eliminar.js' %}"></script>
+
+</body>
+</html>

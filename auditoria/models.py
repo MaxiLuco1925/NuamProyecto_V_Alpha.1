@@ -35,9 +35,9 @@ class CalificacionTributaria(models.Model):
 
 class FactorMensual(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    descripcion = models.TextField(blank = True, null = True)
     valor_factor = models.FloatField()
     fecha_factor = models.DateField()
-    regimen = models.CharField(max_length=200)
     carga_origen = models.ForeignKey(CargaArchivo, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
@@ -62,3 +62,6 @@ class Reportes(models.Model):
     def __str__(self):
         return self.titulo
     
+
+
+

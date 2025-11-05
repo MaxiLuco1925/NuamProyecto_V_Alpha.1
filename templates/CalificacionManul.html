@@ -23,6 +23,7 @@
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit" class="btn btn-primary">Guardar Calificación</button>
+            <a href="{% url 'listadoFactores' %}" class="btn btn-info">Registrar Nuevo Factor Tributario</a>
         </form>
 </body>
 </html>
