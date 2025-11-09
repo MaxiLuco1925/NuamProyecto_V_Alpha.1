@@ -6,10 +6,12 @@ import yfinance as yf
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
+from auditoria.models import Instrumento
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import login
 from usuarios.forms import UsuarioRolForm
+from auditoria.models import CalificacionTributaria
 
 def portada(request):
     return render(request, "index.html")
@@ -143,7 +145,38 @@ def Administrador(request):
     return render(request, 'interfazAdministrador.html')
 
 def panel(request):
-    return render(request, 'panelCalificacion.html')
+    usuario = Usuario.objects.filter(id=request.session.get('usuario_id')).first()
+    
+    if not usuario:
+        return redirect('iniciarSesion')  
+    
+    calificaciones = CalificacionTributaria.objects.select_related(
+        'instrumento', 'declaracion', 'usuario'
+    ).prefetch_related(
+        'factormensual_set'
+    ).order_by('-fecha_pago')
+
+    
+    mercado = request.GET.get('mercado')
+    instrumento = request.GET.get('instrumento')
+    año = request.GET.get('año')
+
+    if mercado:
+        calificaciones = calificaciones.filter(instrumento__mercado=mercado)
+    if instrumento:
+        calificaciones = calificaciones.filter(instrumento__id=instrumento)
+    if año:
+        calificaciones = calificaciones.filter(año_tributario=año)
+
+    return render(request, 'panelCalificacion.html', {
+        'calificaciones': calificaciones,  
+        'instrumentos': Instrumento.objects.all(),
+        'años': CalificacionTributaria.objects.values_list('año_tributario', flat=True).distinct().order_by('año_tributario'),
+        'usuario': usuario, 
+         
+    })
+
+
 
 def panelAdmin(request):
     return render(request, 'panelCalificacionAdmin.html')

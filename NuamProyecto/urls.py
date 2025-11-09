@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path,include
 from usuarios.views import portada, iniciarSesion, registro, interfazinicio, market_data_api, Administrador, panel, panelAdmin, EditarRolusuario, adminEliminarUsuario, listausuarios
 from auditoria.views import cargaArchivos,x_factor, Configuración, ConfiguraciónAdmin, verificacionUsuario, reportes, Factor, x_monto, x_factor_Admin, x_monto_Admin,lecturaReportes,listadoUsuario
-from declaraciones.views  import ingresarCalificacion, listadoFactores, actualizarFactor, agregarFactor
+from declaraciones.views  import ingresarCalificacion, x_factorCalculo
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -46,9 +46,9 @@ urlpatterns = [
     path('lecturaReportes/', lecturaReportes, name='lecturaReportes'),
     path('cargaArchivos', cargaArchivos, name='cargaArchivos'),
     path('ingresarCalificacion/', ingresarCalificacion, name='ingresarCalificacion'),
-    path('listadoFactores/', listadoFactores, name = 'listadoFactores'),
-    path('agregarFactores/', agregarFactor, name = 'agregarFactores'),
-    path('actualizarFactor/<int:id>', actualizarFactor, name = "actualizar"),
+    path("factor_listado/", x_factorCalculo, name = "factorListado" )
+
+
 
 ]
 

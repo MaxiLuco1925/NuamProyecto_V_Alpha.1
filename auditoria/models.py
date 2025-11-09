@@ -12,9 +12,8 @@ class CalificacionTributaria(models.Model):
     ('Validado', 'Validado'),
     ('Rechazado', 'Rechazado'),
 ]
-    instrumento = models.ForeignKey(Instrumento, on_delete=models.CASCADE)
-    declaracion = models.ForeignKey(DeclaracionJurada, on_delete=models.CASCADE)
-    factor = models.ForeignKey('auditoria.FactorMensual', on_delete=models.CASCADE)
+    instrumento = models.ForeignKey(Instrumento, on_delete=models.CASCADE, blank= True)
+    declaracion = models.ForeignKey(DeclaracionJurada, on_delete=models.CASCADE, null=True, blank=True)
     fecha_pago = models.DateTimeField()
     descripcion = models.TextField()
     secuencia_evento = models.IntegerField()
@@ -24,11 +23,11 @@ class CalificacionTributaria(models.Model):
     isfut = models.BooleanField(default=False)
     origen = models.ForeignKey(CargaArchivo, on_delete= models.SET_NULL, null = True, blank= True, help_text= "Carga de archivo que originó esta calificación")
     estado_tributario = models.CharField(max_length=50, default="Activo")
-    usuario = models.ForeignKey(Usuario,on_delete=models.CASCADE, null = True, blank= True )
+    usuario = models.ForeignKey(Usuario,on_delete=models.CASCADE, blank= True )
 
     def __str__(self):
         return self.instrumento.nombre
-2
+
 
 
 
@@ -39,9 +38,15 @@ class FactorMensual(models.Model):
     valor_factor = models.FloatField()
     fecha_factor = models.DateField()
     carga_origen = models.ForeignKey(CargaArchivo, on_delete=models.SET_NULL, null=True, blank=True)
+    numero_factor = models.IntegerField(default = 0)
+    calificacion = models.ForeignKey(CalificacionTributaria, on_delete=models.SET_NULL, null=True, blank=True)
+
+    class Meta:
+        ordering = ['numero_factor']
+
 
     def __str__(self):
-        return self.valor_factor
+        return f"Factor {self.numero_factor} : {self.descripcion}"
 
 
 class Reportes(models.Model):

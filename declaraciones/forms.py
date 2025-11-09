@@ -28,7 +28,7 @@ class IngresoCalificacionManualForm(forms.ModelForm):
         model = CalificacionTributaria
         fields = [
             'descripcion', 'fecha_pago', 'secuencia_evento', 'dividendo',
-            'valor_historico', 'año_tributario'
+            'valor_historico', 'año_tributario','isfut'
         ]
         widgets = {
             'descripcion' : forms.TextInput(attrs={'class' : 'form-control'}),
@@ -37,6 +37,7 @@ class IngresoCalificacionManualForm(forms.ModelForm):
             'dividendo' : forms.NumberInput(attrs= {'class' : 'form-control', 'step' : '0.01'}),
             'valor_historico' : forms.NumberInput(attrs={'class' : 'form-control', 'step' : '0.01'}),
             'año_tributario' : forms.NumberInput(attrs= {'class' : 'form-control', 'min' : 2020, 'max ': 2100}),
+            'isfut' : forms.CheckboxInput(attrs={'class' : 'form-check-input'}),
         }
 
         def __init__(self, *args, **kwargs):
