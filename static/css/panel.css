@@ -55,6 +55,7 @@
   border-radius: 5px;
 }
 
+
 .btn-primary {
   background-color: #e37854;
   border-color: #e37854;
@@ -149,4 +150,9 @@
     transform: scale(0.98);
 }
 
+
+.col-md-12.d-flex.gap-2 > .btn {
+  flex: 1 1 0;        /* Todos los botones tendrán el mismo tamaño */
+  text-align: center; /* Centra el texto */
+}
 

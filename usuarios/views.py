@@ -9,9 +9,20 @@ from django.views.decorators.http import require_http_methods
 from auditoria.models import Instrumento
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import check_password
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from usuarios.forms import UsuarioRolForm
 from auditoria.models import CalificacionTributaria
+from instrumentos.models import Mercado
+from django.conf import settings
+import requests
+import os
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.units import cm
+import json
+
+from django.http import HttpResponse
+import csv
 
 def portada(request):
     return render(request, "index.html")
@@ -21,6 +32,8 @@ def registro(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             usuario = form.save(commit=False)
+            usuario.region = request.POST.get('region')
+            usuario.comuna = request.POST.get('comuna')
             usuario.save()
             messages.success(request, 'Registro exitoso')
             return redirect('iniciarSesion')
@@ -47,7 +60,7 @@ def iniciarSesion(request):
                 request.session['usuario_nombre'] = usuario.nombre
                 request.session['usuario_documento'] = usuario.documento_identidad
                 request.session.modified = True 
-                messages.success(request, f"Has cerrado sesion {usuario.nombre}")
+               
 
                 if usuario.rol and usuario.rol.descripcion == "Administrador":
                     return redirect("interfazAdmin")
@@ -138,7 +151,7 @@ def Administrador(request):
         usuario = Usuario.objects.get(id=request.session['usuario_id'])
         if not usuario.rol or usuario.rol.descripcion != "Administrador":
             messages.error(request, "Debes ser Administrador !!!")
-            return redirect('interfazinicio')
+            return redirect('interfazAdmin')
     except Usuario.DoesNotExist:
         return redirect('iniciarSesion')
     
@@ -149,6 +162,7 @@ def panel(request):
     
     if not usuario:
         return redirect('iniciarSesion')  
+    mercados = Mercado.objects.all()
     
     calificaciones = CalificacionTributaria.objects.select_related(
         'instrumento', 'declaracion', 'usuario'
@@ -173,13 +187,45 @@ def panel(request):
         'instrumentos': Instrumento.objects.all(),
         'años': CalificacionTributaria.objects.values_list('año_tributario', flat=True).distinct().order_by('año_tributario'),
         'usuario': usuario, 
+        'mercados' : mercados
          
     })
 
 
 
 def panelAdmin(request):
-    return render(request, 'panelCalificacionAdmin.html')
+    usuario = Usuario.objects.filter(id=request.session.get('usuario_id')).first()
+    
+    if not usuario:
+        return redirect('iniciarSesion')  
+    mercados = Mercado.objects.all()
+    
+    calificaciones = CalificacionTributaria.objects.select_related(
+        'instrumento', 'declaracion', 'usuario'
+    ).prefetch_related(
+        'factormensual_set'
+    ).order_by('-fecha_pago')
+
+    
+    mercado = request.GET.get('mercado')
+    instrumento = request.GET.get('instrumento')
+    año = request.GET.get('año')
+
+    if mercado:
+        calificaciones = calificaciones.filter(instrumento__mercado=mercado)
+    if instrumento:
+        calificaciones = calificaciones.filter(instrumento__id=instrumento)
+    if año:
+        calificaciones = calificaciones.filter(año_tributario=año)
+
+    return render(request, 'panelCalificacionAdmin.html', {
+        'calificaciones': calificaciones,  
+        'instrumentos': Instrumento.objects.all(),
+        'años': CalificacionTributaria.objects.values_list('año_tributario', flat=True).distinct().order_by('año_tributario'),
+        'usuario': usuario, 
+        'mercados' : mercados
+         
+    })
                                                   
 def listausuarios(request):                                               
     usuarios = Usuario.objects.select_related('rol').order_by('nombre')  
@@ -216,4 +262,70 @@ def adminEliminarUsuario(request, pk):
 
 
 
+def salir(request):
+    request.session.flush()
+    return redirect('iniciarSesion')
 
+def descargar_calificacion(request, calificacion_id):
+    calificacion = CalificacionTributaria.objects.get(id=calificacion_id)
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="calificacion_{calificacion_id}.pdf"'
+
+    p = canvas.Canvas(response, pagesize=A4)
+    width, height = A4
+    y = height - 2*cm
+
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(2*cm, y, f"Calificación Tributaria N° {calificacion.id}")
+    y -= 1.5*cm
+
+    p.setFont("Helvetica", 11)
+    p.drawString(2*cm, y, f"Responsable: {calificacion.usuario.nombre}")
+    y -= 0.6*cm
+    p.drawString(2*cm, y, f"Instrumento: {calificacion.instrumento.nombre if calificacion.instrumento else '-'}")
+    y -= 0.6*cm
+    p.drawString(2*cm, y, f"Año Tributario: {calificacion.año_tributario}")
+    y -= 0.6*cm
+    p.drawString(2*cm, y, f"Fecha de Pago: {calificacion.fecha_pago.strftime('%d/%m/%Y %H:%M')}")
+    y -= 0.6*cm
+    p.drawString(2*cm, y, f"Descripción: {calificacion.descripcion[:90]}...")
+    y -= 0.6*cm
+    p.drawString(2*cm, y, f"Secuencia: {calificacion.secuencia_evento}")
+    y -= 0.6*cm
+    p.drawString(2*cm, y, f"Dividendo: ${calificacion.dividendo:,.2f}")
+    y -= 0.6*cm
+    p.drawString(2*cm, y, f"Valor Histórico: ${calificacion.valor_historico:,.2f}")
+    y -= 0.6*cm
+    p.drawString(2*cm, y, f"ISFUT: {'Sí' if calificacion.isfut else 'No'}")
+    y -= 0.6*cm
+    p.drawString(2*cm, y, f"Estado: {calificacion.estado_tributario}")
+    y -= 1*cm
+
+
+    p.setFont("Helvetica-Bold", 12)
+    p.drawString(2*cm, y, "Factores Mensuales:")
+    y -= 0.8*cm
+    p.setFont("Helvetica", 10)
+
+    factores = calificacion.factormensual_set.all().order_by("numero_factor")
+    for f in factores:
+        texto = f"Factor-{f.numero_factor:02d}: {f.valor_factor:.2f} ({f.descripcion})"
+        p.drawString(2.5*cm, y, texto)
+        y -= 0.5*cm
+        if y < 2*cm:  
+            p.showPage()
+            p.setFont("Helvetica", 10)
+            y = height - 2*cm
+
+    p.showPage()
+    p.save()
+    return response
+
+def ver_detalle_calificacion(request, calificacion_id):
+    calificacion = get_object_or_404(CalificacionTributaria, id=calificacion_id)
+    factores = calificacion.factormensual_set.all().order_by("numero_factor")
+    return render(request, 'ver_detalle_calificacion.html', {
+        'calificacion': calificacion,
+        'factores': factores
+    })

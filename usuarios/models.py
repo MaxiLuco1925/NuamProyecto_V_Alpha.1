@@ -27,8 +27,7 @@ class Usuario(models.Model):
         Pais_Choices =[
         ('', 'Select'),
         ('Chile', 'Chile'),
-        ('Perú', 'Perú'),
-        ('Colombia', 'Colombia'),
+
     ]
         Genero_Choices = [
         ('', 'Select'),

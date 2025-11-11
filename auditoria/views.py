@@ -80,6 +80,7 @@ def reportes(request):
                 return redirect("Reportes")
             except Usuario.DoesNotExist:
                 messages.error(request, 'Usuario no encontrado')
+                return redirect('iniciarSesion')
             except Exception as e:
                 messages.error(request, f'Error al enviar el reporte: {str(e)}')
         else:

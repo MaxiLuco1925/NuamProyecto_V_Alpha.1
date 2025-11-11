@@ -15,10 +15,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,include
-from usuarios.views import portada, iniciarSesion, registro, interfazinicio, market_data_api, Administrador, panel, panelAdmin, EditarRolusuario, adminEliminarUsuario, listausuarios
+from django.urls import path
+from usuarios.views import portada, iniciarSesion, registro, interfazinicio, market_data_api, Administrador, panel, panelAdmin, EditarRolusuario, adminEliminarUsuario, listausuarios,salir, descargar_calificacion,ver_detalle_calificacion
 from auditoria.views import cargaArchivos,x_factor, Configuración, ConfiguraciónAdmin, verificacionUsuario, reportes, Factor, x_monto, x_factor_Admin, x_monto_Admin,lecturaReportes,listadoUsuario
-from declaraciones.views  import ingresarCalificacion, x_factorCalculo
+from declaraciones.views  import ingresarCalificacion, x_factorCalculo, ingresarCalificacionAdmin, x_factorCalculoAdmin
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -46,7 +46,13 @@ urlpatterns = [
     path('lecturaReportes/', lecturaReportes, name='lecturaReportes'),
     path('cargaArchivos', cargaArchivos, name='cargaArchivos'),
     path('ingresarCalificacion/', ingresarCalificacion, name='ingresarCalificacion'),
-    path("factor_listado/", x_factorCalculo, name = "factorListado" )
+    path("factor_listado/", x_factorCalculo, name = "factorListado" ),
+    path('salir/', salir, name= 'salir'),
+    path('descargar/<int:calificacion_id>/', descargar_calificacion, name='descargar_calificacion'),
+    path('calificacion/<int:calificacion_id>/detalle/', ver_detalle_calificacion, name='ver_detalle_calificacion'),
+    path('ingresarcalificacionAdmin/', ingresarCalificacionAdmin, name= "calificacionAdmin"),
+    path("factorAdmin/", x_factorCalculoAdmin, name = "factorAdmin")
+
 
 
 

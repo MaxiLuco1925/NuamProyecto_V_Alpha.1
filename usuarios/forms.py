@@ -15,7 +15,7 @@ class RegisterForm(forms.ModelForm):
 
     class Meta:
         model = Usuario
-        fields = ['documento_identidad', 'nombre', 'email', 'telefono', 'genero', 'edad', 'pais', 'region', 'comuna']
+        fields = ['documento_identidad', 'nombre', 'email', 'telefono', 'genero', 'edad', 'region', 'comuna']
         widgets = {
             'nombre' : forms.TextInput(attrs={'class' : 'form-input'}),
             'email' : forms.EmailInput(attrs={'class' : 'form-input'}),
@@ -25,9 +25,6 @@ class RegisterForm(forms.ModelForm):
             ]),
             'documento_identidad' : forms.TextInput(attrs={'class' : 'form-input'}),
             'edad' : forms.NumberInput(attrs={'class' : 'form-input'}),
-            'pais' : forms.Select(attrs={'class' : 'form-input'}, choices=[
-                ('', 'Select'), ('Chile', 'Chile'), ('Perú', 'Perú'), ('Colombia', 'Colombia')
-            ]),
             'region' : forms.TextInput(attrs={'class' : 'form-input'}),
             'comuna' : forms.TextInput(attrs={'class' : 'form-input'})
         }
@@ -45,15 +42,8 @@ class RegisterForm(forms.ModelForm):
                 'patron' : r'^\d{1,2}\.?\d{3}\.?\d{3}-[\dkK]$',
                 'mensaje' : 'El RUT Chileno debe contener verse de la siguiente manera 9.000.000-4, 10.000.000-6 o con un digito K'
             },
-            'Perú':{
-                'patron' : r'^\d{8}$',
-                'mensaje' : 'El DNI peruano debe tener 8 dígitos númericos !!'
-            },
-            'Colombia':{
-                'patron' : r'^\d{5,10}$',
-                'mensaje' : 'La Cédula Colombiana debe tener entre 5 y 10 dígitos !!!'
+        
             }
-        }
 
         if pais in reglas:
             regla = reglas[pais]
