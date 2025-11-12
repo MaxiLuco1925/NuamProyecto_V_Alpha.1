@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from usuarios.views import portada, iniciarSesion, registro, interfazinicio, market_data_api, Administrador, panel, panelAdmin, EditarRolusuario, adminEliminarUsuario, listausuarios,salir, descargar_calificacion,ver_detalle_calificacion
+from usuarios.views import portada, iniciarSesion, registro, interfazinicio, market_data_api, Administrador, panel, panelAdmin, EditarRolusuario, adminEliminarUsuario, listausuarios,salir, descargar_calificacion,ver_detalle_calificacion,editar_calificacion_manual
 from auditoria.views import cargaArchivos,x_factor, Configuración, ConfiguraciónAdmin, verificacionUsuario, reportes, Factor, x_monto, x_factor_Admin, x_monto_Admin,lecturaReportes,listadoUsuario
 from declaraciones.views  import ingresarCalificacion, x_factorCalculo, ingresarCalificacionAdmin, x_factorCalculoAdmin
 
@@ -51,10 +51,8 @@ urlpatterns = [
     path('descargar/<int:calificacion_id>/', descargar_calificacion, name='descargar_calificacion'),
     path('calificacion/<int:calificacion_id>/detalle/', ver_detalle_calificacion, name='ver_detalle_calificacion'),
     path('ingresarcalificacionAdmin/', ingresarCalificacionAdmin, name= "calificacionAdmin"),
-    path("factorAdmin/", x_factorCalculoAdmin, name = "factorAdmin")
-
-
-
+    path("factorAdmin/", x_factorCalculoAdmin, name = "factorAdmin"),
+    path('editar/<int:pk>/', editar_calificacion_manual, name='editar_calificacion')
 
 ]
 

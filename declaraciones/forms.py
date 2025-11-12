@@ -78,16 +78,17 @@ class IngresoCalificacionManualForm(forms.ModelForm):
             return calificacion
 
 
-    
-    
-class factoresForm(forms. ModelForm):
+class EditarCalificacionForm(forms.ModelForm):
     class Meta:
-        model = FactorMensual
-        fields = [
-            'descripcion','valor_factor','fecha_factor'
-        ]
+        model = CalificacionTributaria
+        fields = ['instrumento', 'descripcion', 'dividendo']
         widgets = {
-            'descripcion' : forms.TextInput(attrs={'class' : 'form-control'}),
-            'valor_factor' : forms.NumberInput(attrs={'class' : 'form-control', 'step' : '0.01'}),
-            'fecha_factor' : forms.DateInput(attrs={'type' : 'date', 'class' : 'form-control'}),
+            'instrumento': forms.Select(attrs={'class': 'form-control'}),
+            'descripcion': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'dividendo': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'instrumento': 'Instrumento',
+            'descripcion': 'Descripción',
+            'dividendo': 'Dividendo',
         }

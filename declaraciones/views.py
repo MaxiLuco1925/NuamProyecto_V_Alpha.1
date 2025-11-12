@@ -4,7 +4,7 @@ from . import forms
 from django.contrib import messages
 from usuarios.models import Usuario
 from auditoria.models import Instrumento, CalificacionTributaria
-from declaraciones.forms import IngresoCalificacionManualForm, factoresForm
+from declaraciones.forms import IngresoCalificacionManualForm
 from auditoria.models import FactorMensual
 from decimal import Decimal, ROUND_HALF_UP    
 from django.http import JsonResponse

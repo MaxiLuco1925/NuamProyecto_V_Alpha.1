@@ -3,6 +3,7 @@ from usuarios.forms import RegisterForm, InicioSesionForm
 from django.contrib import messages
 from usuarios.models import Usuario
 import yfinance as yf
+from declaraciones.forms import EditarCalificacionForm
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
@@ -12,6 +13,7 @@ from django.contrib.auth.hashers import check_password
 from django.contrib.auth import login, logout
 from usuarios.forms import UsuarioRolForm
 from auditoria.models import CalificacionTributaria
+from declaraciones.forms import IngresoCalificacionManualForm
 from instrumentos.models import Mercado
 from django.conf import settings
 import requests
@@ -20,7 +22,6 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
 import json
-
 from django.http import HttpResponse
 import csv
 
@@ -254,7 +255,8 @@ def adminEliminarUsuario(request, pk):
         messages.error(request, "El usuario no existe.")                   
         return redirect('listausuarios')                                  
 
-    if request.method == 'POST':                                         
+    if request.method == 'POST':
+        usuario.delete()                                         
         messages.success(request, "Usuario eliminado correctamente.")    
         return redirect('listausuarios')                               
 
@@ -329,3 +331,21 @@ def ver_detalle_calificacion(request, calificacion_id):
         'calificacion': calificacion,
         'factores': factores
     })
+
+
+
+
+def editar_calificacion_manual(request, pk):
+    calificacion = get_object_or_404(CalificacionTributaria, pk=pk)
+    
+    if request.method == 'POST':
+        form = EditarCalificacionForm(request.POST, instance=calificacion)
+        if form.is_valid():
+            form.save()
+            return redirect('panelCalificacion')
+        else:
+            messages.error(request, "Error al actualizar la calificación.")
+    else:
+        form = EditarCalificacionForm(instance=calificacion)
+
+    return render(request, 'CalificacionManul.html', {'form': form, 'calificacion': calificacion})

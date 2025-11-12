@@ -353,29 +353,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Script para mostrar/ocultar sección de montos
-        document.getElementById('ingresoPorMontos').addEventListener('change', function() {
-            const seccionMontos = document.getElementById('seccionMontos');
-            const factorInputs = document.querySelectorAll('.factor-input');
-            
-            if (this.checked) {
-                seccionMontos.style.display = 'block';
-                // Hacer readonly los factores cuando se activa ingreso por montos
-                factorInputs.forEach(input => {
-                    input.setAttribute('readonly', 'readonly');
-                });
-            } else {
-                seccionMontos.style.display = 'none';
-                // Quitar readonly cuando se desactiva
-                factorInputs.forEach(input => {
-                    input.removeAttribute('readonly');
-                });
-            }
-        });
-    </script>
-    {% if llamada_factores_js_exists %}
-    <script src="{% static 'js/llamada_factores.js' %}"></script>
-    {% endif %}
+
+    <script src="{% static 'js/calculo_montos.js' %}"></script>
 </body>
 </html>

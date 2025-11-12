@@ -23,6 +23,13 @@
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit" class="btn btn-primary">Guardar Calificación</button>
+            <button id="btnEjemplo" 
+                data-imagen-url="{% static 'image/Ejemplo.png' %}" 
+                class="btn btn-primary">
+                <i class="bi bi-eye"></i> Ver Ejemplo
+            </button>
         </form>
+    </div>
+    <script src="{% static 'js/Ejemplo.js' %}"></script>
 </body>
 </html>
