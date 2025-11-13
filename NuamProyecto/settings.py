@@ -145,7 +145,7 @@ DATABASES ={
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'nuam_sql2',
         'USER': 'root',
-        'PASSWORD': 'Darklinkoscuroofward45@',
+        'PASSWORD': '',
         'HOST':'localhost',
         'PORT':3306
 
@@ -156,6 +156,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'ignacio.leivatoro0@gmail.com'
-EMAIL_HOST_PASSWORD = 'lbyy nlxw yofw anwd'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
