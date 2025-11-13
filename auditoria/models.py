@@ -39,7 +39,7 @@ class FactorMensual(models.Model):
     fecha_factor = models.DateField()
     carga_origen = models.ForeignKey(CargaArchivo, on_delete=models.SET_NULL, null=True, blank=True)
     numero_factor = models.IntegerField(default = 0)
-    calificacion = models.ForeignKey(CalificacionTributaria, on_delete=models.SET_NULL, null=True, blank=True)
+    calificacion = models.ForeignKey(CalificacionTributaria, on_delete=models.SET_NULL, null=True, blank=True,)
 
     class Meta:
         ordering = ['numero_factor']

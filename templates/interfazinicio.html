@@ -55,16 +55,18 @@
 <div class="container mt-5" >
     <div class="row justify-content-center">
         <div class="col-12 col-md-3 mb-4">
-            <button class="btn btn-primary w-100">Cantidad de archivos cargados</button>
+            <button class="btn btn-primary btn-panel w-100">Cantidad de archivos cargados</button>
         </div>
         <div class="col-12 col-md-3 mb-4">
-            <button class="btn btn-danger w-100">Cantidad de calificaciones tributarias</button>
+            <button class="btn btn-danger btn-panel w-100">Cantidad de calificaciones tributarias:
+            <span class="badge bg-light text-dark">{{ total_calificaciones }}</span>        
+        </button>
         </div>
         <div class="col-12 col-md-3 mb-4">
-            <a href="{% url 'panelCalificacion' %}" class="btn btn-info">Panel de Calificaciones Tributarias</a>
+            <a href="{% url 'panelCalificacion' %}" class="btn btn-info btn-panel w-100">Panel de Calificaciones Tributarias</a>
         </div> 
         <div class="col-12 col-md-3 mb-4">
-            <a href="{% url 'ingresarCalificacion' %}" class="btn btn-info">Ingresar Nueva Calificación Tributaria</a>
+            <a href="{% url 'ingresarCalificacion' %}" class="btn btn-info btn-panel w-100">Ingresar Nueva Calificación Tributaria</a>
         </div>
     </div>
 </div>

@@ -45,6 +45,7 @@ class Usuario(models.Model):
         comuna = models.CharField(max_length=70, blank=True)
         contraseña_hash = models.CharField(max_length=256)
         rol = models.ForeignKey(Rol, on_delete=models.SET_NULL, blank= True, null=True)
+        verificado = models.BooleanField(default=False)
 
         def __str__(self):
              return self.nombre 

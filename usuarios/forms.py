@@ -1,7 +1,9 @@
 from django import forms
 from usuarios.models import Usuario
 import re
-from django.contrib.auth.hashers import make_password, check_password    
+from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError as DjangoValidationError    
 
 class RegisterForm(forms.ModelForm):
     password1 = forms.CharField(
@@ -58,6 +60,13 @@ class RegisterForm(forms.ModelForm):
         if contraseña1 and contraseña2 and contraseña1 != contraseña2:
             raise forms.ValidationError("Las contraseñas no coinciden")
         
+        if contraseña1:
+            try:
+                validate_password(contraseña1, self.instance)
+            except DjangoValidationError as error:
+                self.add_error('password1', error)
+                
+                
         return contraseña2
 
 

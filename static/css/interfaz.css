@@ -257,14 +257,17 @@ body {
 
 
 
-.row{
+.row {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    margin-left: 250px;
-    width: 1200px;
+    margin-left: 250px;     /* mantiene espacio para el sidebar */
+    width: calc(100% - 250px); /* ✅ evita que se salga de la pantalla */
+    padding-right: 20px;    /* ✅ un pequeño margen interno */
+    box-sizing: border-box; /* ✅ para que el ancho se calcule bien */
 }
+
 
 .nuam-brand {
     display: block;
@@ -290,4 +293,22 @@ body {
 
 .market-panel h4{
     color: #414152;
+}
+
+
+.btn-panel {
+  height: 80px;               
+  font-size: 16px;             
+  font-weight: bold;          
+  border-radius: 35px;        
+  display: flex;              
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-panel:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }

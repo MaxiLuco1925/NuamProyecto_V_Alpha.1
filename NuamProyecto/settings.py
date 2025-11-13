@@ -89,17 +89,30 @@ DATABASES = {
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
+ {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 8, 
+        }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
+
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': 'usuarios.validators.ValidadorMayusculas', 
+    },
+    {
+        'NAME': 'usuarios.validators.ValidadordeNumeros',
+    },
+    {
+        'NAME': 'usuarios.validators.ValidadorCaracteresEspeciales',
+        'OPTIONS': {
+            'allowed_chars': '@',
+        }
     },
 ]
 
@@ -130,7 +143,7 @@ pymysql.install_as_MySQLdb()
 DATABASES ={
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'nuam_sql',
+        'NAME': 'nuam_sql2',
         'USER': 'root',
         'PASSWORD': 'Darklinkoscuroofward45@',
         'HOST':'localhost',
@@ -139,3 +152,10 @@ DATABASES ={
     }
 }
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'ignacio.leivatoro0@gmail.com'
+EMAIL_HOST_PASSWORD = 'lbyy nlxw yofw anwd'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

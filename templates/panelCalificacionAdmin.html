@@ -139,11 +139,20 @@
                                         <a href="{% url 'ver_detalle_calificacion' cal.id %}" class="btn btn-sm btn-outline-primary" title="Ver detalle">
                                             <i class="bi bi-eye"></i>
                                         </a>
-                                        <a href="#" class="btn btn-sm btn-outline-warning" title="Editar">
-                                            <i class="bi bi-pencil"></i>
+                                        <a href="{% url 'editar_calificacion' cal.id %}" 
+                                        class="btn btn-sm btn-outline-warning" 
+                                        title="Editar"
+                                        onclick="return confirmarActualizacion('{{ cal.id }}');">
+                                        <i class="bi bi-pencil"></i>
                                         </a>
                                         <a href="{% url 'descargar_calificacion' cal.id %}" class="btn btn-sm btn-outline-success" title="Descargar CSV">
                                             <i class="bi bi-download"></i>
+                                        </a>
+                                        <a href="{% url 'eliminar_calificacion' cal.id %}" 
+                                        class="btn btn-sm btn-outline-danger" 
+                                        title="Eliminar"
+                                        onclick="return confirmarEliminacion('{{ cal.id }}');">
+                                        <i class="bi bi-trash"></i>
                                         </a>
                                     </div>
                                 </td>
@@ -181,6 +190,6 @@
             </div>
         </div>
     </div>
-
+<script src="{% static 'js/Mensajes.js' %}"></script>
 </body>
 </html>

@@ -3,6 +3,9 @@ from usuarios.forms import RegisterForm, InicioSesionForm
 from django.contrib import messages
 from usuarios.models import Usuario
 import yfinance as yf
+from django.core.mail import send_mail
+from django.conf import settings
+import random
 from declaraciones.forms import EditarCalificacionForm
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -35,9 +38,28 @@ def registro(request):
             usuario = form.save(commit=False)
             usuario.region = request.POST.get('region')
             usuario.comuna = request.POST.get('comuna')
+            usuario.verificado = False  # 🚫 No verificado aún
             usuario.save()
-            messages.success(request, 'Registro exitoso')
-            return redirect('iniciarSesion')
+
+            # Generar código aleatorio de verificación
+            codigo = random.randint(100000, 999999)
+            request.session['codigo_verificacion'] = str(codigo)
+            request.session['usuario_id'] = usuario.id
+
+            # Intentar enviar el correo
+            try:
+                send_mail(
+                    subject='Código de verificación NUAM',
+                    message=f'Tu código de verificación es: {codigo}',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[usuario.email],
+                    fail_silently=False,
+                )
+                messages.info(request, f"📩 Se envió un código de verificación a {usuario.email}")
+            except Exception as e:
+                messages.error(request, f"❌ Error al enviar correo: {e}")
+
+            return redirect('verificacion')  # Redirige al HTML donde se ingresa el código
         else:
             return render(request, 'registro.html', {'form': form})
     else:
@@ -50,50 +72,54 @@ def iniciarSesion(request):
         if form.is_valid():
             documento = form.cleaned_data["documento_identidad"]
             contraseña = form.cleaned_data["contraseña"]
+
             try:
                 usuario = Usuario.objects.get(documento_identidad=documento)
             except Usuario.DoesNotExist:
-                messages.error(request, "Documento no existe")
+                messages.error(request, "❌ Documento no existe.")
                 return render(request, 'InicioSesion.html', {'form': form})
-            
+
+            # Validar contraseña
             if check_password(contraseña, usuario.contraseña_hash):
+                # Verificar si el correo fue validado
+                if not usuario.verificado:
+                    messages.warning(request, "⚠️ Debes verificar tu correo antes de iniciar sesión.")
+                    # 🔁 Redirige al ingreso del código si aún no está verificado
+                    return redirect('verificacion')
+
+                # ✅ Guardar datos en sesión
                 request.session['usuario_id'] = usuario.id
                 request.session['usuario_nombre'] = usuario.nombre
                 request.session['usuario_documento'] = usuario.documento_identidad
-                request.session.modified = True 
-               
 
-                if usuario.rol and usuario.rol.descripcion == "Administrador":
-                    return redirect("interfazAdmin")
-                else:
-                    return redirect("interfazinicio")
+                return redirect("interfazinicio")
             else:
-                messages.error(request, "Contraseña incorrecta")
-                return render(request, 'InicioSesion.html', {'form': form})
+                messages.error(request, "❌ Contraseña incorrecta.")
         else:
-            messages.error(request, "Credenciales inválidas")
-            return render(request, 'InicioSesion.html', {'form': form})
+            messages.error(request, "❌ Credenciales inválidas.")
     else:
         form = InicioSesionForm()
-        return render(request, 'InicioSesion.html', {'form': form})
 
+    return render(request, 'InicioSesion.html', {'form': form})
 
 def interfazinicio(request):
     usuario_id = request.session.get('usuario_id')
-    
     if not usuario_id:
         messages.error(request, "Debes iniciar sesión primero")
         return redirect('iniciarSesion')
-    
     try:
         usuario = Usuario.objects.get(id=usuario_id)
+        total_calificaciones = CalificacionTributaria.objects.filter(usuario=usuario).count()
         context = {
-            'Usuario': usuario
+            'Usuario': usuario,
+            'total_calificaciones': total_calificaciones
         }
         return render(request, "interfazinicio.html", context)
     except Usuario.DoesNotExist:
         messages.error(request, "Usuario no encontrado")
         return redirect('iniciarSesion')
+    
+   
 
 @require_http_methods(["GET"])
 def market_data_api(request):
@@ -349,3 +375,37 @@ def editar_calificacion_manual(request, pk):
         form = EditarCalificacionForm(instance=calificacion)
 
     return render(request, 'CalificacionManul.html', {'form': form, 'calificacion': calificacion})
+
+
+def eliminar_calificacion(request, pk):
+    calificacion = get_object_or_404(CalificacionTributaria, pk=pk)
+    calificacion.delete()
+    messages.success(request, "Calificación eliminada correctamente.")
+    return redirect('panelCalificacionAdmin')
+
+
+
+
+def verificar_codigo(request):
+    if request.method == 'POST':
+        codigo_ingresado = request.POST.get('codigo')
+        codigo_correcto = str(request.session.get('codigo_verificacion'))
+        usuario_id = request.session.get('usuario_id')
+
+        if codigo_ingresado == codigo_correcto and usuario_id:
+            try:
+                usuario = Usuario.objects.get(id=usuario_id)
+                usuario.verificado = True  # ✅ Marcar como verificado
+                usuario.save()
+
+                # Limpiar la sesión del código
+                request.session.pop('codigo_verificacion', None)
+                messages.success(request, "✅ Verificación exitosa. Ahora puedes iniciar sesión.")
+                return redirect('iniciarSesion')
+            except Usuario.DoesNotExist:
+                messages.error(request, "❌ Usuario no encontrado.")
+        else:
+            messages.error(request, "⚠️ Código incorrecto. Intenta nuevamente.")
+
+    return render(request, 'Verificacion.html')
+
