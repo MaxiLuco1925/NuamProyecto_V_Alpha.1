@@ -10,7 +10,6 @@
     <link href="{% static 'css/listado.css' %}" rel="stylesheet">
 </head>
 <body>
-    <!-- Header NUAM -->
     <header class="nuam-header">
         <div class="container-fluid d-flex justify-content-between align-items-center p-3">
             <img src="{% static 'image/NUAM.png' %}" alt="Logo NUAM" class="nuam-logo-header">
@@ -26,7 +25,6 @@
             <i class="bi bi-calculator me-2"></i>Ingresar Factores Tributarios
         </h2>
 
-        <!-- Información de la Calificación -->
         {% if calificacion %}
         <div class="alert alert-info mb-4">
             <h5><i class="bi bi-info-circle me-2"></i>Información de la Calificación</h5>
@@ -56,7 +54,6 @@
             <form id="formFactores" method="post" class="row g-3">
                 {% csrf_token %}
                 
-                <!-- Switch para ingreso por montos -->
                 <div class="col-12">
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" id="ingresoPorMontos" name="ingresoPorMontos">
@@ -66,7 +63,6 @@
                     </div>
                 </div>
 
-                <!-- Sección de Montos -->
                 <div id="seccionMontos" class="col-12 mt-3" style="display: none;">
                     <h5 class="mb-3">
                         <i class="bi bi-list-ol me-2"></i>Montos
@@ -91,13 +87,11 @@
                     </div>
                 </div>
 
-                <!-- Sección de Factores -->
                 <div class="col-12 mt-4">
                     <h5 class="mb-3">
                         <i class="bi bi-percent me-2"></i>Factores Tributarios
                     </h5>
                     <div class="row g-3">
-                        <!-- Factor 08 -->
                         <div class="col-md-4">
                             <label for="id_factor_8" class="form-label">Factor-08</label>
                             <small class="text-muted d-block">No Constitutiva de Renta No Acogido a Impto.</small>
@@ -105,7 +99,6 @@
                                    id="id_factor_8" name="factor_8" value="0.00">
                         </div>
                         
-                        <!-- Factor 09 -->
                         <div class="col-md-4">
                             <label for="id_factor_9" class="form-label">Factor-09</label>
                             <small class="text-muted d-block">Impuesto 1ra Categ. Afecto GL Comp. Con Devolución</small>
@@ -113,7 +106,6 @@
                                    id="id_factor_9" name="factor_9" value="0.00">
                         </div>
                         
-                        <!-- Factor 10 -->
                         <div class="col-md-4">
                             <label for="id_factor_10" class="form-label">Factor-10</label>
                             <small class="text-muted d-block">Impuesto Tasa Adicional Evento Art. 21</small>
@@ -121,7 +113,6 @@
                                    id="id_factor_10" name="factor_10" value="0.00">
                         </div>
 
-                        <!-- Factor 11 -->
                         <div class="col-md-4">
                             <label for="id_factor_11" class="form-label">Factor-11</label>
                             <small class="text-muted d-block">Incremento Impuesto 1ra Categoría</small>
@@ -129,7 +120,6 @@
                                    id="id_factor_11" name="factor_11" value="0.00">
                         </div>
                         
-                        <!-- Factor 12 -->
                         <div class="col-md-4">
                             <label for="id_factor_12" class="form-label">Factor-12</label>
                             <small class="text-muted d-block">Impuesto 1ra Categ. Evento GL Comp. Con Devolución</small>
@@ -137,7 +127,6 @@
                                    id="id_factor_12" name="factor_12" value="0.00">
                         </div>
                         
-                        <!-- Factor 13 -->
                         <div class="col-md-4">
                             <label for="id_factor_13" class="form-label">Factor-13</label>
                             <small class="text-muted d-block">Ingresos afectados a GI con derecho a compensación sin devolución</small>
@@ -145,7 +134,6 @@
                                    id="id_factor_13" name="factor_13" value="0.00">
                         </div>
 
-                        <!-- Factor 14 -->
                         <div class="col-md-4">
                             <label for="id_factor_14" class="form-label">Factor-14</label>
                             <small class="text-muted d-block">Ingresos Exentos de GI con derecho a compensación sin devolución</small>
@@ -153,7 +141,6 @@
                                    id="id_factor_14" name="factor_14" value="0.00">
                         </div>
 
-                        <!-- Factor 15 -->
                         <div class="col-md-4">
                             <label for="id_factor_15" class="form-label">Factor-15</label>
                             <small class="text-muted d-block">Ingresos sujetos a crédito por impuestos internos</small>
@@ -161,7 +148,6 @@
                                    id="id_factor_15" name="factor_15" value="0.00">
                         </div>
 
-                        <!-- Factor 16 -->
                         <div class="col-md-4">
                             <label for="id_factor_16" class="form-label">Factor-16</label>
                             <small class="text-muted d-block">Ingresos no constitutivos de renta acogidos a impuesto</small>
@@ -169,7 +155,6 @@
                                    id="id_factor_16" name="factor_16" value="0.00">
                         </div>
 
-                        <!-- Factor 17 -->
                         <div class="col-md-4">
                             <label for="id_factor_17" class="form-label">Factor-17</label>
                             <small class="text-muted d-block">Ingresos que consideran devolución de capital no constitutiva de renta</small>
@@ -177,7 +162,6 @@
                                    id="id_factor_17" name="factor_17" value="0.00">
                         </div>
 
-                        <!-- Factor 18 -->
                         <div class="col-md-4">
                             <label for="id_factor_18" class="form-label">Factor-18</label>
                             <small class="text-muted d-block">Ingresos que se consideran exentos de IGC y/o IA</small>
@@ -185,7 +169,6 @@
                                    id="id_factor_18" name="factor_18" value="0.00">
                         </div>
 
-                        <!-- Factor 19 -->
                         <div class="col-md-4">
                             <label for="id_factor_19" class="form-label">Factor-19</label>
                             <small class="text-muted d-block">Ingresos no constitutivos de Renta</small>
@@ -193,7 +176,6 @@
                                    id="id_factor_19" name="factor_19" value="0.00">
                         </div>
 
-                        <!-- Factor 20 -->
                         <div class="col-md-4">
                             <label for="id_factor_20" class="form-label">Factor-20</label>
                             <small class="text-muted d-block">Ingresos con crédito sin derecho a devolución</small>
@@ -201,7 +183,6 @@
                                    id="id_factor_20" name="factor_20" value="0.00">
                         </div>
 
-                        <!-- Factor 21 -->
                         <div class="col-md-4">
                             <label for="id_factor_21" class="form-label">Factor-21</label>
                             <small class="text-muted d-block">Ingresos con derecho a devolución</small>
@@ -209,7 +190,6 @@
                                    id="id_factor_21" name="factor_21" value="0.00">
                         </div>
 
-                        <!-- Factor 22 -->
                         <div class="col-md-4">
                             <label for="id_factor_22" class="form-label">Factor-22</label>
                             <small class="text-muted d-block">Ingresos sin derecho a devolución ni imputación directa</small>
@@ -217,7 +197,6 @@
                                    id="id_factor_22" name="factor_22" value="0.00">
                         </div>
 
-                        <!-- Factor 23 -->
                         <div class="col-md-4">
                             <label for="id_factor_23" class="form-label">Factor-23</label>
                             <small class="text-muted d-block">Ingresos con derecho a devolución</small>
@@ -225,7 +204,6 @@
                                    id="id_factor_23" name="factor_23" value="0.00">
                         </div>
 
-                        <!-- Factor 24 -->
                         <div class="col-md-4">
                             <label for="id_factor_24" class="form-label">Factor-24</label>
                             <small class="text-muted d-block">Ingresos con crédito sin derecho a devolución</small>
@@ -233,7 +211,6 @@
                                    id="id_factor_24" name="factor_24" value="0.00">
                         </div>
 
-                        <!-- Factor 25 -->
                         <div class="col-md-4">
                             <label for="id_factor_25" class="form-label">Factor-25</label>
                             <small class="text-muted d-block">Ingresos con derecho a devolución</small>
@@ -241,7 +218,6 @@
                                    id="id_factor_25" name="factor_25" value="0.00">
                         </div>
 
-                        <!-- Factor 26 -->
                         <div class="col-md-4">
                             <label for="id_factor_26" class="form-label">Factor-26</label>
                             <small class="text-muted d-block">Sin derecho a devolución</small>
@@ -249,7 +225,6 @@
                                    id="id_factor_26" name="factor_26" value="0.00">
                         </div>
 
-                        <!-- Factor 27 -->
                         <div class="col-md-4">
                             <label for="id_factor_27" class="form-label">Factor-27</label>
                             <small class="text-muted d-block">Con derecho a devolución</small>
@@ -257,7 +232,6 @@
                                    id="id_factor_27" name="factor_27" value="0.00">
                         </div>
 
-                        <!-- Factor 28 -->
                         <div class="col-md-4">
                             <label for="id_factor_28" class="form-label">Factor-28</label>
                             <small class="text-muted d-block">Crédito por IPE</small>
@@ -265,7 +239,6 @@
                                    id="id_factor_28" name="factor_28" value="0.00">
                         </div>
 
-                        <!-- Factor 29 -->
                         <div class="col-md-4">
                             <label for="id_factor_29" class="form-label">Factor-29</label>
                             <small class="text-muted d-block">Sin derecho a devolución</small>
@@ -273,7 +246,6 @@
                                    id="id_factor_29" name="factor_29" value="0.00">
                         </div>
 
-                        <!-- Factor 30 -->
                         <div class="col-md-4">
                             <label for="id_factor_30" class="form-label">Factor-30</label>
                             <small class="text-muted d-block">Con derecho a devolución</small>
@@ -281,7 +253,6 @@
                                    id="id_factor_30" name="factor_30" value="0.00">
                         </div>
 
-                        <!-- Factor 31 -->
                         <div class="col-md-4">
                             <label for="id_factor_31" class="form-label">Factor-31</label>
                             <small class="text-muted d-block">Sin derecho a devolución</small>
@@ -289,7 +260,6 @@
                                    id="id_factor_31" name="factor_31" value="0.00">
                         </div>
 
-                        <!-- Factor 32 -->
                         <div class="col-md-4">
                             <label for="id_factor_32" class="form-label">Factor-32</label>
                             <small class="text-muted d-block">Con derecho a devolución</small>
@@ -297,7 +267,6 @@
                                    id="id_factor_32" name="factor_32" value="0.00">
                         </div>
 
-                        <!-- Factor 33 -->
                         <div class="col-md-4">
                             <label for="id_factor_33" class="form-label">Factor-33</label>
                             <small class="text-muted d-block">Crédito por IPE</small>
@@ -305,7 +274,6 @@
                                    id="id_factor_33" name="factor_33" value="0.00">
                         </div>
 
-                        <!-- Factor 34 -->
                         <div class="col-md-4">
                             <label for="id_factor_34" class="form-label">Factor-34</label>
                             <small class="text-muted d-block">Cred. Por impto. Tasa adicional, Ex art 21 LIE</small>
@@ -313,7 +281,6 @@
                                    id="id_factor_34" name="factor_34" value="0.00">
                         </div>
 
-                        <!-- Factor 35 -->
                         <div class="col-md-4">
                             <label for="id_factor_35" class="form-label">Factor-35</label>
                             <small class="text-muted d-block">Tasa efectiva del Cred. del FUT (TEF)</small>
@@ -321,7 +288,6 @@
                                    id="id_factor_35" name="factor_35" value="0.00">
                         </div>
 
-                        <!-- Factor 36 -->
                         <div class="col-md-4">
                             <label for="id_factor_36" class="form-label">Factor-36</label>
                             <small class="text-muted d-block">Tasa Efectiva del Cred. del FUNT (TEX)</small>
@@ -329,7 +295,6 @@
                                    id="id_factor_36" name="factor_36" value="0.00">
                         </div>
 
-                        <!-- Factor 37 -->
                         <div class="col-md-4">
                             <label for="id_factor_37" class="form-label">Factor-37</label>
                             <small class="text-muted d-block">Devolución de Capital Art. 17 num 7 LIR</small>
@@ -339,7 +304,6 @@
                     </div>
                 </div>
 
-                <!-- Botones -->
                 <div class="col-12 text-center mt-4">
                     <button type="submit" class="btn btn-success btn-lg me-2">
                         <i class="bi bi-save me-2"></i>Guardar Factores

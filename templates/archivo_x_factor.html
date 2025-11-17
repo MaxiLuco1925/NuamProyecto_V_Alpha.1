@@ -1,73 +1,197 @@
 <!DOCTYPE html>
 {% load static %}
-<html lang="en">
+{% load custom_filters %}
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-    <link href="{% static 'css/x_factor.css' %}" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Archivo x Factor</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Estilos -->
+    <link href="{% static 'css/x_factor.css' %}" rel="stylesheet">
+
+    <style>
+        .nuam-header {
+            background: #0d6efd;
+            color: white;
+        }
+        .nuam-logo-header {
+            height: 60px;
+        }
+        table th, table td {
+            white-space: nowrap;
+            font-size: 13px;
+        }
+    </style>
 </head>
 <body>
-    <header class="nuam-header">
-        <div class="container-fluid d-flex justify-content-between align-items-center p-3">
-            <img src="{% static 'image/NUAM.png' %}" alt="Logo NUAM" class="nuam-logo-header">
-            <h1 class="nuam-title">NUAM</h1>
-               <a href="{% url 'panelCalificacion' %}" class="btn btn-info">Regresar al Panel de Calificaciones Tributarias</a>
+
+<header class="nuam-header">
+    <div class="container-fluid d-flex justify-content-between align-items-center p-3">
+        <img src="{% static 'image/NUAM.png' %}" alt="NUAM" class="nuam-logo-header">
+        <h1 class="m-0">NUAM</h1>
+
+        <a href="{% url 'panelCalificacion' %}" class="btn btn-warning fw-bold">
+            Regresar al Panel de Calificaciones
+        </a>
+    </div>
+</header>
+
+<div class="container my-4">
+
+    <h2 class="mb-4 text-primary fw-bold">📄 Archivo x Factor</h2>
+
+    <!-- 🔥 MOSTRAR ERRORES DEL FORMULARIO ARRIBA -->
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        <strong>Errores en el formulario:</strong>
+        <ul class="mt-2">
+            {% for field, errors in form.errors.items %}
+                <li><strong>{{ field }}:</strong> {{ errors|striptags }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- Formulario carga -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <strong>Subir archivo CSV</strong>
         </div>
-    </header>
 
-    <div class="main-content">
-        <h2 class="section-title mb-4">Archivo x Factor</h2>
+        <div class="card-body">
 
-        <div class="table-container">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <button type="button" class="btn btn-primary">
-                    <i class="bi bi-file-earmark-arrow-up me-2"></i>Seleccionar archivo
-                </button>
+            <!-- 🔥 Errores generales del formulario -->
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {{ form.non_field_errors }}
             </div>
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col" colspan="14" class="text-center bg-primary text-white">Archivo</th>
-                        </tr>
-                        <tr>
-                            <th scope="col">Año</th>
-                            <th scope="col">Categoría tributaria</th>
-                            <th scope="col">Fecha de pago</th>
-                            <th scope="col">Secuencia de eventos</th>
-                            <th scope="col">Descp</th>
-                            <th scope="col">Factor-08</th>
-                            <th scope="col">Factor-09</th>
-                            <th scope="col">Factor-10</th>
-                            <th scope="col">Factor-11</th>
-                            <th scope="col">Factor-12</th>
-                            <th scope="col">Factor-13</th>
-                            <th scope="col">Factor-14</th>
-                            <th scope="col">Factor-15</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="13" class="text-center py-5">No hay datos cargados.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            {% endif %}
 
-            <div class="d-flex justify-content-end gap-2 mt-3">
-                <button type="button" class="btn btn-outline-secondary">Cancelar</button>
-                <button type="button" class="btn btn-outline-info">Ver Formato</button>
-                <button type="button" class="btn btn-success">
-                    <i class="bi bi-save me-2"></i>Guardar
-                </button>
-            </div>
+            <form method="POST" enctype="multipart/form-data" class="row g-3">
+                {% csrf_token %}
+
+                <!-- Campo archivo -->
+                <div class="col-md-6">
+                    {{ form.archivo.label_tag }}
+                    {{ form.archivo }}
+
+                    <!-- 🔥 Errores específicos del campo archivo -->
+                    {% if form.archivo.errors %}
+                    <div class="text-danger small mt-1">
+                        {{ form.archivo.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                {{ form.tipo_carga }}
+
+                <div class="col-md-6 d-flex align-items-end">
+                    <button type="submit" class="btn btn-success w-100 fw-bold">
+                        <i class="bi bi-upload"></i> Subir Archivo
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.js"></script>
-    <script src="{% static 'js/acciones_data.js' %}"></script>
+    {% if carga %}
+    <div class="alert alert-info">
+        <p><strong>Estado de carga:</strong> {{ carga.estado }}</p>
+        <p><strong>Registros procesados:</strong> {{ carga.total_registros }}</p>
+        <p><strong>Éxitos:</strong> {{ carga.registros_exitosos }}</p>
+
+        {% if carga.mensaje_error %}
+        <div class="alert alert-danger mt-3">
+            <pre>{{ carga.mensaje_error }}</pre>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <hr class="my-4">
+
+    <!-- Resultados -->
+    <h4 class="fw-bold mb-3">📊 Registros Procesados</h4>
+
+    {% if calificaciones %}
+        <p class="text-success fw-bold">Total calificaciones: {{ calificaciones|length }}</p>
+    {% endif %}
+
+    <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+        <table class="table table-bordered table-striped align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th colspan="43" class="text-center">Calificaciones Procesadas</th>
+                </tr>
+                <tr>
+                    <th>ID</th>
+                    <th>Responsable</th>
+                    <th>Instrumento</th>
+                    <th>Año Tributario</th>
+                    <th>Fecha Pago</th>
+                    <th>Descripción</th>
+                    <th>Secuencia</th>
+                    <th>Dividendo</th>
+                    <th>Valor Histórico</th>
+                    <th>ISFUT</th>
+                    <th>Estado</th>
+
+                    {% for i in rango_factores %}
+                        <th>Factor {{ i }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+
+            <tbody>
+            {% if calificaciones %}
+                {% for item in calificaciones %}
+                <tr>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.usuario.nombre }}</td>
+                    <td>{{ item.instrumento.nombre }}</td>
+                    <td>{{ item.año_tributario }}</td>
+                    <td>{{ item.fecha_pago|date:"d-m-Y" }}</td>
+                    <td>{{ item.descripcion }}</td>
+                    <td>{{ item.secuencia_evento }}</td>
+                    <td>{{ item.dividendo }}</td>
+                    <td>{{ item.valor_historico }}</td>
+                    <td>{% if item.isfut %}Sí{% else %}No{% endif %}</td>
+                    <td>{{ item.estado_tributario }}</td>
+
+                    {% for i in rango_factores %}
+                        <td>
+                            {% with factor=item.factormensual_set.all|get_item_by_factor:i %}
+                                {% if factor %}
+                                    {{ factor.valor_factor }}
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+
+            {% else %}
+                <tr>
+                    <td colspan="43" class="text-center py-4 text-muted">
+                        No hay datos cargados.
+                    </td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-3 d-flex justify-content-end gap-2">
+        <a href="{% url 'panelCalificacion' %}" class="btn btn-secondary">Volver</a>
+        <a href="{% url 'panelArchivoXFactor' %}" class="btn btn-outline-primary">Actualizar</a>
+    </div>
+
+</div>
+
 </body>
 </html>

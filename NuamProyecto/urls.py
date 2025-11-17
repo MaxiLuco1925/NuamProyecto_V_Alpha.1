@@ -16,9 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from usuarios.views import portada, iniciarSesion, registro, interfazinicio, market_data_api, Administrador, panel, panelAdmin, EditarRolusuario, adminEliminarUsuario, listausuarios,salir, descargar_calificacion,ver_detalle_calificacion,editar_calificacion_manual,eliminar_calificacion, verificar_codigo
+from usuarios.views import portada, iniciarSesion, registro, interfazinicio, market_data_api, Administrador, panel, panelAdmin, EditarRolusuario, adminEliminarUsuario, listausuarios,salir, descargar_calificacion,ver_detalle_calificacion,editar_calificacion_manual,eliminar_calificacion, verificar_codigo, auditoriaSesiones,panelArchivoXFactor
 from auditoria.views import cargaArchivos,x_factor, Configuración, ConfiguraciónAdmin, verificacionUsuario, reportes, Factor, x_monto, x_factor_Admin, x_monto_Admin,lecturaReportes,listadoUsuario
-from declaraciones.views  import ingresarCalificacion, x_factorCalculo, ingresarCalificacionAdmin, x_factorCalculoAdmin
+from declaraciones.views  import ingresarCalificacion, x_factorCalculo, ingresarCalificacionAdmin, x_factorCalculoAdmin,ProcesarArchivoCSV, carga_masiva_factores_view, carga_masiva_montos_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,10 +34,11 @@ urlpatterns = [
     path('Reportes/',reportes,name="Reportes"),
     path('panelCalificacion/', panel, name='panelCalificacion' ),
     path('panelCalificacionAdmin/', panelAdmin, name='panelCalificacionAdmin'),
+    path('auditoria/sesiones/',auditoriaSesiones, name="auditoriaSesiones" ),
     path('FactorImp/',Factor,name='FactorImp'),
-    path('x_factor/', x_factor, name='x_factor'),
+    path('carga/factores/', carga_masiva_factores_view, name='carga_factores'),
+    path('carga/montos/', carga_masiva_montos_view, name='carga_montos'),
     path('x_factor_Admin/', x_factor_Admin, name='x_factor_Admin'),
-    path('x_monto/', x_monto, name='x_monto'),
     path('x_monto_Admin/', x_monto_Admin, name='x_monto_Admin'),
     path('listadoUsuario/', listadoUsuario, name='listadoUsuario'),
     path('listausuarios/<int:pk>/editar/', EditarRolusuario, name='EditarRolusuario'),
@@ -55,6 +56,8 @@ urlpatterns = [
     path('editar/<int:pk>/', editar_calificacion_manual, name='editar_calificacion'),
     path('eliminar/<int:pk>/', eliminar_calificacion, name='eliminar_calificacion'),
     path('verificacion/', verificar_codigo, name='verificacion'),
+    path('ProcesarArchivoCSV/', ProcesarArchivoCSV, name='ProcesarArchivoCSV'),
+    path('panel/archivo-x-factor/', panelArchivoXFactor, name='panelArchivoXFactor'),
 
 ]
 

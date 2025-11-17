@@ -69,4 +69,18 @@ class Reportes(models.Model):
     
 
 
+class AuditoriaLog(models.Model):
+    tablaAfectada = models.CharField(max_length=100)
+    accion = models.CharField(max_length=50)
+    descripcion = models.TextField()
+    usuario = models.CharField(max_length=100)
+    fecha = models.DateTimeField()
+
+    class Meta:
+        managed = False  #esto es para que no cree la tabla o la trate de migrar
+        db_table = 'auditoria_log'
+
+    
+
+
 

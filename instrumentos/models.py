@@ -2,8 +2,6 @@ from django.db import models
 Paises_Choices=[
     ('Select',''),
     ('Chile', 'Chile'),
-    ('Perú', 'Perú'),
-    ('Colombia', 'Colombia'),
 ]
 
 

@@ -1,6 +1,5 @@
 import pytest
 from unittest import mock 
-from usuarios.views import portada
 from usuarios.models import Usuario
 from django.urls import reverse
 from django.contrib.auth.hashers import make_password
@@ -77,7 +76,7 @@ class TestVerificarCodigo:
         usuario_actualizado = Usuario.objects.get(id=usuario_no_verificado.id)
         assert usuario_actualizado.verificado is True
 
-        session_after = client.session
+        session_after = client.session 
         assert 'codigo_verificacion' not in session_after
 
     def test_verificar_codigo_post_incorrecto(self, client, usuario_no_verificado):

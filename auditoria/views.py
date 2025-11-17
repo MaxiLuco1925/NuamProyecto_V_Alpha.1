@@ -3,44 +3,44 @@ from usuarios.models import Usuario
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import ReporteForm
-from auditoria.models import Reportes
+from auditoria.models import Reportes, AuditoriaLog
 from django.http import JsonResponse
+from usuarios.views import asignaRol
 
-
+@asignaRol ("Corredor")
 def x_factor(request):
     return render(request, 'archivo_x_factor.html')
-
+@asignaRol ("Corredor")
 def x_monto(request):
     return render(request, 'archivo_x_monto.html')
-
+@asignaRol ("Administrador")
 def x_factor_Admin(request):
     return render(request, 'archivo_x_factorAdmin.html')
-
+@asignaRol("Administrador")
 def x_monto_Admin(request):
     return render(request, 'archivo_x_montoAdmin.html' )
-
+@asignaRol("Administrador")
 def listadoUsuario(request):
     usuarios = Usuario.objects.all()
     data = {'usuarios' : usuarios}
     return render(request, 'listadoUsuario.html', data)
-
+@asignaRol("Administrador")
 def lecturaReportes(request):
     reportes = Reportes.objects.all()
     data = {'reportes' : reportes}
     return render(request, 'lecturaReportes.html', data)
-
+@asignaRol("Administrador")
 def revisado(request, reporte_id):
     if request.method == 'POST':
         reporte = Reportes.objects.get(id = reporte_id) 
         reporte.estado = "Revisado"
         reporte.save()
         return JsonResponse({'success' : True})
-
+@asignaRol("Corredor")
 def Factor(request):
     factores = range(8, 38)
     contexto = {'factores': factores}
     return render(request,'FactorImpuestos.html',contexto)
-
 
 def Configuración(request):
     usuario_id = request.session.get('usuario_id')
@@ -52,7 +52,7 @@ def Configuración(request):
     except Usuario.DoesNotExist:
         messages.error(request, "Usuario no encontrado")
         return redirect('iniciarSesion')
-
+@asignaRol("Administrador")
 def ConfiguraciónAdmin(request):
     usuario_id = request.session.get('usuario_id')
     
@@ -66,7 +66,7 @@ def ConfiguraciónAdmin(request):
 
 def verificacionUsuario(request):
     return render(request,"Verificacion.html")
-
+@asignaRol("Corredor")
 def reportes(request):
     if request.method == 'POST':
         form = ReporteForm(request.POST, request.FILES)  # Agregado request.FILES
@@ -96,3 +96,7 @@ def cargaArchivos(request):
 
 
 
+@asignaRol("Administrador")
+def auditoria_seguridad(request):
+    registros = AuditoriaLog.objects.all().order_by('-fecha')#el "-" es para ordenar sin el guion es para ordenar desde el mas antiguo al mas nuevo y con es al reves
+    return render(request, 'auditoria_seguridad.html', {'registros': registros})

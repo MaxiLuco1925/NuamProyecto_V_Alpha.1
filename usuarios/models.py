@@ -1,4 +1,7 @@
 from django.db import models
+from django.contrib.auth.models import User
+
+
 
 
 class Rol(models.Model):
@@ -45,7 +48,23 @@ class Usuario(models.Model):
         comuna = models.CharField(max_length=70, blank=True)
         contraseña_hash = models.CharField(max_length=256)
         rol = models.ForeignKey(Rol, on_delete=models.SET_NULL, blank= True, null=True)
+        estado = models.CharField(max_length=20, null = True, blank= True)
         verificado = models.BooleanField(default=False)
+
+
 
         def __str__(self):
              return self.nombre 
+        
+
+
+class AuditoriaSesion(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, null=True, blank=True)
+    documento_intentado = models.CharField(max_length=100, blank=True)
+    exito = models.BooleanField()
+    rol = models.CharField(max_length=100, blank=True)
+    fecha = models.DateTimeField(auto_now_add=True)#auto_now_add=True sirve para asignar la fecha y hora de manera automatica
+
+    def __str__(self):
+        estado = "Éxito" if self.exito else "Fallido"
+        return f"{self.documento_intentado} - {estado} - {self.fecha}"

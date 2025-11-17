@@ -21,16 +21,17 @@ class CargaArchivo(models.Model):
         ('completa', 'Completa'),
         ('fallida', 'Fallida'),
     ]
-    archivo = models.FileField(upload_to = 'cargas/')
-    tipo_carga = models.CharField(max_length=20, choices = TIPO_CHOICES)
+
+    archivo = models.FileField(upload_to='cargas/')
+    tipo_carga = models.CharField(max_length=30, choices=TIPO_CHOICES)
     fecha_carga = models.DateTimeField(auto_now_add=True)
-    cargado_por = models.ForeignKey(Usuario, on_delete= models.CASCADE)
-    estado = models.CharField(max_length=20, choices= ESTADO_CHOICES)
+    cargado_por = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='procesando')
     total_registros = models.IntegerField(default=0)
     registros_exitosos = models.IntegerField(default=0)
-    mensaje_error = models.TextField(blank= True, null= True)
+    mensaje_error = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return self.archivo.usuario
+        return f"Carga #{self.id} - {self.tipo_carga} - {self.archivo.name if self.archivo else 'sin archivo'}"
 
 

@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from usuarios.forms import RegisterForm, InicioSesionForm
 from django.contrib import messages
-from usuarios.models import Usuario
+from usuarios.models import Usuario, AuditoriaSesion
 import yfinance as yf
 from django.core.mail import send_mail
 from django.conf import settings
+from auditoria.forms import CargaArchivoForm
 import random
 from declaraciones.forms import EditarCalificacionForm
 from django.contrib.auth.decorators import login_required
@@ -21,6 +22,7 @@ from instrumentos.models import Mercado
 from django.conf import settings
 import requests
 import os
+from django.db.models import Prefetch
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
@@ -31,6 +33,37 @@ import csv
 def portada(request):
     return render(request, "index.html")
 
+def asignaRol(*roles):
+    def decorador(view_func):
+        def wrapper(request, *args, **kwargs):
+            usuario_id = request.session.get('usuario_id')
+
+            if not usuario_id:
+                messages.error(request, "Debes iniciar sesión primero.")
+                return redirect('iniciarSesion')
+
+            try:
+                usuario = Usuario.objects.get(id=usuario_id)
+            except Usuario.DoesNotExist:
+                messages.error(request, "Usuario no encontrado.")
+                return redirect('iniciarSesion')
+
+
+            if not usuario.rol:
+                messages.error(request, "No tienes permisos para acceder.")
+                return redirect('interfazinicio')
+
+
+            if usuario.rol.descripcion not in roles:
+                messages.error(request, "No tienes permisos para esta sección.")
+                return redirect('interfazinicio')
+
+            return view_func(request, *args, **kwargs)
+        return wrapper
+    return decorador
+
+               
+
 def registro(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -38,15 +71,13 @@ def registro(request):
             usuario = form.save(commit=False)
             usuario.region = request.POST.get('region')
             usuario.comuna = request.POST.get('comuna')
-            usuario.verificado = False  # 🚫 No verificado aún
+            usuario.verificado = False 
             usuario.save()
 
-            # Generar código aleatorio de verificación
             codigo = random.randint(100000, 999999)
             request.session['codigo_verificacion'] = str(codigo)
             request.session['usuario_id'] = usuario.id
 
-            # Intentar enviar el correo
             try:
                 send_mail(
                     subject='Código de verificación NUAM',
@@ -55,11 +86,11 @@ def registro(request):
                     recipient_list=[usuario.email],
                     fail_silently=False,
                 )
-                messages.info(request, f"📩 Se envió un código de verificación a {usuario.email}")
+                messages.info(request, " Se envió un código de verificación a {usuario.email}")
             except Exception as e:
-                messages.error(request, f"❌ Error al enviar correo: {e}")
+                messages.error(request, " Error al enviar correo: {e}")
 
-            return redirect('verificacion')  # Redirige al HTML donde se ingresa el código
+            return redirect('verificacion') 
         else:
             return render(request, 'registro.html', {'form': form})
     else:
@@ -76,31 +107,51 @@ def iniciarSesion(request):
             try:
                 usuario = Usuario.objects.get(documento_identidad=documento)
             except Usuario.DoesNotExist:
-                messages.error(request, "❌ Documento no existe.")
+                AuditoriaSesion.objects.create(
+                    usuario = None,
+                    documento_intentado = documento,
+                    exito = False,
+                    rol=""
+                )
+                messages.error(request, " El Documento no existe.")
                 return render(request, 'InicioSesion.html', {'form': form})
 
-            # Validar contraseña
             if check_password(contraseña, usuario.contraseña_hash):
-                # Verificar si el correo fue validado
+                AuditoriaSesion.objects.create(
+                    usuario = usuario,
+                    documento_intentado=documento,
+                    exito = True,
+                    rol = usuario.rol.descripcion if usuario.rol else "Sin rol"
+                )
+
                 if not usuario.verificado:
-                    messages.warning(request, "⚠️ Debes verificar tu correo antes de iniciar sesión.")
-                    # 🔁 Redirige al ingreso del código si aún no está verificado
+                    messages.warning(request, "Debes verificar Primero tu correo antes de iniciar sesión.")
                     return redirect('verificacion')
 
-                # ✅ Guardar datos en sesión
                 request.session['usuario_id'] = usuario.id
                 request.session['usuario_nombre'] = usuario.nombre
                 request.session['usuario_documento'] = usuario.documento_identidad
 
+                if usuario.rol and usuario.rol.descripcion == "Administrador":
+                    return redirect("interfazAdmin")  
+                
                 return redirect("interfazinicio")
+
             else:
-                messages.error(request, "❌ Contraseña incorrecta.")
+                AuditoriaSesion.objects.create(
+                    usuario = usuario,
+                    documento_intentado = documento,
+                    exito = False,
+                    rol = usuario.rol.descripcion if usuario.rol else "Sin rol"
+                )
+                messages.error(request, " Contraseña incorrecta.")
         else:
-            messages.error(request, "❌ Credenciales inválidas.")
+            messages.error(request, " Credenciales inválidas.")
     else:
         form = InicioSesionForm()
 
     return render(request, 'InicioSesion.html', {'form': form})
+
 
 def interfazinicio(request):
     usuario_id = request.session.get('usuario_id')
@@ -171,19 +222,10 @@ def market_data_api(request):
 
     return JsonResponse(result)
 
+@asignaRol("Administrador")
 def Administrador(request):
-    if 'usuario_id' not in request.session:
-        return redirect('iniciarSesion')
-    try:
-        usuario = Usuario.objects.get(id=request.session['usuario_id'])
-        if not usuario.rol or usuario.rol.descripcion != "Administrador":
-            messages.error(request, "Debes ser Administrador !!!")
-            return redirect('interfazAdmin')
-    except Usuario.DoesNotExist:
-        return redirect('iniciarSesion')
-    
     return render(request, 'interfazAdministrador.html')
-
+@asignaRol("Corredor")    
 def panel(request):
     usuario = Usuario.objects.filter(id=request.session.get('usuario_id')).first()
     
@@ -219,7 +261,7 @@ def panel(request):
     })
 
 
-
+@asignaRol("Administrador")
 def panelAdmin(request):
     usuario = Usuario.objects.filter(id=request.session.get('usuario_id')).first()
     
@@ -253,11 +295,11 @@ def panelAdmin(request):
         'mercados' : mercados
          
     })
-                                                  
+@asignaRol("Administrador")                                                  
 def listausuarios(request):                                               
     usuarios = Usuario.objects.select_related('rol').order_by('nombre')  
     return render(request, 'adminlista.html', {'usuarios': usuarios})    
-
+@asignaRol("Administrador")
 def EditarRolusuario(request, pk):
     usuario = get_object_or_404(Usuario, pk = pk)
     if request.method == 'POST':
@@ -273,7 +315,7 @@ def EditarRolusuario(request, pk):
     
     return render(request, 'adminEditarRoles.html', {'form': form, 'usuario': usuario}) 
 
-                                                   
+@asignaRol("Admistrador")                                                   
 def adminEliminarUsuario(request, pk):                                   
     try:
         usuario = Usuario.objects.get(pk=pk)                               
@@ -293,7 +335,7 @@ def adminEliminarUsuario(request, pk):
 def salir(request):
     request.session.flush()
     return redirect('iniciarSesion')
-
+@asignaRol("Administrador")
 def descargar_calificacion(request, calificacion_id):
     calificacion = CalificacionTributaria.objects.get(id=calificacion_id)
 
@@ -349,7 +391,7 @@ def descargar_calificacion(request, calificacion_id):
     p.showPage()
     p.save()
     return response
-
+@asignaRol("Corredor")
 def ver_detalle_calificacion(request, calificacion_id):
     calificacion = get_object_or_404(CalificacionTributaria, id=calificacion_id)
     factores = calificacion.factormensual_set.all().order_by("numero_factor")
@@ -360,7 +402,7 @@ def ver_detalle_calificacion(request, calificacion_id):
 
 
 
-
+@asignaRol("Corredor")
 def editar_calificacion_manual(request, pk):
     calificacion = get_object_or_404(CalificacionTributaria, pk=pk)
     
@@ -376,7 +418,7 @@ def editar_calificacion_manual(request, pk):
 
     return render(request, 'CalificacionManul.html', {'form': form, 'calificacion': calificacion})
 
-
+@asignaRol("Administrador")
 def eliminar_calificacion(request, pk):
     calificacion = get_object_or_404(CalificacionTributaria, pk=pk)
     calificacion.delete()
@@ -395,17 +437,81 @@ def verificar_codigo(request):
         if codigo_ingresado == codigo_correcto and usuario_id:
             try:
                 usuario = Usuario.objects.get(id=usuario_id)
-                usuario.verificado = True  # ✅ Marcar como verificado
+                usuario.verificado = True 
                 usuario.save()
 
-                # Limpiar la sesión del código
                 request.session.pop('codigo_verificacion', None)
-                messages.success(request, "✅ Verificación exitosa. Ahora puedes iniciar sesión.")
+                messages.success(request, " Verificación exitosa. Ahora puedes iniciar sesión.")
                 return redirect('iniciarSesion')
             except Usuario.DoesNotExist:
-                messages.error(request, "❌ Usuario no encontrado.")
+                messages.error(request, " Usuario no encontrado.")
         else:
-            messages.error(request, "⚠️ Código incorrecto. Intenta nuevamente.")
+            messages.error(request, " Código incorrecto. Intenta nuevamente.")
 
     return render(request, 'Verificacion.html')
 
+
+
+def auditoriaSesiones(request):
+    usuario_id = request.session.get("usuario_id")
+
+    if not usuario_id:
+        messages.error(request, "Debes iniciar sesión primero.")
+        return redirect("iniciarSesion")
+
+
+    usuario = Usuario.objects.filter(id=usuario_id).first()
+
+
+    if not usuario or not usuario.rol or usuario.rol.descripcion != "Administrador":
+        messages.error(request, "No tienes permiso para acceder a auditorías.")
+        return redirect("interfazinicio")
+
+
+    auditorias = AuditoriaSesion.objects.select_related("usuario").order_by("-fecha")
+
+    return render(request, "auditoriaSesiones.html", {"auditorias": auditorias})
+
+
+@asignaRol("Corredor")
+def panelArchivoXFactor(request):
+    usuario = Usuario.objects.filter(id=request.session.get('usuario_id')).first()
+    if not usuario:
+        return redirect('iniciarSesion')
+
+    mercados = Mercado.objects.all()
+    instrumentos = Instrumento.objects.all()
+    años = CalificacionTributaria.objects.values_list(
+        'año_tributario', flat=True
+    ).distinct().order_by("año_tributario")
+
+    calificaciones = CalificacionTributaria.objects.select_related(
+        "instrumento", "usuario"
+    ).prefetch_related(
+        "factormensual_set"
+    ).filter(
+        origen__cargado_por=usuario
+    ).order_by("-fecha_pago")
+
+    # filtros GET
+    mercado = request.GET.get("mercado")
+    instrumento = request.GET.get("instrumento")
+    año = request.GET.get("año")
+
+    if mercado:
+        calificaciones = calificaciones.filter(instrumento__mercado=mercado)
+    if instrumento:
+        calificaciones = calificaciones.filter(instrumento__id=instrumento)
+    if año:
+        calificaciones = calificaciones.filter(año_tributario=año)
+
+    return render(request, "archivo_x_factor.html", {
+        "usuario": usuario,
+        "calificaciones": calificaciones,
+        "instrumentos": instrumentos,
+        "mercados": mercados,
+        "años": años,
+        "rango_factores": list(range(8, 38)),
+        "form": CargaArchivoForm(initial={"tipo_carga": "factores"}),
+        "carga": None
+    })
