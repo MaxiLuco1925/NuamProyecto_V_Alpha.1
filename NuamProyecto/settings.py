@@ -145,7 +145,7 @@ DATABASES ={
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'nuam_sql3',
         'USER': 'root',
-        'PASSWORD': 'Darklinkoscuroofward45@',
+        'PASSWORD': '',
         'HOST':'localhost',
         'PORT':3306
 
@@ -159,3 +159,4 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
