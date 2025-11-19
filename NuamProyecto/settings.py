@@ -138,7 +138,7 @@ pymysql.install_as_MySQLdb()
 DATABASES ={
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'nuam_sql3',
+        'NAME': '',
         'USER': '',
         'PASSWORD': '',
         'HOST':'localhost',
@@ -154,5 +154,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
 
 
