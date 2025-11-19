@@ -13,7 +13,8 @@ class IngresoCalificacionManualForm(forms.ModelForm):
     )
     instrumento = forms.ModelChoiceField(
         queryset= Instrumento.objects.all(),
-        empty_label= "Seleccione un instrumento",
+        empty_label= "No inscrito",
+        required=False,
         widget=forms.Select(attrs={'class' : 'form-control'})
     )
 
@@ -67,7 +68,7 @@ class IngresoCalificacionManualForm(forms.ModelForm):
             )
 
             calificacion = super().save(commit=False)
-            calificacion.instrumento = self.cleaned_data = ['instrumento']
+            calificacion.instrumento = self.cleaned_data['instrumento']
             calificacion.declaracion = declaracion
             calificacion.factor = factor
             calificacion.isfut = self.cleaned_data_data.get('isfut', False)

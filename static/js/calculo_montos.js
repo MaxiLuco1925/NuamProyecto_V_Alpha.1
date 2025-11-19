@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function(){
-    // --- Constantes ---
     const FACTOR_CALC_START = 8;
     const FACTOR_CALC_END = 37;
     

@@ -25,3 +25,7 @@ def get_item_by_factor(diccionario, factor):
         return diccionario.get(factor)
     except Exception:
         return None
+    
+@register.filter
+def get_item_by_factor(factors, numero):
+    return factors.filter(numero_factor=numero).first()

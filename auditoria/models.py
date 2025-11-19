@@ -12,7 +12,7 @@ class CalificacionTributaria(models.Model):
     ('Validado', 'Validado'),
     ('Rechazado', 'Rechazado'),
 ]
-    instrumento = models.ForeignKey(Instrumento, on_delete=models.CASCADE, blank= True)
+    instrumento = models.ForeignKey(Instrumento, on_delete=models.CASCADE, blank= True, null=True)
     declaracion = models.ForeignKey(DeclaracionJurada, on_delete=models.CASCADE, null=True, blank=True)
     fecha_pago = models.DateTimeField()
     descripcion = models.TextField()
@@ -22,7 +22,7 @@ class CalificacionTributaria(models.Model):
     año_tributario = models.IntegerField()
     isfut = models.BooleanField(default=False)
     origen = models.ForeignKey(CargaArchivo, on_delete= models.SET_NULL, null = True, blank= True, help_text= "Carga de archivo que originó esta calificación")
-    estado_tributario = models.CharField(max_length=50, default="Activo")
+    estado_tributario = models.CharField(max_length=50, default="Manual")
     usuario = models.ForeignKey(Usuario,on_delete=models.CASCADE, blank= True )
 
     def __str__(self):

@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from usuarios.views import portada, iniciarSesion, registro, interfazinicio, market_data_api, Administrador, panel, panelAdmin, EditarRolusuario, adminEliminarUsuario, listausuarios,salir, descargar_calificacion,ver_detalle_calificacion,editar_calificacion_manual,eliminar_calificacion, verificar_codigo, auditoriaSesiones,panelArchivoXFactor
 from auditoria.views import cargaArchivos,x_factor, Configuración, ConfiguraciónAdmin, verificacionUsuario, reportes, Factor, x_monto, x_factor_Admin, x_monto_Admin,lecturaReportes,listadoUsuario
-from declaraciones.views  import ingresarCalificacion, x_factorCalculo, ingresarCalificacionAdmin, x_factorCalculoAdmin,ProcesarArchivoCSV, carga_masiva_factores_view, carga_masiva_montos_view
+from declaraciones.views  import ingresarCalificacion, x_factorCalculo, ingresarCalificacionAdmin, x_factorCalculoAdmin,ProcesarArchivoCSV, carga_masiva_factores_view, carga_masiva_montos_view, ProcesarArchivoMontosCSV
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -57,6 +57,7 @@ urlpatterns = [
     path('eliminar/<int:pk>/', eliminar_calificacion, name='eliminar_calificacion'),
     path('verificacion/', verificar_codigo, name='verificacion'),
     path('ProcesarArchivoCSV/', ProcesarArchivoCSV, name='ProcesarArchivoCSV'),
+    path('ProcesarArchivoMontosCSV/', ProcesarArchivoMontosCSV, name = 'ProcesarArchivoMontosCSV'),
     path('panel/archivo-x-factor/', panelArchivoXFactor, name='panelArchivoXFactor'),
 
 ]

@@ -16,6 +16,7 @@ from django.utils.dateparse import parse_date
 from auditoria.forms import CargaArchivoForm
 from declaraciones.models import CargaArchivo
 from usuarios.views import asignaRol
+from instrumentos.models import Mercado
 
 @asignaRol("Corredor")
 def ingresarCalificacion(request):
@@ -36,7 +37,7 @@ def ingresarCalificacion(request):
     return render(request, 'CalificacionManul.html', {'form': form})
 
 
-@asignaRol("Corredor")
+@asignaRol("Corredor", "Administrador")
 def x_factorCalculo(request):
     calificacion_id = request.session.get('calificacion_id')
     
@@ -216,25 +217,22 @@ def x_factorCalculoAdmin(request):
 
 def ProcesarArchivoCSV(archivo, tipo_carga, usuario, carga_origen):
     """
-    Procesa CSV tolerante:
-    - acepta encabezados 'Instrumento' o 'codigo_instrumento' (o 'codigo')
-    - intenta match por Instrumento.codigo, Instrumento.nombre (iexact) y fallback icontains
-    - registra errores en carga_origen.mensaje_error
+    Procesa CSV tolerante y registra errores en carga_origen.
     """
     texto = None
     try:
         contenido = archivo.read()
         if isinstance(contenido, bytes):
-            texto = contenido.decode('utf-8-sig')  # limpia BOM si existe
+            texto = contenido.decode('utf-8-sig')
         else:
             texto = str(contenido)
+        archivo.seek(0) 
     except Exception as e:
         carga_origen.mensaje_error = f"Error leyendo archivo: {e}"
         carga_origen.estado = 'fallida'
         carga_origen.save()
         return []
 
-    # normalizar fin de linea y construir reader
     stream = io.StringIO(texto)
     reader = csv.DictReader(stream)
 
@@ -243,7 +241,6 @@ def ProcesarArchivoCSV(archivo, tipo_carga, usuario, carga_origen):
     exitosos = 0
     calificaciones_creadas = []
 
-    # columnas esperadas mínimas (para validación)
     header = reader.fieldnames or []
     if not header:
         carga_origen.mensaje_error = "CSV sin encabezados detectables."
@@ -251,52 +248,43 @@ def ProcesarArchivoCSV(archivo, tipo_carga, usuario, carga_origen):
         carga_origen.save()
         return []
 
-    # iterar filas
     for fila in reader:
         total += 1
         try:
-            # detecta campo instrumento (soporta diferentes nombres)
             instrumento_val = (fila.get('Instrumento') or
-                               fila.get('instrumento') or
-                               fila.get('codigo_instrumento') or
-                               fila.get('codigo') or
-                               fila.get('Codigo') or
-                               '').strip()
+                            fila.get('instrumento') or
+                            fila.get('codigo_instrumento') or
+                            fila.get('codigo') or
+                            fila.get('Codigo') or
+                            '').strip()
 
             if not instrumento_val:
                 raise ValueError("Columna 'Instrumento' o 'codigo_instrumento' vacía en esta fila.")
 
             instrumento = None
-            # intenta match por campo 'codigo' si tu modelo tiene 'codigo'
             try:
                 instrumento = Instrumento.objects.get(codigo__iexact=instrumento_val)
-            except Exception:
-                instrumento = None
-
-            # si no encontró por codigo, intenta por nombre exacto
-            if not instrumento:
+            except Instrumento.DoesNotExist:
                 instrumento = Instrumento.objects.filter(nombre__iexact=instrumento_val).first()
-
-            # si todavía no hay match, intenta contains (último recurso)
-            if not instrumento:
-                instrumento = Instrumento.objects.filter(nombre__icontains=instrumento_val).first()
+                if not instrumento:
+                    instrumento = Instrumento.objects.filter(nombre__icontains=instrumento_val).first()
 
             if not instrumento:
                 raise ValueError(f"Instrumento '{instrumento_val}' no encontrado en la base de datos.")
 
-            # parseo y defaults
             secuencia = int(fila.get('Secuencia') or fila.get('secuencia') or 0)
             ejercicio = int(fila.get('Ejercicio') or fila.get('ejercicio') or 0)
+            from django.utils.dateparse import parse_date
             fecha_pago = parse_date(fila.get('Fecha') or fila.get('fecha') or '')
             descripcion = (fila.get('Descripcion') or fila.get('descripcion') or '').strip()
-            # normalizar numeros: acepta comas como separador decimal -> reemplaza coma por punto
+
             def to_float_safe(s):
                 if s is None:
                     return 0.0
                 s = str(s).strip()
                 if not s:
                     return 0.0
-                s = s.replace(',', '.')  # convierte "0,10" -> "0.10"
+                s = s.replace(',', '.')
                 try:
                     return float(s)
                 except Exception:
@@ -304,11 +292,9 @@ def ProcesarArchivoCSV(archivo, tipo_carga, usuario, carga_origen):
 
             dividendo = to_float_safe(fila.get('Dividendo') or fila.get('dividendo'))
             valor_historico = to_float_safe(fila.get('Valor Historico') or fila.get('valor historico') or fila.get('valor_historico'))
-
             isfut_raw = (fila.get('ISFUT') or fila.get('isfut') or '').strip().lower()
             isfut = isfut_raw in ['si', 's', 'yes', 'y', 'true', '1']
 
-            # Crear/actualizar calificacion y factores en transacción
             with transaction.atomic():
                 calificacion, creada = CalificacionTributaria.objects.update_or_create(
                     instrumento=instrumento,
@@ -327,16 +313,14 @@ def ProcesarArchivoCSV(archivo, tipo_carga, usuario, carga_origen):
                 )
 
                 calificaciones_creadas.append(calificacion)
-
                 suma_factores = Decimal('0')
                 suma_error = False
 
-                # intenta leer factores 8..37; si faltan, los pone 0
                 for i in range(8, 38):
                     col = f'Factor {i}'
                     raw = (fila.get(col) or fila.get(col.lower()) or '0')
                     raw = str(raw).strip() or '0'
-                    raw = raw.replace(',', '.')  # acepta coma decimal
+                    raw = raw.replace(',', '.')
                     try:
                         valor = Decimal(raw)
                     except InvalidOperation:
@@ -366,9 +350,7 @@ def ProcesarArchivoCSV(archivo, tipo_carga, usuario, carga_origen):
 
         except Exception as e:
             errores.append(f"Fila {total}: Instrumento '{instrumento_val}' -> {str(e)}")
-            # continuar con la siguiente fila
 
-    # actualizar estado de carga
     carga_origen.total_registros = total
     carga_origen.registros_exitosos = exitosos
     carga_origen.estado = (
@@ -378,7 +360,6 @@ def ProcesarArchivoCSV(archivo, tipo_carga, usuario, carga_origen):
     )
     carga_origen.mensaje_error = "\n".join(errores) if errores else None
     carga_origen.save()
-
     return calificaciones_creadas
 
 
@@ -403,15 +384,14 @@ def carga_masiva_factores_view(request):
             archivo = request.FILES["archivo"]
             tipo_carga = form.cleaned_data["tipo_carga"]
 
-            # Crear registro de seguimiento en base de datos
+            archivo.seek(0)
             carga_origen = CargaArchivo.objects.create(
                 archivo=archivo,
                 tipo_carga=tipo_carga,
                 cargado_por=usuario,
                 estado="procesando"
             )
-
-            # Procesar archivo y devolver calificaciones creadas
+            archivo.seek(0) 
             calificaciones = ProcesarArchivoCSV(
                 archivo=archivo,
                 tipo_carga=tipo_carga,
@@ -429,16 +409,256 @@ def carga_masiva_factores_view(request):
     })
 
 
+def ProcesarArchivoMontosCSV(archivo, tipo_carga, usuario, carga_origen):
+    """
+    Procesa CSV con montos y calcula automáticamente los factores 8-19.
+    Crea instrumentos automáticamente si no existen, asignando el mercado correcto.
+    """
+    texto = None
+    try:
+        contenido = archivo.read()
+        if isinstance(contenido, bytes):
+            texto = contenido.decode('utf-8-sig')
+        else:
+            texto = str(contenido)
+        archivo.seek(0)
+    except Exception as e:
+        carga_origen.mensaje_error = f"Error leyendo archivo: {e}"
+        carga_origen.estado = 'fallida'
+        carga_origen.save()
+        return []
 
+    stream = io.StringIO(texto)
+    reader = csv.DictReader(stream)
 
+    errores = []
+    total = 0
+    exitosos = 0
+    calificaciones_creadas = []
+
+    header = reader.fieldnames or []
+    if not header:
+        carga_origen.mensaje_error = "CSV sin encabezados detectables."
+        carga_origen.estado = 'fallida'
+        carga_origen.save()
+        return []
+
+    mercados_por_tipo = {
+        'ACC': 'Acciones',
+        'BON': 'Bonos', 
+        'CRY': 'Criptomonedas',
+        'FIN': 'Instrumentos financieros',
+        'EXP': 'Exportaciones',
+        'IMP': 'Importaciones',
+        'SER': 'Servicios',
+        'REN': 'Renta inmobiliaria',
+        'COM': 'Comercio',
+        'AGR': 'Agroindustria'
+    }
+    
+    mercados_dict = {mercado.nombre: mercado for mercado in Mercado.objects.all()}
+    if not mercados_dict:
+        errores.append("No hay mercados configurados en el sistema")
+        carga_origen.mensaje_error = "\n".join(errores)
+        carga_origen.estado = 'fallida'
+        carga_origen.save()
+        return []
+
+    for fila in reader:
+        total += 1
+        instrumento_val = None
+        try:
+            instrumento_val = (fila.get('Instrumento') or
+                            fila.get('instrumento') or
+                            fila.get('codigo_instrumento') or
+                            fila.get('codigo') or
+                            fila.get('Codigo') or
+                            '').strip()
+
+            if not instrumento_val:
+                raise ValueError("Columna 'Instrumento' o 'codigo_instrumento' vacía en esta fila.")
+            instrumento = None
+            try:
+                instrumento = Instrumento.objects.get(codigo__iexact=instrumento_val)
+                print(f" Instrumento encontrado: {instrumento_val}")
+            except Instrumento.DoesNotExist:
+                mercado_asignado = None
+                for prefijo, mercado_nombre in mercados_por_tipo.items():
+                    if instrumento_val.startswith(prefijo):
+                        mercado_asignado = mercados_dict.get(mercado_nombre)
+                        break
+                
+                if not mercado_asignado:
+                    mercado_asignado = list(mercados_dict.values())[0]
+                
+                tipo_instrumento = mercados_por_tipo.get(instrumento_val[:3], "Acción")
+                instrumento = Instrumento.objects.create(
+                    codigo=instrumento_val,
+                    nombre=f"Instrumento {instrumento_val}",
+                    mercado=mercado_asignado,
+                    tipo_instrumento=tipo_instrumento
+                )
+                print(f" Instrumento creado: {instrumento_val} en mercado {mercado_asignado.nombre}")
+
+            secuencia = int(fila.get('Secuencia') or fila.get('secuencia') or 0)
+            ejercicio = int(fila.get('Ejercicio') or fila.get('ejercicio') or 0)
+            
+            from django.utils.dateparse import parse_date
+            fecha_pago_str = fila.get('Fecha') or fila.get('fecha') or ''
+            fecha_pago = parse_date(fecha_pago_str)
+            if not fecha_pago:
+                fecha_pago = timezone.now().date()
+                
+            descripcion = (fila.get('Descripcion') or fila.get('descripcion') or f"Dividendo {instrumento_val}").strip()
+
+            def to_float_safe(s):
+                if s is None:
+                    return 0.0
+                s = str(s).strip()
+                if not s:
+                    return 0.0
+                s = s.replace(',', '.')
+                try:
+                    return float(s)
+                except Exception:
+                    raise ValueError(f"Valor numérico inválido: '{s}'")
+
+            dividendo = to_float_safe(fila.get('Dividendo') or fila.get('dividendo'))
+            valor_historico = to_float_safe(fila.get('Valor Historico') or fila.get('valor historico') or fila.get('valor_historico'))
+            isfut_raw = (fila.get('ISFUT') or fila.get('isfut') or '').strip().lower()
+            isfut = isfut_raw in ['si', 's', 'yes', 'y', 'true', '1']
+
+            montos = {}
+            total_montos = 0.0
+            
+            for i in range(1, 13):
+                col_monto = f'Monto {i}'
+                raw_monto = (fila.get(col_monto) or fila.get(col_monto.lower()) or '0')
+                monto_valor = to_float_safe(raw_monto)
+                montos[i] = monto_valor
+                total_montos += monto_valor
+
+            if total_montos == 0:
+                raise ValueError("El total de los Montos ingresados es igual a 0. ¡No se puede calcular!")
+
+            with transaction.atomic():
+                calificacion, creada = CalificacionTributaria.objects.update_or_create(
+                    instrumento=instrumento,
+                    secuencia_evento=secuencia,
+                    año_tributario=ejercicio,
+                    usuario=usuario,
+                    defaults={
+                        'fecha_pago': fecha_pago,
+                        'descripcion': descripcion,
+                        'dividendo': dividendo,
+                        'valor_historico': valor_historico,
+                        'isfut': isfut,
+                        'origen': carga_origen,
+                        'estado_tributario': 'procesado'
+                    }
+                )
+
+                calificaciones_creadas.append(calificacion)
+                suma_factores = Decimal('0')
+
+                for factor_num in range(8, 38):
+                    calculo = Decimal('0')
+                    
+                    if 8 <= factor_num <= 19:
+                        monto_index = factor_num - 7
+                        monto_asociado = montos.get(monto_index, 0.0)
+                        
+                        if monto_asociado > 0 and total_montos > 0:
+                            calculo = Decimal(str(monto_asociado)) / Decimal(str(total_montos))
+                    
+                    FactorMensual.objects.update_or_create(
+                        calificacion=calificacion,
+                        numero_factor=factor_num,
+                        defaults={
+                            'valor_factor': float(calculo),
+                            'fecha_factor': fecha_pago,
+                            'usuario': usuario,
+                            'carga_origen': carga_origen,
+                            'descripcion': f'Factor {factor_num}' + (f' (calculado desde Monto {monto_index})' if 8 <= factor_num <= 19 else '')
+                        }
+                    )
+                    
+                    if 8 <= factor_num <= 19:
+                        suma_factores += calculo
+
+                suma_redondeada = round(suma_factores, 6)
+                if suma_redondeada > Decimal('1.000000'):
+                    errores.append(f"Fila {total}: suma factores 8-19 = {suma_redondeada:.6f} > 1.000000 para instrumento '{instrumento_val}'")
+                elif suma_redondeada < Decimal('0.999999'):
+                    if suma_redondeada < Decimal('0.999000'):
+                        errores.append(f"Fila {total}: suma factores 8-19 = {suma_redondeada:.6f} < 1.000000 para instrumento '{instrumento_val}'")
+                    else:
+                        exitosos += 1
+                else:
+                    exitosos += 1
+
+        except Exception as e:
+            if instrumento_val:
+                errores.append(f"Fila {total}: Instrumento '{instrumento_val}' -> {str(e)}")
+            else:
+                errores.append(f"Fila {total}: Error -> {str(e)}")
+
+    carga_origen.total_registros = total
+    carga_origen.registros_exitosos = exitosos
+    carga_origen.estado = (
+        'completa' if exitosos == total and total > 0 else
+        'fallida' if exitosos == 0 and total > 0 else
+        'procesando'
+    )
+    carga_origen.mensaje_error = "\n".join(errores) if errores else None
+    carga_origen.save()
+    
+    print(f" Procesamiento completado: {exitosos}/{total} registros exitosos")
+    return calificaciones_creadas
 
 @asignaRol("Corredor")
-def carga_masiva_montos_view(request):
-    form = CargaArchivoForm(initial={'tipo_carga': 'montos:dj1948'})
-    return render(request, 'archivo_x_factor.html', {
-        'form': form,
-        'calificaciones': [],
-        'carga': None,
-        'rango_factores': list(range(8, 38))
-    })
 
+def carga_masiva_montos_view(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('iniciarSesion')
+
+    usuario = Usuario.objects.filter(id=usuario_id).first()
+    if not usuario:
+        return redirect("iniciarSesion")
+
+    calificaciones = []
+    carga_origen = None
+
+    if request.method == "POST":
+        form = CargaArchivoForm(request.POST, request.FILES)
+        
+        if form.is_valid():
+            archivo = request.FILES["archivo"]
+
+            tipo_carga = 'montos:dj1948'
+            
+            archivo.seek(0)
+            carga_origen = CargaArchivo.objects.create(
+                archivo=archivo,
+                tipo_carga=tipo_carga, 
+                cargado_por=usuario,
+                estado="procesando"
+            )
+            archivo.seek(0)
+            calificaciones = ProcesarArchivoMontosCSV(
+                archivo=archivo,
+                tipo_carga=tipo_carga,
+                usuario=usuario,
+                carga_origen=carga_origen
+            )
+    else:
+        form = CargaArchivoForm(initial={'tipo_carga': 'montos:dj1948'})
+
+    return render(request, "archivo_x_montos.html", {
+        "form": form,
+        "calificaciones": calificaciones,
+        "carga": carga_origen,
+        "rango_montos": list(range(1, 30)),
+        "rango_factores": list(range(8, 38)),
+    })

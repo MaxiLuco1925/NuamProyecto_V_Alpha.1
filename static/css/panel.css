@@ -156,3 +156,18 @@
   text-align: center; /* Centra el texto */
 }
 
+.custom-toast {
+            background-color: #000000 !important;
+            color: #ff8c00 !important;
+            border: 1px solid #ff8c00 !important;
+        }
+        .custom-toast .toast-body {
+            background-color: #000000 !important;
+            color: #ff8c00 !important;
+        }
+        .custom-toast .bi {
+            color: #ff8c00 !important;
+        }
+        .custom-toast .btn-close {
+            filter: invert(1) brightness(2) !important;
+        }
