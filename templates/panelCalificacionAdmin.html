@@ -12,6 +12,25 @@
     <title>Búsqueda Calificaciones Tributarias</title>
 </head> 
 <body>
+    <!-- Toast Container para mensajes -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+        {% for message in messages %}
+            <div class="toast custom-toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+                <div class="d-flex">
+                    <div class="toast-body d-flex align-items-center">
+                        <i class="bi 
+                            {% if message.tags == 'success' %}bi-check-circle-fill
+                            {% elif message.tags == 'error' %}bi-exclamation-triangle-fill
+                            {% elif message.tags == 'warning' %}bi-exclamation-triangle-fill
+                            {% else %}bi-info-circle-fill{% endif %} me-2"></i>
+                        <span>{{ message }}</span>
+                    </div>
+                    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
     <header class="nuam-header">
         <div class="container-fluid d-flex justify-content-between align-items-center p-3">
             <img src="{% static 'image/NUAM.png' %}" alt="Logo NUAM" class="nuam-logo-header">
@@ -66,6 +85,12 @@
                     </a>
                     <a href="{% url 'calificacionAdmin' %}" class="btn btn-success">
                         <i class="bi bi-plus-circle me-2"></i>Nueva Calificación
+                    </a>
+                    <a href="{% url 'carga_factores_Admin' %}" class="btn btn-secondary">
+                        <i class="bi bi-file-earmark-arrow-down"></i>Cargar archivo por Factor
+                    </a>
+                    <a href="{% url 'carga_montos_Admin' %}" class="btn btn-secondary">
+                        <i class="bi bi-file-earmark-arrow-down"></i>Cargar archivo por Monto
                     </a>
                 </div>
             </form>
@@ -130,7 +155,7 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    <span class="badge {% if cal.estado_tributario == 'Activo' %}bg-success{% else %}bg-danger{% endif %}">
+                                    <span class="badge {% if cal.estado_tributario == 'Manual' %}bg-success{% else %}bg-danger{% endif %}">
                                         {{ cal.estado_tributario }}
                                     </span>
                                 </td>
@@ -147,12 +172,6 @@
                                         </a>
                                         <a href="{% url 'descargar_calificacion' cal.id %}" class="btn btn-sm btn-outline-success" title="Descargar CSV">
                                             <i class="bi bi-download"></i>
-                                        </a>
-                                        <a href="{% url 'eliminar_calificacion' cal.id %}" 
-                                        class="btn btn-sm btn-outline-danger" 
-                                        title="Eliminar"
-                                        onclick="return confirmarEliminacion('{{ cal.id }}');">
-                                        <i class="bi bi-trash"></i>
                                         </a>
                                     </div>
                                 </td>
@@ -190,6 +209,18 @@
             </div>
         </div>
     </div>
-<script src="{% static 'js/Mensajes.js' %}"></script>
+
+    <script src="{% static 'js/Mensajes.js' %}"></script>
+    
+    <!-- Script para mostrar los toasts automáticamente -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+            var toastList = toastElList.map(function(toastEl) {
+                return new bootstrap.Toast(toastEl);
+            });
+            toastList.forEach(toast => toast.show());
+        });
+    </script>
 </body>
 </html>

@@ -10,25 +10,33 @@ from usuarios.views import asignaRol
 @asignaRol ("Corredor")
 def x_factor(request):
     return render(request, 'archivo_x_factor.html')
+
 @asignaRol ("Corredor")
 def x_monto(request):
     return render(request, 'archivo_x_monto.html')
+
 @asignaRol ("Administrador")
 def x_factor_Admin(request):
     return render(request, 'archivo_x_factorAdmin.html')
+
 @asignaRol("Administrador")
 def x_monto_Admin(request):
     return render(request, 'archivo_x_montoAdmin.html' )
+
 @asignaRol("Administrador")
 def listadoUsuario(request):
     usuarios = Usuario.objects.all()
     data = {'usuarios' : usuarios}
     return render(request, 'listadoUsuario.html', data)
+
+
 @asignaRol("Administrador")
 def lecturaReportes(request):
     reportes = Reportes.objects.all()
     data = {'reportes' : reportes}
     return render(request, 'lecturaReportes.html', data)
+
+
 @asignaRol("Administrador")
 def revisado(request, reporte_id):
     if request.method == 'POST':
@@ -36,11 +44,20 @@ def revisado(request, reporte_id):
         reporte.estado = "Revisado"
         reporte.save()
         return JsonResponse({'success' : True})
+    
+    
 @asignaRol("Corredor")
 def Factor(request):
     factores = range(8, 38)
     contexto = {'factores': factores}
     return render(request,'FactorImpuestos.html',contexto)
+
+@asignaRol("Administrador")
+def FactorAdmin(request):
+    factores = range(8, 38)
+    contexto = {'factores': factores}
+    return render(request,'FactorImpuestosAdmin.html',contexto)
+
 
 def Configuración(request):
     usuario_id = request.session.get('usuario_id')
@@ -52,6 +69,8 @@ def Configuración(request):
     except Usuario.DoesNotExist:
         messages.error(request, "Usuario no encontrado")
         return redirect('iniciarSesion')
+    
+
 @asignaRol("Administrador")
 def ConfiguraciónAdmin(request):
     usuario_id = request.session.get('usuario_id')
@@ -66,6 +85,8 @@ def ConfiguraciónAdmin(request):
 
 def verificacionUsuario(request):
     return render(request,"Verificacion.html")
+
+
 @asignaRol("Corredor")
 def reportes(request):
     if request.method == 'POST':

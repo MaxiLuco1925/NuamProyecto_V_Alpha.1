@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from usuarios.forms import RegisterForm, InicioSesionForm
+from usuarios.forms import RegisterForm, InicioSesionForm, ResetearContraseñaForm
 from django.contrib import messages
 from usuarios.models import Usuario, AuditoriaSesion
 import yfinance as yf
@@ -14,7 +14,7 @@ from django.views.decorators.http import require_http_methods
 from auditoria.models import Instrumento
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import check_password
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, get_user_model
 from usuarios.forms import UsuarioRolForm
 from auditoria.models import CalificacionTributaria
 from declaraciones.forms import IngresoCalificacionManualForm
@@ -29,6 +29,7 @@ from reportlab.lib.units import cm
 import json
 from django.http import HttpResponse
 import csv
+from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmView
 
 def portada(request):
     return render(request, "index.html")
@@ -318,7 +319,8 @@ def panelAdmin(request):
 @asignaRol("Administrador")                                                  
 def listausuarios(request):                                               
     usuarios = Usuario.objects.select_related('rol').order_by('nombre')  
-    return render(request, 'adminlista.html', {'usuarios': usuarios})    
+    return render(request, 'adminlista.html', {'usuarios': usuarios}) 
+   
 @asignaRol("Administrador")
 def EditarRolusuario(request, pk):
     usuario = get_object_or_404(Usuario, pk = pk)
@@ -356,7 +358,7 @@ def salir(request):
     request.session.flush()
     return redirect('iniciarSesion')
 
-@asignaRol("Administrador", "Corredor")
+@asignaRol("Corredor")
 def descargar_calificacion(request, calificacion_id):
     calificacion = CalificacionTributaria.objects.get(id=calificacion_id)
 
@@ -412,6 +414,7 @@ def descargar_calificacion(request, calificacion_id):
     p.showPage()
     p.save()
     return response
+
 @asignaRol("Corredor")
 def ver_detalle_calificacion(request, calificacion_id):
     calificacion = get_object_or_404(CalificacionTributaria, id=calificacion_id)
@@ -514,7 +517,6 @@ def panelArchivoXFactor(request):
         origen__cargado_por=usuario
     ).order_by("-fecha_pago")
 
-    # filtros GET
     mercado = request.GET.get("mercado")
     instrumento = request.GET.get("instrumento")
     año = request.GET.get("año")
@@ -536,3 +538,58 @@ def panelArchivoXFactor(request):
         "form": CargaArchivoForm(initial={"tipo_carga": "factores"}),
         "carga": None
     })
+
+
+
+
+
+@asignaRol("Administrador")
+def panelArchivoXFactorAdmin(request):
+    usuario = Usuario.objects.filter(id=request.session.get('usuario_id')).first()
+    if not usuario:
+        return redirect('iniciarSesion')
+
+    mercados = Mercado.objects.all()
+    instrumentos = Instrumento.objects.all()
+    años = CalificacionTributaria.objects.values_list(
+        'año_tributario', flat=True
+    ).distinct().order_by("año_tributario")
+
+    calificaciones = CalificacionTributaria.objects.select_related(
+        "instrumento", "usuario"
+    ).prefetch_related(
+        "factormensual_set"
+    ).filter(
+        origen__cargado_por=usuario
+    ).order_by("-fecha_pago")
+
+    mercado = request.GET.get("mercado")
+    instrumento = request.GET.get("instrumento")
+    año = request.GET.get("año")
+
+    if mercado:
+        calificaciones = calificaciones.filter(instrumento__mercado=mercado)
+    if instrumento:
+        calificaciones = calificaciones.filter(instrumento__id=instrumento)
+    if año:
+        calificaciones = calificaciones.filter(año_tributario=año)
+
+    return render(request, "archivo_x_factorAdmin.html", {
+        "usuario": usuario,
+        "calificaciones": calificaciones,
+        "instrumentos": instrumentos,
+        "mercados": mercados,
+        "años": años,
+        "rango_factores": list(range(8, 38)),
+        "form": CargaArchivoForm(initial={"tipo_carga": "factores"}),
+        "carga": None
+    })
+
+
+
+
+
+
+
+
+

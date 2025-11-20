@@ -34,7 +34,7 @@ def ingresarCalificacion(request):
             return redirect('factorListado')
     else:
         form = forms.IngresoCalificacionManualForm()
-    return render(request, 'CalificacionManul.html', {'form': form})
+    return render(request, 'CalificacionManual.html', {'form': form})
 
 
 @asignaRol("Corredor", "Administrador")
@@ -662,3 +662,102 @@ def carga_masiva_montos_view(request):
         "rango_montos": list(range(1, 30)),
         "rango_factores": list(range(8, 38)),
     })
+
+
+
+
+@asignaRol("Administrador")
+def carga_masiva_factores_Admin(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('iniciarSesion')
+
+    usuario = Usuario.objects.filter(id=usuario_id).first()
+    if not usuario:
+        return redirect("iniciarSesion")
+
+    calificaciones = []
+    carga_origen = None
+
+    if request.method == "POST":
+        form = CargaArchivoForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            archivo = request.FILES["archivo"]
+            tipo_carga = form.cleaned_data["tipo_carga"]
+
+            archivo.seek(0)
+            carga_origen = CargaArchivo.objects.create(
+                archivo=archivo,
+                tipo_carga=tipo_carga,
+                cargado_por=usuario,
+                estado="procesando"
+            )
+            archivo.seek(0) 
+            calificaciones = ProcesarArchivoCSV(
+                archivo=archivo,
+                tipo_carga=tipo_carga,
+                usuario=usuario,
+                carga_origen=carga_origen
+            )
+    else:
+        form = CargaArchivoForm(initial={"tipo_carga": "factores"})
+
+    return render(request, "archivo_x_factorAdmin.html", {
+        "form": form,
+        "calificaciones": calificaciones,
+        "carga": carga_origen,
+        "rango_factores": list(range(8, 38)),
+    })
+
+
+
+@asignaRol("Administrador")
+
+def carga_masiva_montos_Admin(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('iniciarSesion')
+
+    usuario = Usuario.objects.filter(id=usuario_id).first()
+    if not usuario:
+        return redirect("iniciarSesion")
+
+    calificaciones = []
+    carga_origen = None
+
+    if request.method == "POST":
+        form = CargaArchivoForm(request.POST, request.FILES)
+        
+        if form.is_valid():
+            archivo = request.FILES["archivo"]
+
+            tipo_carga = 'montos:dj1948'
+            
+            archivo.seek(0)
+            carga_origen = CargaArchivo.objects.create(
+                archivo=archivo,
+                tipo_carga=tipo_carga, 
+                cargado_por=usuario,
+                estado="procesando"
+            )
+            archivo.seek(0)
+            calificaciones = ProcesarArchivoMontosCSV(
+                archivo=archivo,
+                tipo_carga=tipo_carga,
+                usuario=usuario,
+                carga_origen=carga_origen
+            )
+    else:
+        form = CargaArchivoForm(initial={'tipo_carga': 'montos:dj1948'})
+
+    return render(request, "archivo_x_montoAdmin.html", {
+        "form": form,
+        "calificaciones": calificaciones,
+        "carga": carga_origen,
+        "rango_montos": list(range(1, 30)),
+        "rango_factores": list(range(8, 38)),
+    })
+
+
+

@@ -3,7 +3,8 @@ from usuarios.models import Usuario
 import re
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.password_validation import validate_password
-from django.core.exceptions import ValidationError as DjangoValidationError    
+from django.core.exceptions import ValidationError as DjangoValidationError
+from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm    
 
 class RegisterForm(forms.ModelForm):
     password1 = forms.CharField(
@@ -105,6 +106,7 @@ class InicioSesionForm(forms.Form):
                 raise forms.ValidationError("Contraseña incorrecta")
         return cleaned_data
 
+
 class UsuarioRolForm(forms.ModelForm):
     class Meta:
         model = Usuario
@@ -113,3 +115,42 @@ class UsuarioRolForm(forms.ModelForm):
             'rol': forms.Select(attrs={'class': 'form-select'})
         }
 
+
+
+class ResetearContraseñaForm(PasswordResetForm):
+    email = forms.EmailField(
+        label = ('Email'),
+        max_length=256,
+        widget=forms.EmailInput(attrs={
+            'autocomplete' : 'email',
+            'class' : 'form-control',
+            'placeholder' : 'Ingresa tu correo'
+        })
+    )
+
+    def get_users(self, email):
+        active_users = Usuario._default_manager.filter(
+            email__iexact = email,
+            is_active = True
+        )
+        return active_users
+    
+class CustomContraseñaForm(SetPasswordForm):
+        new_password1 = forms.CharField(
+            label=("Nueva Contraseña"),
+            widget= forms.PasswordInput(attrs={
+                'autocomplete' : 'new-password',
+                'class' : 'form-control',
+                'placeholder' : 'Ingresa tu nueva contraseña'
+            }),
+            strip=False,
+        )
+        new_password2 = forms.CharField(
+            label=("Confirmar nueva contraseña"),
+            strip= False,
+            widget=forms.PasswordInput(attrs={
+                'autocomplete' : 'new-password',
+                'class' : 'form-control',
+                'placeholder' : 'Repite tu nueva contraseña'
+            }),
+        )

@@ -16,9 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from usuarios.views import portada, iniciarSesion, registro, interfazinicio, market_data_api, Administrador, panel, panelAdmin, EditarRolusuario, adminEliminarUsuario, listausuarios,salir, descargar_calificacion,ver_detalle_calificacion,editar_calificacion_manual,eliminar_calificacion, verificar_codigo, auditoriaSesiones,panelArchivoXFactor
-from auditoria.views import cargaArchivos,x_factor, Configuración, ConfiguraciónAdmin, verificacionUsuario, reportes, Factor, x_monto, x_factor_Admin, x_monto_Admin,lecturaReportes,listadoUsuario
-from declaraciones.views  import ingresarCalificacion, x_factorCalculo, ingresarCalificacionAdmin, x_factorCalculoAdmin,ProcesarArchivoCSV, carga_masiva_factores_view, carga_masiva_montos_view, ProcesarArchivoMontosCSV
+from usuarios.views import portada, iniciarSesion, registro, interfazinicio, market_data_api, Administrador, panel, panelAdmin, EditarRolusuario, adminEliminarUsuario, listausuarios,salir, descargar_calificacion,ver_detalle_calificacion,editar_calificacion_manual,eliminar_calificacion, verificar_codigo, auditoriaSesiones,panelArchivoXFactor, panelArchivoXFactorAdmin
+from auditoria.views import cargaArchivos, Configuración, ConfiguraciónAdmin, verificacionUsuario, reportes, Factor,lecturaReportes,listadoUsuario, FactorAdmin
+from declaraciones.views  import ingresarCalificacion, x_factorCalculo, ingresarCalificacionAdmin, x_factorCalculoAdmin,ProcesarArchivoCSV, carga_masiva_factores_view, carga_masiva_montos_view, ProcesarArchivoMontosCSV, carga_masiva_montos_Admin, carga_masiva_factores_Admin
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -36,10 +36,9 @@ urlpatterns = [
     path('panelCalificacionAdmin/', panelAdmin, name='panelCalificacionAdmin'),
     path('auditoria/sesiones/',auditoriaSesiones, name="auditoriaSesiones" ),
     path('FactorImp/',Factor,name='FactorImp'),
+     path('FactorAdminList/',FactorAdmin,name='FactorAdminList'),
     path('carga/factores/', carga_masiva_factores_view, name='carga_factores'),
     path('carga/montos/', carga_masiva_montos_view, name='carga_montos'),
-    path('x_factor_Admin/', x_factor_Admin, name='x_factor_Admin'),
-    path('x_monto_Admin/', x_monto_Admin, name='x_monto_Admin'),
     path('listadoUsuario/', listadoUsuario, name='listadoUsuario'),
     path('listausuarios/<int:pk>/editar/', EditarRolusuario, name='EditarRolusuario'),
     path('listausuarios/<int:pk>/eliminar/', adminEliminarUsuario, name='adminEliminarUsuario'),
@@ -59,6 +58,9 @@ urlpatterns = [
     path('ProcesarArchivoCSV/', ProcesarArchivoCSV, name='ProcesarArchivoCSV'),
     path('ProcesarArchivoMontosCSV/', ProcesarArchivoMontosCSV, name = 'ProcesarArchivoMontosCSV'),
     path('panel/archivo-x-factor/', panelArchivoXFactor, name='panelArchivoXFactor'),
+    path('carga/montos_Admin/', carga_masiva_montos_Admin, name='carga_montos_Admin'),
+    path('carga/factores_Admin/', carga_masiva_factores_Admin, name='carga_factores_Admin'),
+    path('panel/archivo-x-factor_admin/', panelArchivoXFactorAdmin,  name='panelArchivoXFactorAdmin'),
 
 ]
 

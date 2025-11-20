@@ -37,7 +37,7 @@
                 <img src="{% static 'image/sii.png' %}" alt="SII" class="nav-icon">
                 <span>Servicio de impuestos internos</span>
             </a>
-            <a href="FactorImpuestos" class="nav-item">
+            <a href= "{% url 'FactorAdminList' %}" class="nav-item">
                 <img src="{% static 'image/IMPUESTOS.png' %}" alt="Factor de impuestos" class="nav-icon">
                 <span>Factor de impuestos</span>
             </a>
@@ -79,19 +79,7 @@
                         </div>
                     </a>
                 </div>
-                <div class="col-md-6 col-lg-3">
-                    <a href="{% url 'cargaArchivos' %}" class="text-decoration-none">
-                        <div class="card h-100 shadow-sm border-0 text-center hover-card bg-white">
-                            <div class="card-body d-flex flex-column justify-content-center align-items-center p-4">
-                                <div class="icon-circle bg-info text-white mb-3">
-                                    <i class="bi bi-upload fs-3"></i>
-                                </div>
-                                <h6 class="card-title fw-bold text-dark">Carga de Archivos</h6>
-                                <p class="card-text text-muted small mt-2">Sube y procesa documentos tributarios o financieros</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
+
                 <div class="col-md-6 col-lg-3">
                     <a href="{% url 'panelCalificacionAdmin' %}" class="text-decoration-none">
                         <div class="card h-100 shadow-sm border-0 text-center hover-card bg-white">
