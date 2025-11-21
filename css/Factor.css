@@ -1,0 +1,99 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #414152;
+  color: #fff;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e37854;
+  padding: 10px 20px;
+}
+
+.logo-left, .logo-right {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: rgb(0, 132, 255);
+}
+
+.title {
+    font-size: 60px;
+    font-weight: bold;
+    font-style: italic;
+    color: #414152;  
+}
+
+.container {
+  padding: 20px;
+}
+
+.section-title {
+  font-size: 1.4em;
+  margin-bottom: 20px;
+  color: #e37854;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 15px;
+}
+
+.factor-box {
+  background-color: #e37854;
+  padding: 15px;
+  text-align: center;
+  font-weight: bold;
+  color: #1e1e1e;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  transition: transform 0.2s ease;
+  margin-bottom: 10px;
+}
+
+.factor-box:hover {
+  transform: scale(1.05);
+  background-color: #ffb347;
+}
+
+.factor-box .btn {
+  font-weight: bold;
+  background-color: #fff;
+  color: #e37854;
+  border: none;
+}
+
+.factor-box .btn:hover {
+  background-color: #1e1e1e;
+  color: #fff;
+}
+.icon-small{
+    width:50px;
+    height: auto;
+}
+.back-link {
+    display: inline-block;
+    color: #e37854;               
+    font-weight: 600;
+    text-decoration: none;
+    background-color: #2E2E3A;   
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    margin: 20px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+.back-link:hover {
+    background-color: #e37854;    
+    color: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.back-link:active {
+    transform: scale(0.98);
+}

@@ -1,0 +1,142 @@
+
+.nuam-header {
+  background-color: #e37854;
+  color: white;
+  padding: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nuam-logo-header {
+  width: 60px;
+  height: auto;
+  margin: 0 15px;
+}
+
+.sii-logo-header {
+  width: 60px;
+  height: auto;
+  margin: 0 15px;
+}
+
+.nuam-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #414152;
+  margin: 0;
+  letter-spacing: 1px;
+}
+.nuam-header .container-fluid {
+  max-width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.section-title {
+  color: #e37854;
+  font-weight: bold;
+  border-bottom: 2px solid #e37854;
+  padding-bottom: 5px;
+  margin-top: 0;
+}
+
+.upload-panel {
+  background-color: white;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.upload-area {
+  border-style: dashed;
+  border-color: #ced4da;
+  background-color: #f9f9f9;
+  transition: all 0.3s ease;
+}
+
+.upload-area:hover {
+  border-color: #e37854;
+  background-color: #fdf7f5;
+}
+
+.instructions p {
+  font-size: 0.95rem;
+}
+
+.btn-primary{
+    background-color: #e37854;
+    border: #e37854;
+}
+
+.btn-primary:hover{
+    background-color: #e37854;
+    border-color: #e37854;
+}
+
+.btn-success {
+  background-color: #414152;
+  border-color: #414152;
+}
+
+.btn-success:hover {
+  background-color: #414152;
+  border-color: #414152;
+}
+
+.btn-secondary{
+    background-color: #e37854;
+}
+
+.btn-secondary:hover{
+    background-color: #e37854;
+    border-color: #e37854;
+}
+
+.btn-outline-secondary {
+  background-color: #e37854;
+  color: white;
+  border-color: #e37854;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #e37854;
+}
+
+.btn-info {
+    display: inline-block;
+    color: white;               
+    font-weight: 600;
+    text-decoration: none;
+    background-color: #414152;   
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    margin: 20px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    border-color: #414152;
+}
+
+.btn-info:hover {
+    background-color: #414152; 
+    color: #fff;
+    border-color: #414152;
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.btn-info:active {
+    transform: scale(0.98);
+}
+
+
+@media (max-width: 768px) {
+  .upload-panel {
+    padding: 20px;
+  }
+
+  .upload-area {
+    padding: 30px 15px;
+  }
+}

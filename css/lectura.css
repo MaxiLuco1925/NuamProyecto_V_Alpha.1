@@ -1,0 +1,364 @@
+:root {
+    --primary: #e37854;
+    --primary-dark: #d06a48;
+    --primary-light: rgba(227, 120, 84, 0.1);
+    --dark: #414152;
+    --dark-light: #4a4a5a;
+    --white: #ffffff;
+    --gray-light: #f8f9fa;
+    --gray-border: #dee2e6;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 6px 20px rgba(0, 0, 0, 0.15);
+    --border-radius: 12px;
+    --transition: all 0.3s ease;
+}
+
+.nuam-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--white);
+    padding: 0;
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nuam-logo-header {
+    width: 60px;
+    height: auto;
+    margin: 0 15px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    transition: var(--transition);
+}
+
+.nuam-logo-header:hover {
+    transform: scale(1.05);
+}
+
+.sii-logo-header {
+    width: 60px;
+    height: auto;
+    margin: 0 15px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    transition: var(--transition);
+}
+
+.sii-logo-header:hover {
+    transform: scale(1.05);
+}
+
+.nuam-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--white);
+    margin: 0;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.nuam-header .container-fluid {
+    max-width: 100%;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.section-title {
+    color: var(--primary);
+    font-weight: 700;
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 8px;
+    margin-top: 0;
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary), transparent);
+}
+
+.main-content {
+    margin-left: 0;
+    padding: 30px;
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--dark) 0%, #2E2E3A 100%);
+    position: relative;
+}
+
+.main-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 80%, var(--primary-light) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+.report-panel {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
+    backdrop-filter: blur(10px);
+    padding: 25px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.report-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--primary), var(--primary-dark));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.report-panel:hover::before {
+    opacity: 1;
+}
+
+.report-panel:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+}
+
+.accordion-item {
+    border: 1px solid var(--gray-border);
+    border-radius: var(--border-radius);
+    margin-bottom: 15px;
+    overflow: hidden;
+    background: var(--white);
+    transition: var(--transition);
+}
+
+.accordion-item:hover {
+    border-color: var(--primary);
+    box-shadow: 0 2px 8px rgba(227, 120, 84, 0.1);
+}
+
+.accordion-button {
+    font-weight: 600;
+    color: var(--dark);
+    background-color: var(--gray-light);
+    border: none;
+    padding: 16px 20px;
+    transition: var(--transition);
+    position: relative;
+}
+
+.accordion-button:not(.collapsed) {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--white);
+    box-shadow: none;
+}
+
+.accordion-button:focus {
+    box-shadow: 0 0 0 2px rgba(227, 120, 84, 0.25);
+    border-color: var(--primary);
+}
+
+.accordion-button::after {
+    filter: brightness(0) saturate(100%) invert(47%) sepia(14%) saturate(7452%) hue-rotate(349deg) brightness(97%) contrast(85%);
+    transition: var(--transition);
+}
+
+.accordion-button:not(.collapsed)::after {
+    filter: brightness(0) saturate(100%) invert(97%) sepia(0%) saturate(7452%) hue-rotate(349deg) brightness(97%) contrast(85%);
+    transform: rotate(180deg);
+}
+
+/* CORREGIDO: Fondo del contenido del accordion */
+.accordion-body {
+    padding: 25px;
+    background-color: var(--white);
+    border-top: 1px solid var(--gray-border);
+    line-height: 1.6;
+    color: #333; /* Texto oscuro para mejor contraste */
+}
+
+/* Estilos para el contenido dentro del accordion */
+.accordion-body p {
+    margin-bottom: 1rem;
+    color: #555;
+    font-size: 0.95rem;
+}
+
+.accordion-body strong {
+    color: var(--dark);
+    font-weight: 600;
+}
+
+.accordion-body .report-meta {
+    background: var(--gray-light);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border-left: 3px solid var(--primary);
+}
+
+.accordion-body .report-details {
+    background: #fafafa;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--gray-border);
+}
+
+.btn-revisado {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border: none;
+    color: var(--white);
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+    box-shadow: 0 2px 8px rgba(227, 120, 84, 0.3);
+}
+
+.btn-revisado:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, #bf5c40 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(227, 120, 84, 0.4);
+    color: var(--white);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border: none;
+    color: var(--white);
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+    box-shadow: 0 2px 8px rgba(227, 120, 84, 0.3);
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, #bf5c40 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(227, 120, 84, 0.4);
+    color: var(--white);
+}
+
+/* Estados de los reportes */
+.report-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-left: 10px;
+}
+
+.report-status.pendiente {
+    background: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+    border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.report-status.revisado {
+    background: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+    border: 1px solid rgba(40, 167, 69, 0.3);
+}
+
+.report-status.urgente {
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    border: 1px solid rgba(220, 53, 69, 0.3);
+}
+
+/* Efectos de carga suaves */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.accordion-item {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.accordion-item:nth-child(1) { animation-delay: 0.1s; }
+.accordion-item:nth-child(2) { animation-delay: 0.2s; }
+.accordion-item:nth-child(3) { animation-delay: 0.3s; }
+
+/* Scrollbar personalizado */
+.report-panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+.report-panel::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.report-panel::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 3px;
+}
+
+.report-panel::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding: 20px 15px;
+    }
+
+    .section-title {
+        font-size: 1.4rem;
+    }
+
+    .accordion-button {
+        padding: 14px 16px;
+        font-size: 0.95rem;
+    }
+
+    .accordion-body {
+        padding: 20px;
+    }
+
+    .btn-revisado,
+    .btn-secondary {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .nuam-title {
+        font-size: 1.6rem;
+    }
+
+    .nuam-header .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .report-panel {
+        padding: 20px;
+    }
+}

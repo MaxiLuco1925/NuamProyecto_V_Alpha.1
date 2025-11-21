@@ -1,0 +1,351 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #414152 0%, #2d2d3d 100%);
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+}
+
+.form-container {
+    min-height: 100vh;
+    position: relative;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* === HEADER MODERNO === */
+.header-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0 40px 0;
+}
+
+.logo-group {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    padding: 20px 40px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.icon-small {
+    height: 70px;
+    width: auto;
+    transition: transform 0.3s ease;
+}
+
+.icon-small:hover {
+    transform: scale(1.1);
+}
+
+.lightning {
+    height: 90px;
+    width: auto;
+    transition: transform 0.3s ease;
+}
+
+.lightning:hover {
+    transform: scale(1.1);
+}
+
+/* === FORMULARIO MODERNO === */
+.card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    padding: 40px 35px !important;
+    border-top: 3px solid #e37854;
+}
+
+h2 {
+    font-weight: 700;
+    color: white;
+    margin-bottom: 35px !important;
+    text-align: center;
+    font-size: 28px;
+    position: relative;
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #e37854, #ff8c00);
+    border-radius: 2px;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #CFCFCF;
+    margin-bottom: 10px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-control {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 2px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 12px !important;
+    color: white !important;
+    padding: 14px 18px !important;
+    transition: all 0.3s ease;
+    font-size: 15px;
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: #e37854 !important;
+    box-shadow: 0 0 0 3px rgba(227, 120, 84, 0.2) !important;
+    color: white !important;
+    transform: translateY(-2px);
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #e37854 0%, #d06a48 100%) !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 14px !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    transition: all 0.3s ease !important;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-primary:hover::before {
+    left: 100%;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #d06a48 0%, #bf5c40 100%) !important;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(227, 120, 84, 0.4) !important;
+}
+
+/* === ENLACE OLVIDÉ CONTRASEÑA === */
+.text-light {
+    color: #8aa8c4 !important;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    position: relative;
+}
+
+.text-light:hover {
+    color: #e37854 !important;
+}
+
+.text-light::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #e37854;
+    transition: width 0.3s ease;
+}
+
+.text-light:hover::after {
+    width: 100%;
+}
+
+/* === FOOTER MODERNO === */
+.footer-logo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px 0 20px 0;
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nuam-text {
+    font-size: 42px;
+    font-weight: 800;
+    color: #e37854;
+    font-style: italic;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.footer-logo .btn-primary {
+    background: linear-gradient(135deg, #8aa8c4 0%, #6c8cb0 100%) !important;
+    padding: 12px 30px !important;
+    width: auto;
+    border-radius: 25px !important;
+    box-shadow: 0 6px 20px rgba(138, 168, 196, 0.3) !important;
+}
+
+.footer-logo .btn-primary:hover {
+    background: linear-gradient(135deg, #6c8cb0 0%, #5a7ca0 100%) !important;
+    box-shadow: 0 8px 25px rgba(138, 168, 196, 0.4) !important;
+}
+
+/* === ALERTAS MODERNAS === */
+.alert {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 100%);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    border-left: 4px solid #28a745;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.alert-success {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* === ERRORES DE FORMULARIO === */
+.text-danger {
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    color: #ff6b6b !important;
+    font-weight: 500;
+}
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 768px) {
+    .form-container {
+        padding: 30px 15px;
+    }
+    
+    .header-logos {
+        padding: 15px 0 30px 0;
+    }
+    
+    .logo-group {
+        padding: 15px 30px;
+        gap: 20px;
+    }
+    
+    .icon-small {
+        height: 60px;
+    }
+    
+    .lightning {
+        height: 75px;
+    }
+    
+    .card {
+        padding: 30px 25px !important;
+    }
+    
+    .footer-logo {
+        flex-direction: column;
+        gap: 25px;
+        text-align: center;
+        padding: 30px 0 15px 0;
+    }
+    
+    .nuam-text {
+        font-size: 36px;
+    }
+    
+    h2 {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 576px) {
+    .form-container {
+        padding: 20px 10px;
+    }
+    
+    .logo-group {
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+    }
+    
+    .icon-small {
+        height: 50px;
+    }
+    
+    .lightning {
+        height: 65px;
+    }
+    
+    .card {
+        padding: 25px 20px !important;
+    }
+    
+    .nuam-text {
+        font-size: 32px;
+    }
+    
+    h2 {
+        font-size: 22px;
+    }
+    
+    .form-control {
+        padding: 12px 15px !important;
+    }
+}
+
+/* Efectos de animación suaves */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Scroll personalizado moderno */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #e37854 0%, #d06a48 100%);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #d06a48 0%, #bf5c40 100%);
+}

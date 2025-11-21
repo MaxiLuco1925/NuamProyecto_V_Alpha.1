@@ -1,0 +1,768 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #414152 0%, #2d2d3d 100%);
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* ======== HEADER MODERNIZADO ======== */
+.nuam-header {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+}
+
+.nuam-header .container-fluid {
+    max-width: 100%;
+    padding: 15px 20px;
+}
+
+.nuam-logo-header {
+    width: 60px;
+    height: auto;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    transition: transform 0.3s ease;
+}
+
+.nuam-logo-header:hover {
+    transform: scale(1.05);
+}
+
+.nuam-title {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 800;
+    color: #e37854;
+    margin: 0;
+    font-style: italic;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    letter-spacing: 1px;
+}
+
+/* ======== CONTENIDO PRINCIPAL ======== */
+.main-content {
+    padding: clamp(15px, 3vw, 30px);
+    min-height: calc(100vh - 80px);
+    background: transparent;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+/* ======== FILTROS DE BÚSQUEDA MODERNIZADOS ======== */
+.search-filters {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: clamp(20px, 3vw, 30px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.search-filters .form-label {
+    color: white;
+    font-weight: 600;
+    font-size: clamp(0.85rem, 2vw, 0.95rem);
+    margin-bottom: 10px;
+}
+
+.search-filters .form-select {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    color: white;
+    padding: clamp(10px, 2vw, 12px) clamp(12px, 2vw, 16px);
+    font-size: clamp(0.85rem, 2vw, 0.95rem);
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.search-filters .form-select:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #e37854;
+    box-shadow: 0 0 0 3px rgba(227, 120, 84, 0.2);
+    color: white;
+}
+
+.search-filters .form-select option {
+    background: #414152;
+    color: white;
+}
+
+/* ======== BOTONES CON TAMAÑO EXACTO 150x40 ======== */
+.btn {
+    width: 150px; /* Ancho fijo */
+    height: 40px; /* Alto fijo */
+    padding: 0; /* Reset padding para control exacto */
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    flex: 0 0 auto; /* No flex grow/shrink - tamaño fijo */
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+/* Contenedor específico de los botones */
+.col-md-12.d-flex.gap-2 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+    justify-content: center; /* Centrar los botones */
+}
+
+.col-md-12.d-flex.gap-2 .btn {
+    width: 150px; /* Ancho fijo */
+    height: 40px; /* Alto fijo */
+    flex: 0 0 auto; /* Tamaño fijo, no flexible */
+}
+
+/* Todos los botones específicos - tamaño exacto */
+.btn-primary,
+.btn-success,
+.btn-secondary,
+.btn-info {
+    width: 150px;
+    height: 40px;
+}
+
+/* Botón "Regresar" en header */
+.nuam-header .btn-info {
+    width: 150px;
+    height: 40px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Estados hover manteniendo tamaño exacto */
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Asegurar que el texto e íconos queden centrados perfectamente */
+.btn .bi {
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    width: 14px;
+    text-align: center;
+}
+
+/* Botones con texto largo - asegurar que quepa */
+.btn[href*="carga_factores"],
+.btn[href*="carga_montos"] {
+    font-size: 0.85rem; /* Texto ligeramente más pequeño */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ======== RESPONSIVE PARA BOTONES DE TAMAÑO FIJO ======== */
+@media (max-width: 1200px) {
+    .col-md-12.d-flex.gap-2 .btn {
+        width: 150px; /* Mantener tamaño en desktop */
+        height: 40px;
+    }
+}
+
+@media (max-width: 992px) {
+    .col-md-12.d-flex.gap-2 .btn {
+        width: 140px; /* Ligeramente más pequeño en tablet */
+        height: 38px;
+        font-size: 0.85rem;
+    }
+    
+    .btn {
+        width: 140px;
+        height: 38px;
+        font-size: 0.85rem;
+    }
+    
+    .btn .bi {
+        font-size: 0.85rem;
+        width: 13px;
+    }
+}
+
+@media (max-width: 768px) {
+    .col-md-12.d-flex.gap-2 {
+        gap: 8px;
+        justify-content: center;
+    }
+    
+    .col-md-12.d-flex.gap-2 .btn {
+        width: 150px; /* Volver a 150px pero menos botones por fila */
+        height: 40px;
+        flex: 0 0 calc(50% - 8px); /* 2 botones por fila */
+        max-width: calc(50% - 8px);
+    }
+}
+
+@media (max-width: 576px) {
+    .col-md-12.d-flex.gap-2 .btn {
+        width: 100%; /* En móvil ocupar todo el ancho */
+        height: 40px;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    
+    .btn {
+        width: 100%;
+        height: 40px;
+    }
+    
+    .nuam-header .btn-info {
+        width: 120px; /* Header button más pequeño en móvil */
+        height: 36px;
+    }
+}
+
+@media (max-width: 480px) {
+    .col-md-12.d-flex.gap-2 .btn {
+        height: 38px;
+        font-size: 0.83rem;
+    }
+    
+    .btn {
+        height: 38px;
+        font-size: 0.83rem;
+    }
+    
+    .btn .bi {
+        font-size: 0.83rem;
+    }
+    
+    /* Para texto muy largo en móviles */
+    .btn[href*="carga_factores"],
+    .btn[href*="carga_montos"] {
+        font-size: 0.8rem;
+        white-space: normal;
+        line-height: 1.1;
+        padding: 2px 8px;
+    }
+}
+
+/* ======== BOTONES EN GRUPOS PEQUEÑOS (tabla) ======== */
+.btn-group .btn-sm {
+    width: 40px; /* Tamaño fijo para botones pequeños */
+    height: 32px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+}
+
+/* ======== ESTADOS ESPECIALES ======== */
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.4);
+    outline-offset: 2px;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    transform: none;
+    cursor: not-allowed;
+}
+
+/* ======== GRADIENTES OPTIMIZADOS ======== */
+.btn-primary {
+    background: linear-gradient(135deg, #e37854 0%, #d06a48 100%);
+    color: white;
+    box-shadow: 0 3px 10px rgba(227, 120, 84, 0.25);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #70C3F5 0%, #5aa8d6 100%);
+    color: white;
+    box-shadow: 0 3px 10px rgba(112, 195, 245, 0.25);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #8aa8c4 0%, #6c8cb0 100%);
+    color: white;
+    box-shadow: 0 3px 10px rgba(138, 168, 196, 0.25);
+}
+
+.btn-info {
+    background: linear-gradient(135deg, #414152 0%, #2d2d3d 100%);
+    color: white;
+    box-shadow: 0 3px 10px rgba(65, 65, 82, 0.25);
+}
+
+/* Efecto de brillo al hover */
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+/* ======== TABLA MODERNIZADA ======== */
+.table-container {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: clamp(20px, 3vw, 30px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    animation: fadeInUp 0.6s ease-out;
+    width: 100%;
+    overflow: hidden;
+}
+
+.table-responsive {
+    border-radius: 12px;
+    overflow: auto;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 0;
+    color: white;
+    width: 100%;
+    min-width: 800px;
+}
+
+.table thead th {
+    background: linear-gradient(135deg, #e37854 0%, #d06a48 100%);
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: clamp(10px, 2vw, 15px) clamp(8px, 1.5vw, 12px);
+    text-align: center;
+    vertical-align: middle;
+    font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+    white-space: nowrap;
+}
+
+.table tbody td {
+    background: rgba(255, 255, 255, 0.02);
+    border-color: rgba(255, 255, 255, 0.1);
+    padding: clamp(8px, 1.5vw, 12px) clamp(6px, 1.5vw, 10px);
+    vertical-align: middle;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.9);
+    transition: background-color 0.3s ease;
+    font-size: clamp(0.75rem, 1.5vw, 0.85rem);
+}
+
+.table tbody tr:hover td {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* ======== BADGES MODERNIZADOS ======== */
+.badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: clamp(0.7rem, 1.5vw, 0.8rem);
+}
+
+.bg-primary {
+    background: linear-gradient(135deg, #e37854 0%, #d06a48 100%) !important;
+}
+
+.bg-success {
+    background: linear-gradient(135deg, #70C3F5 0%, #5aa8d6 100%) !important;
+}
+
+.bg-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%) !important;
+    color: #212529 !important;
+}
+
+.bg-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+}
+
+.bg-secondary {
+    background: linear-gradient(135deg, #8aa8c4 0%, #6c8cb0 100%) !important;
+}
+
+.bg-info {
+    background: linear-gradient(135deg, #414152 0%, #2d2d3d 100%) !important;
+}
+
+/* ======== TOAST PERSONALIZADO ======== */
+.custom-toast {
+    background: rgba(0, 0, 0, 0.9) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid #e37854 !important;
+    border-radius: 12px !important;
+    color: #e37854 !important;
+    box-shadow: 0 4px 15px rgba(227, 120, 84, 0.3) !important;
+    max-width: 350px;
+}
+
+.custom-toast .toast-body {
+    background: transparent !important;
+    color: #e37854 !important;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.custom-toast .bi {
+    color: #e37854 !important;
+    font-size: 1.1rem;
+}
+
+.custom-toast .btn-close {
+    filter: invert(1) brightness(2) !important;
+}
+
+/* ======== ESTADO VACÍO ======== */
+.text-muted {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.table tbody tr td.text-center {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.table tbody tr td.text-center .bi {
+    color: rgba(255, 255, 255, 0.3);
+    font-size: clamp(2rem, 6vw, 3rem);
+}
+
+/* ======== ANIMACIONES ======== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ======== SCROLLBAR PERSONALIZADO ======== */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #e37854;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #d06a48;
+}
+
+/* ======== LAYOUT RESPONSIVO MEJORADO ======== */
+.container-fluid {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 clamp(10px, 3vw, 20px);
+}
+
+.row {
+    margin: 0 -10px;
+}
+
+.row > [class*="col-"] {
+    padding: 0 10px;
+}
+
+/* ======== GRID SYSTEM MEJORADO ======== */
+.search-filters .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.search-filters .col-md-4 {
+    flex: 1 1 300px;
+    min-width: 0;
+}
+
+.search-filters .col-md-12 {
+    flex: 1 1 100%;
+}
+
+/* ======== BOTONES EN GRUPO MEJORADO ======== */
+.col-md-12.d-flex.gap-2 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+}
+
+.col-md-12.d-flex.gap-2 .btn {
+    flex: 1 1 calc(25% - 10px);
+    min-width: 150px;
+}
+
+/* ======== MEJORAS VISUALES ADICIONALES ======== */
+.text-truncate {
+    max-width: min(200px, 100%);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.btn-group {
+    gap: 4px;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.form-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23ffffff' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    background-size: 12px;
+}
+
+/* ======== RESPONSIVE DESIGN MEJORADO ======== */
+@media (max-width: 1400px) {
+    .table {
+        min-width: 1000px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .main-content {
+        padding: 20px;
+    }
+    
+    .table-container {
+        padding: 20px;
+    }
+    
+    .search-filters {
+        padding: 20px;
+    }
+    
+    .col-md-12.d-flex.gap-2 .btn {
+        flex: 1 1 calc(33.333% - 10px);
+    }
+}
+
+@media (max-width: 992px) {
+    .main-content {
+        padding: 15px;
+    }
+    
+    .table-responsive {
+        font-size: 0.8rem;
+    }
+    
+    .btn {
+        min-width: 120px;
+    }
+    
+    .col-md-12.d-flex.gap-2 .btn {
+        flex: 1 1 calc(50% - 10px);
+    }
+    
+    .search-filters .col-md-4 {
+        flex: 1 1 250px;
+    }
+}
+
+@media (max-width: 768px) {
+    .nuam-header .container-fluid {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+        padding: 10px 15px;
+    }
+    
+    .nuam-title {
+        font-size: 1.8rem;
+    }
+    
+    .nuam-logo-header {
+        width: 50px;
+    }
+    
+    .main-content {
+        padding: 10px;
+    }
+    
+    .search-filters {
+        padding: 15px;
+        border-radius: 15px;
+    }
+    
+    .table-container {
+        padding: 15px 10px;
+        border-radius: 15px;
+    }
+    
+    .table thead th,
+    .table tbody td {
+        padding: 8px 6px;
+        font-size: 0.75rem;
+    }
+    
+    .btn-group .btn-sm {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+    }
+    
+    .col-md-12.d-flex.gap-2 .btn {
+        flex: 1 1 100%;
+        min-width: 100%;
+    }
+    
+    .search-filters .col-md-4 {
+        flex: 1 1 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .nuam-title {
+        font-size: 1.6rem;
+    }
+    
+    .main-content {
+        padding: 8px;
+    }
+    
+    .search-filters {
+        padding: 12px;
+    }
+    
+    .table-container {
+        padding: 12px 8px;
+    }
+    
+    .btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        min-width: 100%;
+    }
+    
+    .badge {
+        padding: 3px 8px;
+        font-size: 0.7rem;
+    }
+    
+    .table {
+        min-width: 600px;
+    }
+}
+
+@media (max-width: 480px) {
+    .nuam-header .container-fluid {
+        padding: 8px 12px;
+    }
+    
+    .nuam-title {
+        font-size: 1.4rem;
+    }
+    
+    .main-content {
+        padding: 5px;
+    }
+    
+    .search-filters,
+    .table-container {
+        padding: 10px;
+        border-radius: 12px;
+    }
+    
+    .btn {
+        padding: 6px 10px;
+        font-size: 0.75rem;
+    }
+}
+
+/* ======== UTILIDADES ADICIONALES ======== */
+.d-flex {
+    display: flex !important;
+}
+
+.flex-wrap {
+    flex-wrap: wrap !important;
+}
+
+.justify-content-between {
+    justify-content: space-between !important;
+}
+
+.align-items-center {
+    align-items: center !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.w-100 {
+    width: 100% !important;
+}
+
+.h-100 {
+    height: 100% !important;
+}
+
+/* ======== OPTIMIZACIÓN PARA PANTALLAS GRANDES ======== */
+@media (min-width: 1920px) {
+    .main-content {
+        max-width: 1800px;
+        margin: 0 auto;
+    }
+    
+    .table {
+        min-width: 1200px;
+    }
+}
