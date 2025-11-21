@@ -3,36 +3,12 @@
 {% load custom_filters %}
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Archivo x Montos</title>
-
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Estilos -->
-    <link href="{% static 'css/x_factor.css' %}" rel="stylesheet">
-
-    <style>
-        .nuam-header {
-            background: #0d6efd;
-            color: white;
-        }
-        .nuam-logo-header {
-            height: 60px;
-        }
-        table th, table td {
-            white-space: nowrap;
-            font-size: 13px;
-        }
-        .info-box {
-            background: #e8f4fd;
-            border-left: 4px solid #0d6efd;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Archivo x Montos</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<link href="{% static 'css/x_factor.css' %}" rel="stylesheet">
 </head>
 <body>
 
@@ -41,7 +17,7 @@
         <img src="{% static 'image/NUAM.png' %}" alt="NUAM" class="nuam-logo-header">
         <h1 class="m-0">NUAM</h1>
 
-        <a href="{% url 'panelCalificacionAdmin' %}" class="btn btn-warning fw-bold">
+        <a href="{% url 'panelCalificacionAdmin' %}" class="btn btn-dark fw-bold">
             Regresar al Panel de Calificaciones
         </a>
     </div>
@@ -49,17 +25,15 @@
 
 <div class="container my-4">
 
-    <h2 class="mb-4 text-primary fw-bold">💰 Archivo x Montos</h2>
+    <h2 class="mb-4 text-primary fw-bold"> Archivo x Montos</h2>
 
-    <!-- Información sobre el formato -->
     <div class="info-box">
-        <h5 class="fw-bold">📋 Formato del Archivo CSV</h5>
+        <h5 class="fw-bold"> Formato del Archivo CSV</h5>
         <p class="mb-1"><strong>Columnas requeridas:</strong> Instrumento, Secuencia, Ejercicio, Fecha, Descripcion, Dividendo, Valor Historico, ISFUT</p>
         <p class="mb-1"><strong>Columnas de montos:</strong> Monto 1, Monto 2, ..., Monto 12</p>
         <p class="mb-0"><strong>Nota:</strong> Los factores 8-19 se calcularán automáticamente como: Factor = Monto / Total Montos</p>
     </div>
 
-    <!-- 🔥 MOSTRAR ERRORES DEL FORMULARIO ARRIBA -->
     {% if form.errors %}
     <div class="alert alert-danger">
         <strong>Errores en el formulario:</strong>
@@ -71,7 +45,6 @@
     </div>
     {% endif %}
 
-    <!-- Formulario carga -->
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-success text-white">
             <strong>Subir archivo CSV con Montos</strong>
@@ -79,7 +52,6 @@
 
         <div class="card-body">
 
-            <!-- 🔥 Errores generales del formulario -->
             {% if form.non_field_errors %}
             <div class="alert alert-danger">
                 {{ form.non_field_errors }}
@@ -89,12 +61,10 @@
             <form method="POST" enctype="multipart/form-data" class="row g-3">
                 {% csrf_token %}
 
-                <!-- Campo archivo -->
                 <div class="col-md-6">
                     {{ form.archivo.label_tag }}
                     {{ form.archivo }}
 
-                    <!-- 🔥 Errores específicos del campo archivo -->
                     {% if form.archivo.errors %}
                     <div class="text-danger small mt-1">
                         {{ form.archivo.errors }}
@@ -105,7 +75,7 @@
                 {{ form.tipo_carga }}
 
                 <div class="col-md-6 d-flex align-items-end">
-                    <button type="submit" class="btn btn-success w-100 fw-bold">
+                    <button type="submit" class="btn btn-dark w-100 fw-bold">
                         <i class="bi bi-upload"></i> Subir Archivo y Calcular Factores
                     </button>
                 </div>
@@ -115,7 +85,7 @@
 
     {% if carga %}
     <div class="alert alert-info">
-        <h5 class="fw-bold">📊 Resultados de la Carga</h5>
+        <h5 class="fw-bold"> Resultados de la Carga</h5>
         <p><strong>Estado:</strong> 
             <span class="badge {% if carga.estado == 'completa' %}bg-success{% elif carga.estado == 'fallida' %}bg-danger{% else %}bg-warning{% endif %}">
                 {{ carga.estado|title }}
@@ -135,8 +105,7 @@
 
     <hr class="my-4">
 
-    <!-- Resultados -->
-    <h4 class="fw-bold mb-3">📋 Registros Procesados</h4>
+    <h4 class="fw-bold mb-3"> Registros Procesados</h4>
 
     {% if calificaciones %}
         <p class="text-success fw-bold">Total calificaciones procesadas: {{ calificaciones|length }}</p>
