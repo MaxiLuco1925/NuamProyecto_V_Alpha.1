@@ -18,7 +18,7 @@ from declaraciones.models import CargaArchivo
 from usuarios.views import asignaRol
 from instrumentos.models import Mercado
 
-@asignaRol("Corredor")
+@asignaRol("Corredor", "Administrador")
 def ingresarCalificacion(request):
     if request.method == 'POST':
         form = forms.IngresoCalificacionManualForm(request.POST)
@@ -364,7 +364,7 @@ def ProcesarArchivoCSV(archivo, tipo_carga, usuario, carga_origen):
 
 
 
-@asignaRol("Corredor")
+@asignaRol("Corredor", "Administrador")
 def carga_masiva_factores_view(request):
     usuario_id = request.session.get('usuario_id')
     if not usuario_id:
@@ -412,7 +412,8 @@ def carga_masiva_factores_view(request):
 def ProcesarArchivoMontosCSV(archivo, tipo_carga, usuario, carga_origen):
     """
     Procesa CSV con montos y calcula automáticamente los factores 8-19.
-    Crea instrumentos automáticamente si no existen, asignando el mercado correcto.
+    Crea instrumentos y mercados automáticamente si no existen.
+    Actualiza factores cuando el instrumento ya existe.
     """
     texto = None
     try:
@@ -443,22 +444,38 @@ def ProcesarArchivoMontosCSV(archivo, tipo_carga, usuario, carga_origen):
         carga_origen.save()
         return []
 
-    mercados_por_tipo = {
-        'ACC': 'Acciones',
-        'BON': 'Bonos', 
-        'CRY': 'Criptomonedas',
-        'FIN': 'Instrumentos financieros',
-        'EXP': 'Exportaciones',
-        'IMP': 'Importaciones',
-        'SER': 'Servicios',
-        'REN': 'Renta inmobiliaria',
-        'COM': 'Comercio',
-        'AGR': 'Agroindustria'
+    mercados_config = {
+        'ACC': {'nombre': 'Acciones', 'codigo': 'AC'},
+        'BON': {'nombre': 'Bonos', 'codigo': 'BO'}, 
+        'CRY': {'nombre': 'Criptomonedas', 'codigo': 'CR'},
+        'FIN': {'nombre': 'Instrumentos financieros', 'codigo': 'IN'},
+        'EXP': {'nombre': 'Exportaciones', 'codigo': 'EX'},
+        'IMP': {'nombre': 'Importaciones', 'codigo': 'IM'},
+        'SER': {'nombre': 'Servicios', 'codigo': 'SE'},
+        'REN': {'nombre': 'Renta inmobiliaria', 'codigo': 'RE'},
+        'COM': {'nombre': 'Comercio', 'codigo': 'CO'},
+        'AGR': {'nombre': 'Agroindustria', 'codigo': 'AG'}
     }
     
-    mercados_dict = {mercado.nombre: mercado for mercado in Mercado.objects.all()}
-    if not mercados_dict:
-        errores.append("No hay mercados configurados en el sistema")
+    mercados_dict = {}
+    try:
+        for mercado in Mercado.objects.all():
+            mercados_dict[mercado.nombre] = mercado
+        
+        for prefijo, config in mercados_config.items():
+            nombre_mercado = config['nombre']
+            if nombre_mercado not in mercados_dict:
+                nuevo_mercado = Mercado.objects.create(
+                    nombre=nombre_mercado,
+                    codigo_mercado=config['codigo']
+                )
+                mercados_dict[nombre_mercado] = nuevo_mercado
+                print(f"✅ Mercado creado automáticamente: {nombre_mercado}")
+        
+        print(f"✅ Mercados disponibles: {list(mercados_dict.keys())}")
+        
+    except Exception as e:
+        errores.append(f"Error configurando mercados: {e}")
         carga_origen.mensaje_error = "\n".join(errores)
         carga_origen.estado = 'fallida'
         carga_origen.save()
@@ -478,27 +495,43 @@ def ProcesarArchivoMontosCSV(archivo, tipo_carga, usuario, carga_origen):
             if not instrumento_val:
                 raise ValueError("Columna 'Instrumento' o 'codigo_instrumento' vacía en esta fila.")
             instrumento = None
+            instrumento_creado = False
+            
             try:
                 instrumento = Instrumento.objects.get(codigo__iexact=instrumento_val)
-                print(f" Instrumento encontrado: {instrumento_val}")
+                print(f"🔄 Instrumento encontrado: {instrumento_val} - Actualizando factores...")
             except Instrumento.DoesNotExist:
                 mercado_asignado = None
-                for prefijo, mercado_nombre in mercados_por_tipo.items():
+                tipo_instrumento = "Acción" 
+                
+                for prefijo, config in mercados_config.items():
                     if instrumento_val.startswith(prefijo):
-                        mercado_asignado = mercados_dict.get(mercado_nombre)
+                        nombre_mercado = config['nombre']
+                        mercado_asignado = mercados_dict.get(nombre_mercado)
+                        tipo_instrumento = nombre_mercado
                         break
                 
                 if not mercado_asignado:
-                    mercado_asignado = list(mercados_dict.values())[0]
+                    posible_mercado = instrumento_val.split('-')[0] if '-' in instrumento_val else instrumento_val[:3]
+                    nombre_mercado_nuevo = f"Mercado {posible_mercado}"
+                    codigo_mercado_nuevo = posible_mercado[:2].upper()
+                    
+                    mercado_asignado = Mercado.objects.create(
+                        nombre=nombre_mercado_nuevo,
+                        codigo_mercado=codigo_mercado_nuevo
+                    )
+                    mercados_dict[nombre_mercado_nuevo] = mercado_asignado
+                    tipo_instrumento = nombre_mercado_nuevo
+                    print(f"✅ Mercado nuevo creado: {nombre_mercado_nuevo}")
                 
-                tipo_instrumento = mercados_por_tipo.get(instrumento_val[:3], "Acción")
                 instrumento = Instrumento.objects.create(
                     codigo=instrumento_val,
                     nombre=f"Instrumento {instrumento_val}",
                     mercado=mercado_asignado,
                     tipo_instrumento=tipo_instrumento
                 )
-                print(f" Instrumento creado: {instrumento_val} en mercado {mercado_asignado.nombre}")
+                instrumento_creado = True
+                print(f"✅ Instrumento creado: {instrumento_val} en mercado {mercado_asignado.nombre}")
 
             secuencia = int(fila.get('Secuencia') or fila.get('secuencia') or 0)
             ejercicio = int(fila.get('Ejercicio') or fila.get('ejercicio') or 0)
@@ -531,7 +564,7 @@ def ProcesarArchivoMontosCSV(archivo, tipo_carga, usuario, carga_origen):
             montos = {}
             total_montos = 0.0
             
-            for i in range(1, 13):
+            for i in range(1, 30):  
                 col_monto = f'Monto {i}'
                 raw_monto = (fila.get(col_monto) or fila.get(col_monto.lower()) or '0')
                 monto_valor = to_float_safe(raw_monto)
@@ -587,19 +620,19 @@ def ProcesarArchivoMontosCSV(archivo, tipo_carga, usuario, carga_origen):
                         suma_factores += calculo
 
                 suma_redondeada = round(suma_factores, 6)
-                if suma_redondeada > Decimal('1.000000'):
-                    errores.append(f"Fila {total}: suma factores 8-19 = {suma_redondeada:.6f} > 1.000000 para instrumento '{instrumento_val}'")
-                elif suma_redondeada < Decimal('0.999999'):
-                    if suma_redondeada < Decimal('0.999000'):
-                        errores.append(f"Fila {total}: suma factores 8-19 = {suma_redondeada:.6f} < 1.000000 para instrumento '{instrumento_val}'")
-                    else:
-                        exitosos += 1
-                else:
+                if abs(suma_redondeada - Decimal('1.000000')) <= Decimal('0.0001'):  # Tolerancia de 0.01%
                     exitosos += 1
+                    accion = "creado" if instrumento_creado else "actualizado"
+                    print(f"✅ {instrumento_val}: Factores {accion} correctamente (suma: {suma_redondeada:.6f})")
+                elif suma_redondeada > Decimal('1.000000'):
+                    errores.append(f"Fila {total}: suma factores 8-19 = {suma_redondeada:.6f} > 1.000000 para '{instrumento_val}'")
+                else:
+                    errores.append(f"Fila {total}: suma factores 8-19 = {suma_redondeada:.6f} < 1.000000 para '{instrumento_val}'")
 
         except Exception as e:
             if instrumento_val:
                 errores.append(f"Fila {total}: Instrumento '{instrumento_val}' -> {str(e)}")
+                print(f" Error en {instrumento_val}: {str(e)}")
             else:
                 errores.append(f"Fila {total}: Error -> {str(e)}")
 
@@ -616,7 +649,7 @@ def ProcesarArchivoMontosCSV(archivo, tipo_carga, usuario, carga_origen):
     print(f" Procesamiento completado: {exitosos}/{total} registros exitosos")
     return calificaciones_creadas
 
-@asignaRol("Corredor")
+@asignaRol("Corredor", "Administrador")
 
 def carga_masiva_montos_view(request):
     usuario_id = request.session.get('usuario_id')

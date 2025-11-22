@@ -29,3 +29,17 @@ def get_item_by_factor(diccionario, factor):
 @register.filter
 def get_item_by_factor(factors, numero):
     return factors.filter(numero_factor=numero).first()
+
+@register.filter
+def get_item(dictionary, key):
+    try:
+        return dictionary.get(key)
+    except Exception:
+        return None
+
+@register.filter
+def get_item_by_factor(factors, numero):
+    try:
+        return factors.filter(numero_factor=numero).first()
+    except Exception:
+        return None

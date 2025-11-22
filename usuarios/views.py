@@ -6,6 +6,7 @@ import yfinance as yf
 from django.core.mail import send_mail
 from django.conf import settings
 from auditoria.forms import CargaArchivoForm
+from auditoria.models import CargaArchivo
 import random
 from declaraciones.forms import EditarCalificacionForm
 from django.contrib.auth.decorators import login_required
@@ -162,10 +163,12 @@ def interfazinicio(request):
         return redirect('iniciarSesion')
     try:
         usuario = Usuario.objects.get(id=usuario_id)
+        total_archivos = CargaArchivo.objects.filter(cargado_por=usuario).count()
         total_calificaciones = CalificacionTributaria.objects.filter(usuario=usuario).count()
         context = {
             'Usuario': usuario,
-            'total_calificaciones': total_calificaciones
+            'total_calificaciones': total_calificaciones,
+            'total_archivos': total_archivos
         }
         return render(request, "interfazinicio.html", context)
     except Usuario.DoesNotExist:
@@ -228,7 +231,8 @@ def market_data_api(request):
 def Administrador(request):
     return render(request, 'interfazAdministrador.html')
 
-@asignaRol("Corredor")    
+@asignaRol("Corredor", "Administrador")
+
 def panel(request):
     usuario = Usuario.objects.filter(id=request.session.get('usuario_id')).first()
     
@@ -358,7 +362,7 @@ def salir(request):
     request.session.flush()
     return redirect('iniciarSesion')
 
-@asignaRol("Corredor")
+@asignaRol("Corredor", "Administrador")
 def descargar_calificacion(request, calificacion_id):
     calificacion = CalificacionTributaria.objects.get(id=calificacion_id)
 
@@ -415,7 +419,7 @@ def descargar_calificacion(request, calificacion_id):
     p.save()
     return response
 
-@asignaRol("Corredor")
+@asignaRol("Corredor", "Administrador")
 def ver_detalle_calificacion(request, calificacion_id):
     calificacion = get_object_or_404(CalificacionTributaria, id=calificacion_id)
     factores = calificacion.factormensual_set.all().order_by("numero_factor")
@@ -426,7 +430,7 @@ def ver_detalle_calificacion(request, calificacion_id):
 
 
 
-@asignaRol("Corredor")
+@asignaRol("Corredor", "Administrador")
 def editar_calificacion_manual(request, pk):
     calificacion = get_object_or_404(CalificacionTributaria, pk=pk)
     
@@ -440,7 +444,93 @@ def editar_calificacion_manual(request, pk):
     else:
         form = EditarCalificacionForm(instance=calificacion)
 
-    return render(request, 'CalificacionManul.html', {'form': form, 'calificacion': calificacion})
+    return render(request, 'CalificacionManual.html', {'form': form, 'calificacion': calificacion})
+
+@asignaRol("Administrador")
+def descargar_calificacion_Admin(request, calificacion_id):
+    calificacion = CalificacionTributaria.objects.get(id=calificacion_id)
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="calificacion_{calificacion_id}.pdf"'
+
+    p = canvas.Canvas(response, pagesize=A4)
+    width, height = A4
+    y = height - 2*cm
+
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(2*cm, y, f"Calificación Tributaria N° {calificacion.id}")
+    y -= 1.5*cm
+
+    p.setFont("Helvetica", 11)
+    p.drawString(2*cm, y, f"Responsable: {calificacion.usuario.nombre}")
+    y -= 0.6*cm
+    p.drawString(2*cm, y, f"Instrumento: {calificacion.instrumento.nombre if calificacion.instrumento else '-'}")
+    y -= 0.6*cm
+    p.drawString(2*cm, y, f"Año Tributario: {calificacion.año_tributario}")
+    y -= 0.6*cm
+    p.drawString(2*cm, y, f"Fecha de Pago: {calificacion.fecha_pago.strftime('%d/%m/%Y %H:%M')}")
+    y -= 0.6*cm
+    p.drawString(2*cm, y, f"Descripción: {calificacion.descripcion[:90]}...")
+    y -= 0.6*cm
+    p.drawString(2*cm, y, f"Secuencia: {calificacion.secuencia_evento}")
+    y -= 0.6*cm
+    p.drawString(2*cm, y, f"Dividendo: ${calificacion.dividendo:,.2f}")
+    y -= 0.6*cm
+    p.drawString(2*cm, y, f"Valor Histórico: ${calificacion.valor_historico:,.2f}")
+    y -= 0.6*cm
+    p.drawString(2*cm, y, f"ISFUT: {'Sí' if calificacion.isfut else 'No'}")
+    y -= 0.6*cm
+    p.drawString(2*cm, y, f"Estado: {calificacion.estado_tributario}")
+    y -= 1*cm
+
+
+    p.setFont("Helvetica-Bold", 12)
+    p.drawString(2*cm, y, "Factores Mensuales:")
+    y -= 0.8*cm
+    p.setFont("Helvetica", 10)
+
+    factores = calificacion.factormensual_set.all().order_by("numero_factor")
+    for f in factores:
+        texto = f"Factor-{f.numero_factor:02d}: {f.valor_factor:.2f} ({f.descripcion})"
+        p.drawString(2.5*cm, y, texto)
+        y -= 0.5*cm
+        if y < 2*cm:  
+            p.showPage()
+            p.setFont("Helvetica", 10)
+            y = height - 2*cm
+
+    p.showPage()
+    p.save()
+    return response
+
+@asignaRol("Administrador")
+def ver_detalle_calificacion_Admin(request, calificacion_id):
+    calificacion = get_object_or_404(CalificacionTributaria, id=calificacion_id)
+    factores = calificacion.factormensual_set.all().order_by("numero_factor")
+    return render(request, 'ver_detalles_calificacion_admin.html', {
+        'calificacion': calificacion,
+        'factores': factores
+    })
+
+
+
+@asignaRol("Administrador")
+def editar_calificacion_manual_Admin(request, pk):
+    calificacion = get_object_or_404(CalificacionTributaria, pk=pk)
+    
+    if request.method == 'POST':
+        form = EditarCalificacionForm(request.POST, instance=calificacion)
+        if form.is_valid():
+            form.save()
+            return redirect('panelCalificacionAdmin')
+        else:
+            messages.error(request, "Error al actualizar la calificación.")
+    else:
+        form = EditarCalificacionForm(instance=calificacion)
+
+    return render(request, 'CalificacionManualAdmin.html', {'form': form, 'calificacion': calificacion})
+
+
 
 @asignaRol("Administrador")
 def eliminar_calificacion(request, pk):
@@ -497,7 +587,7 @@ def auditoriaSesiones(request):
     return render(request, "auditoriaSesiones.html", {"auditorias": auditorias})
 
 
-@asignaRol("Corredor")
+@asignaRol("Corredor", "Administrador")
 def panelArchivoXFactor(request):
     usuario = Usuario.objects.filter(id=request.session.get('usuario_id')).first()
     if not usuario:

@@ -21,17 +21,19 @@
 
 <div class="main-content">
 
-    <h2 class="section-title mb-4"">Auditoría de Inicio de Sesión</h2>
+    <h2 class="section-title mb-4">Auditoría de Seguridad</h2>
 
     <table class="table table-bordered table-striped table-hover">
         <thead class="table-dark">
             <tr>
                 <th>ID</th>
-                <th>Usuario</th>
+                <th>Usuario Involucrado</th>
+                <th>Dirección IP</th>
+                <th>Fecha y Hora</th>
+                <th>Tipo de Amenaza</th>
                 <th>Rol</th>
                 <th>Documento Intentado</th>
                 <th>Resultado</th>
-                <th>Fecha y Hora</th>
             </tr>
         </thead>
 
@@ -39,6 +41,8 @@
             {% for a in auditorias %}
             <tr>
                 <td>{{ a.id }}</td>
+                
+                <!-- Usuario Involucrado -->
                 <td>
                     {% if a.usuario %}
                         {{ a.usuario.nombre }}
@@ -46,6 +50,38 @@
                         <span class="text-danger">Desconocido</span>
                     {% endif %}
                 </td>
+                
+                <!-- Dirección IP -->
+                <td>
+                    {% if a.ip_address %}
+                        <span class="font-monospace">{{ a.ip_address }}</span>
+                    {% else %}
+                        <span class="text-muted">No registrada</span>
+                    {% endif %}
+                </td>
+                
+                <!-- Fecha y Hora -->
+                <td>{{ a.fecha|date:"d/m/Y H:i:s" }}</td>
+                
+                <!-- Tipo de Amenaza -->
+                <td>
+                    {% if a.tipo_ataque %}
+                        <span class="badge 
+                            {% if a.tipo_ataque == 'SQL_INYECTION' %}bg-danger
+                            {% elif a.tipo_ataque == 'XSS' %}bg-warning
+                            {% elif a.tipo_ataque == 'CSRF' %}bg-info
+                            {% else %}bg-secondary{% endif %}">
+                            {% if a.tipo_ataque == 'SQL_INYECTION' %}Inyección SQL
+                            {% elif a.tipo_ataque == 'XSS' %}Cross-Site Scripting
+                            {% elif a.tipo_ataque == 'CSRF' %}CSRF
+                            {% else %}{{ a.tipo_ataque|default:"N/A" }}{% endif %}
+                        </span>
+                    {% else %}
+                        <span class="badge bg-light text-dark">Sin amenaza</span>
+                    {% endif %}
+                </td>
+                
+                <!-- Rol -->
                 <td>
                     {% if a.usuario and a.usuario.rol %}
                         {{ a.usuario.rol.descripcion }}
@@ -53,8 +89,11 @@
                         -
                     {% endif %}
                 </td>
+                
+                <!-- Documento Intentado -->
                 <td>{{ a.documento_intentado }}</td>
 
+                <!-- Resultado -->
                 <td>
                     {% if a.exito %}
                         <span class="badge bg-success">EXITOSO</span>
@@ -63,12 +102,10 @@
                     {% endif %}
                 </td>
 
-                <td>{{ a.fecha|date:"d/m/Y H:i:s" }}</td>
-
             </tr>
             {% empty %}
             <tr>
-                <td colspan="6" class="text-center">No hay auditorías registradas.</td>
+                <td colspan="8" class="text-center">No hay auditorías registradas.</td>
             </tr>
             {% endfor %}
         </tbody>

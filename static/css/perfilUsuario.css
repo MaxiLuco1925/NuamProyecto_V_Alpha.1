@@ -10,33 +10,34 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
 }
 
-/* Sidebar responsive */
+/* ===== SIDEBAR FULLY RESPONSIVE ===== */
 .sidebar {
     background: linear-gradient(180deg, #e37854 0%, #d06a48 100%);
-    padding: 30px 20px;
-    width: 280px;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
+    padding: clamp(1rem, 3vw, 1.875rem) clamp(1rem, 2vw, 1.25rem);
+    width: 100%;
+    height: auto;
+    position: relative;
     z-index: 1000;
-    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
-    border-right: 3px solid #ff8c00;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border-bottom: 3px solid #ff8c00;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
 .sidebar-logo {
     text-align: center;
-    margin-bottom: 40px;
+    margin: 0;
 }
 
 .sidebar-logo img {
-    width: 100px;
+    width: clamp(50px, 12vw, 100px);
     height: auto;
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
 }
@@ -45,78 +46,97 @@ body {
     color: #414152;
     text-decoration: none;
     font-weight: 700;
-    font-size: 16px;
-    padding: 12px 20px;
+    font-size: clamp(0.875rem, 2.5vw, 1rem);
+    padding: clamp(0.5rem, 2vw, 0.75rem) clamp(1rem, 3vw, 1.25rem);
     background: rgba(255, 255, 255, 0.15);
     border-radius: 12px;
     border: 2px solid rgba(255, 255, 255, 0.3);
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-top: auto;
-    margin-bottom: 20px;
+    gap: 0.625rem;
+    white-space: nowrap;
+    min-height: 44px;
 }
 
 .back-link:hover {
     background: rgba(255, 255, 255, 0.25);
-    transform: translateX(5px);
+    transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     color: #2d2d3d;
     text-decoration: none;
 }
 
-/* Contenido principal */
+/* ===== CONTENIDO PRINCIPAL RESPONSIVE ===== */
 .main-container {
     flex-grow: 1;
-    margin-left: 280px;
-    padding: 40px;
+    padding: clamp(1rem, 4vw, 2.5rem);
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
-    position: relative;
+    min-height: calc(100vh - 120px);
+    width: 100%;
+    max-width: 100%;
 }
 
-/* Tarjeta de perfil moderna */
+/* ===== TARJETA DE PERFIL FULLY RESPONSIVE ===== */
 .perfil-form {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
     backdrop-filter: blur(20px);
-    border-radius: 25px;
-    padding: 40px;
+    border-radius: clamp(1rem, 3vw, 1.5625rem);
+    padding: clamp(1.25rem, 4vw, 2.5rem);
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    margin-bottom: 40px;
+    margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+    gap: clamp(1.5rem, 4vw, 2.5rem);
+    width: 100%;
+}
+
+/* Layout para desktop */
+@media (min-width: 769px) {
+    .perfil-form {
+        flex-direction: row;
+        align-items: flex-start;
+    }
 }
 
 .form-fields {
-    width: 55%;
+    width: 100%;
     display: flex;
     flex-direction: column;
 }
 
+@media (min-width: 769px) {
+    .form-fields {
+        width: 55%;
+    }
+}
+
 .form-fields label {
-    margin-top: 20px;
+    margin-top: clamp(1rem, 2vw, 1.25rem);
     font-weight: 600;
     color: #CFCFCF;
-    font-size: 14px;
+    font-size: clamp(0.75rem, 2vw, 0.875rem);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem;
 }
 
 .form-fields input {
     background: rgba(255, 255, 255, 0.1);
     border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 15px;
+    border-radius: clamp(0.75rem, 2vw, 0.9375rem);
     color: white;
-    padding: 15px 20px;
+    padding: clamp(0.75rem, 2vw, 0.9375rem) clamp(1rem, 2vw, 1.25rem);
     outline: none;
-    font-size: 16px;
+    font-size: clamp(0.875rem, 2vw, 1rem);
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
+    width: 100%;
+    min-height: 50px;
 }
 
 .form-fields input:focus {
@@ -138,9 +158,9 @@ body {
     transform: none;
 }
 
-/* Sección de imagen de perfil */
+/* ===== SECCIÓN DE IMAGEN DE PERFIL RESPONSIVE ===== */
 .profile-icon {
-    width: 35%;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -148,11 +168,17 @@ body {
     text-align: center;
 }
 
+@media (min-width: 769px) {
+    .profile-icon {
+        width: 35%;
+    }
+}
+
 .profile-icon img {
-    width: 200px;
-    height: 200px;
+    width: clamp(120px, 25vw, 200px);
+    height: clamp(120px, 25vw, 200px);
     border-radius: 50%;
-    border: 4px solid #e37854;
+    border: clamp(3px, 1vw, 4px) solid #e37854;
     object-fit: cover;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     transition: all 0.3s ease;
@@ -163,53 +189,66 @@ body {
     box-shadow: 0 15px 40px rgba(227, 120, 84, 0.4);
 }
 
-/* Alert moderno */
+/* ===== ALERT MODERNO RESPONSIVE ===== */
 .alert {
     background: linear-gradient(135deg, rgba(255, 193, 7, 0.2) 0%, rgba(255, 193, 7, 0.1) 100%);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 193, 7, 0.3);
-    border-radius: 20px;
-    padding: 30px;
+    border-radius: clamp(1rem, 3vw, 1.25rem);
+    padding: clamp(1.25rem, 4vw, 1.875rem);
     text-align: center;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 100%;
 }
 
 .alert p {
-    font-size: 18px;
-    margin-bottom: 20px;
+    font-size: clamp(1rem, 3vw, 1.125rem);
+    margin-bottom: clamp(1rem, 3vw, 1.25rem);
     color: #FFD700;
+    line-height: 1.5;
 }
 
 .btn-primary {
     background: linear-gradient(135deg, #e37854 0%, #d06a48 100%);
     border: none;
-    border-radius: 25px;
-    padding: 12px 30px;
+    border-radius: clamp(1rem, 3vw, 1.5625rem);
+    padding: clamp(0.75rem, 2vw, 0.875rem) clamp(1.5rem, 4vw, 2rem);
     font-weight: 700;
-    font-size: 16px;
+    font-size: clamp(0.875rem, 2vw, 1rem);
     box-shadow: 0 6px 20px rgba(227, 120, 84, 0.4);
     transition: all 0.3s ease;
+    min-height: 50px;
+    min-width: 140px;
+    cursor: pointer;
+    color: white;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-primary:hover {
     background: linear-gradient(135deg, #d06a48 0%, #bf5c40 100%);
     transform: translateY(-3px);
     box-shadow: 0 10px 25px rgba(227, 120, 84, 0.5);
+    color: white;
+    text-decoration: none;
 }
 
-/* Footer de marca moderno */
+/* ===== FOOTER DE MARCA RESPONSIVE ===== */
 .brand-footer {
-    font-size: 48px;
+    font-size: clamp(1.5rem, 8vw, 3rem);
     font-weight: 900;
     color: #e37854;
     text-align: center;
     margin-top: auto;
     text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.5);
     opacity: 0.7;
-    padding: 20px 0;
+    padding: clamp(1rem, 3vw, 1.25rem) 0;
+    line-height: 1.2;
 }
 
-/* Efectos de animación */
+/* ===== EFECTOS DE ANIMACIÓN ===== */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -225,19 +264,21 @@ body {
     animation: fadeInUp 0.8s ease-out;
 }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
+/* ===== MEDIA QUERIES ESPECÍFICAS ===== */
+
+/* Tablets (769px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
     .sidebar {
-        width: 250px;
+        padding: 1.5rem 1.25rem;
     }
     
     .main-container {
-        margin-left: 250px;
-        padding: 30px;
+        padding: 2rem;
     }
     
     .perfil-form {
-        padding: 30px;
+        padding: 2rem;
+        gap: 2rem;
     }
     
     .profile-icon img {
@@ -246,51 +287,23 @@ body {
     }
 }
 
+/* Móviles grandes (481px - 768px) */
 @media (max-width: 768px) {
-    body {
-        flex-direction: column;
-    }
-    
     .sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
-        flex-direction: row;
-        justify-content: space-between;
-        padding: 20px;
-    }
-    
-    .sidebar-logo {
-        margin-bottom: 0;
-    }
-    
-    .sidebar-logo img {
-        width: 60px;
-    }
-    
-    .back-link {
-        margin-top: 0;
-        margin-bottom: 0;
+        padding: 1.25rem 1rem;
     }
     
     .main-container {
-        margin-left: 0;
-        padding: 25px;
+        padding: 1.5rem;
     }
     
     .perfil-form {
-        flex-direction: column-reverse;
-        padding: 25px;
-    }
-    
-    .form-fields {
-        width: 100%;
-        margin-top: 30px;
+        padding: 1.5rem;
+        gap: 1.5rem;
     }
     
     .profile-icon {
-        width: 100%;
-        margin-bottom: 20px;
+        margin-bottom: 0;
     }
     
     .profile-icon img {
@@ -299,24 +312,44 @@ body {
     }
     
     .brand-footer {
-        font-size: 36px;
-        position: relative;
-        margin-top: 30px;
+        margin-top: 2rem;
     }
 }
 
+/* Móviles pequeños (hasta 480px) */
 @media (max-width: 480px) {
+    body {
+        font-size: 14px;
+    }
+    
+    .sidebar {
+        padding: 1rem 0.75rem;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .sidebar-logo img {
+        width: 60px;
+    }
+    
+    .back-link {
+        width: 100%;
+        justify-content: center;
+    }
+    
     .main-container {
-        padding: 15px;
+        padding: 1rem;
     }
     
     .perfil-form {
-        padding: 20px;
+        padding: 1.25rem;
+        border-radius: 0.75rem;
     }
     
     .form-fields input {
-        padding: 12px 15px;
-        font-size: 14px;
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+        min-height: 45px;
     }
     
     .profile-icon img {
@@ -325,25 +358,99 @@ body {
     }
     
     .brand-footer {
-        font-size: 28px;
+        font-size: 1.75rem;
+        padding: 0.75rem 0;
     }
     
     .alert {
-        padding: 20px;
+        padding: 1rem;
+        border-radius: 0.75rem;
     }
     
     .alert p {
-        font-size: 16px;
+        font-size: 0.875rem;
+    }
+    
+    .btn-primary {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.875rem;
+        min-height: 45px;
     }
 }
 
-/* Efectos de hover adicionales */
+/* Orientación landscape en móviles */
+@media (max-height: 500px) and (orientation: landscape) {
+    .sidebar {
+        padding: 0.75rem 1rem;
+    }
+    
+    .main-container {
+        padding: 1rem;
+    }
+    
+    .perfil-form {
+        padding: 1rem;
+        flex-direction: row;
+        gap: 1rem;
+    }
+    
+    .profile-icon img {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .form-fields input {
+        padding: 0.5rem 0.75rem;
+        min-height: 40px;
+    }
+}
+
+/* ===== MEJORAS DE ACCESIBILIDAD ===== */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Soporte para touch devices */
+@media (hover: none) and (pointer: coarse) {
+    .form-fields input:focus {
+        transform: none;
+    }
+    
+    .profile-icon img:hover {
+        transform: none;
+    }
+    
+    .btn-primary:hover {
+        transform: none;
+    }
+    
+    .back-link:hover {
+        transform: none;
+    }
+}
+
+/* Alto contraste */
+@media (prefers-contrast: high) {
+    .form-fields input {
+        border-width: 3px;
+    }
+    
+    .profile-icon img {
+        border-width: 4px;
+    }
+}
+
+/* ===== EFECTOS HOVER ADICIONALES ===== */
 .form-fields input:not(:read-only):hover {
     border-color: rgba(255, 255, 255, 0.3);
     background: rgba(255, 255, 255, 0.12);
 }
 
-/* Scroll personalizado */
+/* ===== SCROLL PERSONALIZADO ===== */
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -360,4 +467,45 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
     background: #d06a48;
+}
+
+/* ===== UTILIDADES RESPONSIVE ===== */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Contenedor flexible para formularios */
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    width: 100%;
+}
+
+.form-group {
+    flex: 1 1 300px;
+    min-width: 0;
+}
+
+/* Loading states */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Estados de validación */
+.form-fields input:valid {
+    border-color: rgba(76, 175, 80, 0.3);
+}
+
+.form-fields input:invalid:not(:focus):not(:placeholder-shown) {
+    border-color: rgba(244, 67, 54, 0.3);
 }

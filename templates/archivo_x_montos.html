@@ -6,12 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Archivo x Montos</title>
-
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Estilos -->
     <link href="{% static 'css/x_factor.css' %}" rel="stylesheet">
 </head>
 <body>
@@ -30,8 +26,6 @@
 <div class="container my-4">
 
     <h2 class="mb-4 text-primary fw-bold"> Archivo x Montos</h2>
-
-    <!-- Información sobre el formato -->
     <div class="info-box">
         <h5 class="fw-bold"> Formato del Archivo CSV</h5>
         <p class="mb-1"><strong>Columnas requeridas:</strong> Instrumento, Secuencia, Ejercicio, Fecha, Descripcion, Dividendo, Valor Historico, ISFUT</p>
@@ -120,64 +114,60 @@
     {% endif %}
 
     <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
-        <table class="table table-bordered table-striped align-middle">
-            <thead class="table-dark">
-    <tr>
-        <th colspan="22" class="text-center">Calificaciones Procesadas desde Montos</th>
-    </tr>
-    <tr>
-        <th>ID</th>
-        <th>Instrumento</th>
-        <th>Año Tributario</th>
-        <th>Fecha Pago</th>
-        <th>Descripción</th>
-        <th>Secuencia</th>
-        <th>Dividendo</th>
-        <th>Valor Histórico</th>
-        <th>ISFUT</th>
-        <th>Estado</th>
+    <table class="table table-bordered table-striped align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th colspan="22" class="text-center">Calificaciones Procesadas desde Montos</th>
+            </tr>
+            <tr>
+                <th>ID</th>
+                <th>Instrumento</th>
+                <th>Año Tributario</th>
+                <th>Fecha Pago</th>
+                <th>Descripción</th>
+                <th>Secuencia</th>
+                <th>Dividendo</th>
+                <th>Valor Histórico</th>
+                <th>ISFUT</th>
+                <th>Estado</th>
 
-        <!-- Solo factores 8-19 (calculados desde montos) -->
-        {% for i in rango_factores %}
-            <th class="table-success">F{{ i }}</th>
-        {% endfor %}
-    </tr>
-</thead>
+            {% for i in rango_factores %}
+                <th class="table-success">F{{ i }}</th>
+            {% endfor %}
+            </tr>
+        </thead>
 
-<tbody>
-{% if calificaciones %}
-    {% for item in calificaciones %}
-    <tr>
-        <td>{{ item.id }}</td>
-        <td>{{ item.instrumento.nombre }} ({{ item.instrumento.codigo }})</td>
-        <td>{{ item.año_tributario }}</td>
-        <td>{{ item.fecha_pago|date:"d-m-Y" }}</td>
-        <td>{{ item.descripcion }}</td>
-        <td>{{ item.secuencia_evento }}</td>
-        <td>${{ item.dividendo }}</td>
-        <td>${{ item.valor_historico }}</td>
-        <td>{% if item.isfut %}Sí{% else %}No{% endif %}</td>
-        <td><span class="badge bg-success">{{ item.estado_tributario }}</span></td>
+        <tbody>
+        {% if calificaciones %}
+            {% for item in calificaciones %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.instrumento.nombre }} ({{ item.instrumento.codigo }})</td>
+                <td>{{ item.año_tributario }}</td>
+                <td>{{ item.fecha_pago|date:"d-m-Y" }}</td>
+                <td>{{ item.descripcion }}</td>
+                <td>{{ item.secuencia_evento }}</td>
+                <td>${{ item.dividendo }}</td>
+                <td>${{ item.valor_historico }}</td>
+                <td>{% if item.isfut %}Sí{% else %}No{% endif %}</td>
+                <td><span class="badge bg-success">{{ item.estado_tributario }}</span></td>
 
-        <!-- Factores calculados 8-19 -->
-        {% for i in rango_factores %}
-            <td class="bg-success bg-opacity-25">
-                {% with factor=item.factormensual_set.all|get_item_by_factor:i %}
-                    {% if factor %}
-                        {{ factor.valor_factor|floatformat:6 }}
-                    {% else %}
-                        0.000000
-                    {% endif %}
-                {% endwith %}
-            </td>
-        {% endfor %}
-    </tr>
-    {% endfor %}
-{% endif %}
-</tbody>
-
-    
-        </table>
+                {% for i in rango_factores %}
+                    <td class="bg-success bg-opacity-25">
+                        {% with factor=item.factormensual_set.all|get_item_by_factor:i %}
+                            {% if factor %}
+                                {{ factor.valor_factor|floatformat:6 }}
+                            {% else %}
+                                0.000000
+                            {% endif %}
+                        {% endwith %}
+                    </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
     </div>
 
     <div class="mt-3 d-flex justify-content-end gap-2">

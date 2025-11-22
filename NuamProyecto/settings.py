@@ -52,7 +52,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'auditoria.middleware.SeguridadMiddleware',
 ]
+
 
 ROOT_URLCONF = 'NuamProyecto.urls'
 
@@ -154,6 +156,11 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+DEBUG = True
+
+ALLOWED_HOSTS = ['*']
+
 
 
 

@@ -7,11 +7,11 @@ from auditoria.models import Reportes, AuditoriaLog
 from django.http import JsonResponse
 from usuarios.views import asignaRol
 
-@asignaRol ("Corredor")
+@asignaRol ("Corredor", "Administrador")
 def x_factor(request):
     return render(request, 'archivo_x_factor.html')
 
-@asignaRol ("Corredor")
+@asignaRol ("Corredor", "Administrador")
 def x_monto(request):
     return render(request, 'archivo_x_monto.html')
 
@@ -46,7 +46,7 @@ def revisado(request, reporte_id):
         return JsonResponse({'success' : True})
     
     
-@asignaRol("Corredor")
+@asignaRol("Corredor", "Administrador")
 def Factor(request):
     factores = range(8, 38)
     contexto = {'factores': factores}

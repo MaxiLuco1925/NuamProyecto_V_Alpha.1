@@ -54,7 +54,7 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="col-md-4">
+              <div class="col-md-4">
                     <label for="instrumento" class="form-label">Instrumentos</label>
                     <select name="instrumento" id="instrumento" class="form-select">
                         <option value="">Seleccionar...</option>
@@ -161,21 +161,26 @@
                                 </td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a href="{% url 'ver_detalle_calificacion' cal.id %}" class="btn btn-sm btn-outline-primary" title="Ver detalle">
+                                        <a href="{% url 'ver_detalle_calificacion_Admin' cal.id %}" class="btn btn-sm btn-outline-primary" title="Ver detalle">
                                             <i class="bi bi-eye"></i>
                                         </a>
-                                        <a href="{% url 'editar_calificacion' cal.id %}" 
+                                        <a href="{% url 'editar_calificacion_Admin' cal.id %}" 
                                         class="btn btn-sm btn-outline-warning" 
                                         title="Editar"
                                         onclick="return confirmarActualizacion('{{ cal.id }}');">
                                         <i class="bi bi-pencil"></i>
                                         </a>
-                                        <a href="{% url 'descargar_calificacion' cal.id %}" class="btn btn-sm btn-outline-success" title="Descargar CSV">
+                                        <a href="{% url 'descargar_calificacion_Admin' cal.id %}" class="btn btn-sm btn-outline-success" title="Descargar CSV">
                                             <i class="bi bi-download"></i>
                                         </a>
+                                         <a href="{% url 'eliminar_calificacion' cal.id %}" class="btn btn-sm btn-outline-danger" title="Eliminar Calificación"
+                                          onclick="return confirmarEliminacion('{{ cal.id }}');">
+                                        <i class="bi bi-trash"></i>
+                                        </a>
+                                     
+                                        
                                     </div>
                                 </td>
-
                         
                                 {% for num in "8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37"|split:"," %}
                                     {% with factor=cal.factormensual_set.all|get_factor:num %}

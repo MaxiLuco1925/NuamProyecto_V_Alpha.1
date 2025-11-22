@@ -59,12 +59,43 @@ class Usuario(models.Model):
 
 
 class AuditoriaSesion(models.Model):
+    TIPOS_EVENTO = [
+         ('LOGIN', 'Inicio de Sesisón'),
+         ('LOGOUT', 'Cierre de Sesión'),
+         ('LOGIN_FALLIDO', 'Intento fallido'),
+         ('INYECCION_SQL', 'Intento de Inyección SQL'),
+         ('XSS', 'Intento de Cross-Site Scripting'),
+         ('CSRF', 'Intento CSRF'),
+         ('ACCESO_DENEGADO', 'Acceso Denegado'),
+         ('FUERZA_BRUTA', 'Ataque Fuerza Bruta'),    
+    ]
+
+    NIVEL_AMENAZA = [
+         ('BAJO', 'Bajo'),
+         ('MEDIO', 'Medio'),
+         ('ALTO', 'Alto'),
+         ('CRITICO', 'Critico')
+
+    ]
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, null=True, blank=True)
     documento_intentado = models.CharField(max_length=100, blank=True)
     exito = models.BooleanField()
     rol = models.CharField(max_length=100, blank=True)
     fecha = models.DateTimeField(auto_now_add=True)#auto_now_add=True sirve para asignar la fecha y hora de manera automatica
+    tipo_evento = models.CharField(max_length=50, choices=TIPOS_EVENTO, default='LOGIN')
+    nivel_amenaza = models.CharField(max_length=10, choices=NIVEL_AMENAZA, default='BAJO')
+    ip_adress = models.GenericIPAddressField(null= True, blank= True)
+    user_agent = models.TextField(blank= True)
+    detalles = models.TextField(blank= True)
+    ruta_accedida = models.CharField(max_length=10, blank= True)
+    metodo_http = models.CharField(max_length=10, blank= True)
+    payload_intentado = models.TextField(blank= True)
+    parametro_afectado = models.CharField(max_length=100, blank=True)
+    tipo_ataque = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
         estado = "Éxito" if self.exito else "Fallido"
         return f"{self.documento_intentado} - {estado} - {self.fecha}"
+    
+
+
