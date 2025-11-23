@@ -26,8 +26,10 @@ SECRET_KEY = 'django-insecure-g(mh#an^bwx)c0b^$veid1uxpy+q)iorp@4dggx7ifusz8)4h9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Application definition
 
@@ -41,7 +43,8 @@ INSTALLED_APPS = [
     'auditoria',
     'declaraciones',
     'instrumentos',
-    'usuarios'
+    'usuarios',
+    'django_extensions'
 ]
 
 MIDDLEWARE = [
@@ -157,9 +160,6 @@ EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-DEBUG = True
-
-ALLOWED_HOSTS = ['*']
 
 
 

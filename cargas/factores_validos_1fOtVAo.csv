@@ -1,5 +1,0 @@
-codigo_instrumento,descripcion,mercado,factor,fecha_inicio,fecha_termino
-ACC001,Acción Banco de Chile,Chile,0.15,2024-01-01,2024-12-31
-ACC002,Acción SQM,Chile,0.18,2024-01-01,2024-12-31
-BON001,Bono Tesorería EEUU,EEUU,0.1,2024-01-01,2024-12-31
-ETF001,ETF MSCI Latam,Perú,0.2,2024-01-01,2024-12-31

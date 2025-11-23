@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from usuarios.models import Usuario
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -6,6 +6,8 @@ from .forms import ReporteForm
 from auditoria.models import Reportes, AuditoriaLog
 from django.http import JsonResponse
 from usuarios.views import asignaRol
+from auditoria.models import Reportes
+from django.views.decorators.csrf import csrf_protect
 
 @asignaRol ("Corredor", "Administrador")
 def x_factor(request):
@@ -86,7 +88,7 @@ def ConfiguraciónAdmin(request):
 def verificacionUsuario(request):
     return render(request,"Verificacion.html")
 
-
+@csrf_protect
 @asignaRol("Corredor")
 def reportes(request):
     if request.method == 'POST':
@@ -114,6 +116,14 @@ def reportes(request):
 
 def cargaArchivos(request):
     return render(request, 'cargaArchivos.html')
+
+@asignaRol("Administrador")
+def revisar_reporte(request, pk):
+    reporte = get_object_or_404(Reportes, pk=pk)
+    reporte.delete()
+    messages.success(request, "Reporte revisado con Exito!.")
+    return redirect('lecturaReportes')
+
 
 
 

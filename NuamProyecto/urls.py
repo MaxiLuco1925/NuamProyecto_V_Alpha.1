@@ -15,9 +15,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 from usuarios.views import portada, iniciarSesion, registro, interfazinicio, market_data_api, Administrador, panel, panelAdmin, EditarRolusuario, adminEliminarUsuario, listausuarios,salir, descargar_calificacion,ver_detalle_calificacion,editar_calificacion_manual,eliminar_calificacion, verificar_codigo, auditoriaSesiones,panelArchivoXFactor, panelArchivoXFactorAdmin, descargar_calificacion_Admin, ver_detalle_calificacion_Admin, editar_calificacion_manual_Admin
-from auditoria.views import cargaArchivos, Configuración, ConfiguraciónAdmin, verificacionUsuario, reportes, Factor,lecturaReportes,listadoUsuario, FactorAdmin
+from auditoria.views import cargaArchivos, Configuración, ConfiguraciónAdmin, verificacionUsuario, reportes, Factor,lecturaReportes,listadoUsuario, FactorAdmin, revisar_reporte
 from declaraciones.views  import ingresarCalificacion, x_factorCalculo, ingresarCalificacionAdmin, x_factorCalculoAdmin,ProcesarArchivoCSV, carga_masiva_factores_view, carga_masiva_montos_view, ProcesarArchivoMontosCSV, carga_masiva_montos_Admin, carga_masiva_factores_Admin
 
 urlpatterns = [
@@ -44,6 +46,7 @@ urlpatterns = [
     path('listausuarios/<int:pk>/eliminar/', adminEliminarUsuario, name='adminEliminarUsuario'),
     path('listausuarios/', listausuarios, name='listausuarios'),
     path('lecturaReportes/', lecturaReportes, name='lecturaReportes'),
+    path("revisarReporte/<int:pk>", revisar_reporte, name = 'revisarReporte'),
     path('cargaArchivos', cargaArchivos, name='cargaArchivos'),
     path('ingresarCalificacion/', ingresarCalificacion, name='ingresarCalificacion'),
     path("factor_listado/", x_factorCalculo, name = "factorListado" ),
@@ -67,3 +70,5 @@ urlpatterns = [
 
 ]
 
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

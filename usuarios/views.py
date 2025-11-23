@@ -12,8 +12,8 @@ from declaraciones.forms import EditarCalificacionForm
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_protect
 from auditoria.models import Instrumento
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import login, logout, get_user_model
 from usuarios.forms import UsuarioRolForm
@@ -64,7 +64,7 @@ def asignaRol(*roles):
     return decorador
 
                
-
+@csrf_protect
 def registro(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -99,7 +99,7 @@ def registro(request):
     else:
         form = RegisterForm()
         return render(request, 'registro.html', {'form': form})
-
+@csrf_protect
 def iniciarSesion(request):
     if request.method == 'POST':
         form = InicioSesionForm(request.POST)

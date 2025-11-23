@@ -5,6 +5,13 @@ from auditoria.models import FactorMensual
 from datetime import date
 
 class IngresoCalificacionManualForm(forms.ModelForm):
+
+    año_tributario = forms.ChoiceField(
+        choices=[('', 'Seleccione un año tributario')] + [(año, año) for año in range (2020, 2028)],
+        label="Año tributario",
+        widget=forms.Select(attrs={'class' : 'form-control'})
+    )
+
     mercado = forms.ModelChoiceField(
         queryset=Mercado.objects.all(),
         label = "Mercado",
@@ -37,7 +44,6 @@ class IngresoCalificacionManualForm(forms.ModelForm):
             'secuencia_evento' : forms.NumberInput(attrs={'class' : 'form-control'}),
             'dividendo' : forms.NumberInput(attrs= {'class' : 'form-control', 'step' : '0.01'}),
             'valor_historico' : forms.NumberInput(attrs={'class' : 'form-control', 'step' : '0.01'}),
-            'año_tributario' : forms.NumberInput(attrs= {'class' : 'form-control', 'min' : 2020, 'max ': 2100}),
             'isfut' : forms.CheckboxInput(attrs={'class' : 'form-check-input'}),
         }
 

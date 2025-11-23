@@ -17,7 +17,8 @@ from auditoria.forms import CargaArchivoForm
 from declaraciones.models import CargaArchivo
 from usuarios.views import asignaRol
 from instrumentos.models import Mercado
-
+from django.views.decorators.csrf import csrf_protect
+@csrf_protect
 @asignaRol("Corredor", "Administrador")
 def ingresarCalificacion(request):
     if request.method == 'POST':
@@ -36,7 +37,7 @@ def ingresarCalificacion(request):
         form = forms.IngresoCalificacionManualForm()
     return render(request, 'CalificacionManual.html', {'form': form})
 
-
+@csrf_protect
 @asignaRol("Corredor", "Administrador")
 def x_factorCalculo(request):
     calificacion_id = request.session.get('calificacion_id')
@@ -115,7 +116,7 @@ def x_factorCalculo(request):
     }
     return render(request, 'factores.html', context)
 
-
+@csrf_protect
 @asignaRol("Administrador")           
 def ingresarCalificacionAdmin(request):
     if request.method == 'POST':
@@ -133,7 +134,7 @@ def ingresarCalificacionAdmin(request):
     else:
         form = forms.IngresoCalificacionManualForm()
     return render(request, 'CalificacionManualAdmin.html', {'form': form})
-
+@csrf_protect
 @asignaRol("Administrador")
 def x_factorCalculoAdmin(request):
     calificacion_id = request.session.get('calificacion_id')
@@ -470,7 +471,7 @@ def ProcesarArchivoMontosCSV(archivo, tipo_carga, usuario, carga_origen):
                     codigo_mercado=config['codigo']
                 )
                 mercados_dict[nombre_mercado] = nuevo_mercado
-                print(f"✅ Mercado creado automáticamente: {nombre_mercado}")
+                print(f" Mercado creado automáticamente: {nombre_mercado}")
         
         print(f"✅ Mercados disponibles: {list(mercados_dict.keys())}")
         
@@ -499,7 +500,7 @@ def ProcesarArchivoMontosCSV(archivo, tipo_carga, usuario, carga_origen):
             
             try:
                 instrumento = Instrumento.objects.get(codigo__iexact=instrumento_val)
-                print(f"🔄 Instrumento encontrado: {instrumento_val} - Actualizando factores...")
+                print(f" Instrumento encontrado: {instrumento_val} - Actualizando factores...")
             except Instrumento.DoesNotExist:
                 mercado_asignado = None
                 tipo_instrumento = "Acción" 
@@ -522,7 +523,7 @@ def ProcesarArchivoMontosCSV(archivo, tipo_carga, usuario, carga_origen):
                     )
                     mercados_dict[nombre_mercado_nuevo] = mercado_asignado
                     tipo_instrumento = nombre_mercado_nuevo
-                    print(f"✅ Mercado nuevo creado: {nombre_mercado_nuevo}")
+                    print(f" Mercado nuevo creado: {nombre_mercado_nuevo}")
                 
                 instrumento = Instrumento.objects.create(
                     codigo=instrumento_val,
@@ -531,7 +532,7 @@ def ProcesarArchivoMontosCSV(archivo, tipo_carga, usuario, carga_origen):
                     tipo_instrumento=tipo_instrumento
                 )
                 instrumento_creado = True
-                print(f"✅ Instrumento creado: {instrumento_val} en mercado {mercado_asignado.nombre}")
+                print(f" Instrumento creado: {instrumento_val} en mercado {mercado_asignado.nombre}")
 
             secuencia = int(fila.get('Secuencia') or fila.get('secuencia') or 0)
             ejercicio = int(fila.get('Ejercicio') or fila.get('ejercicio') or 0)
@@ -623,7 +624,7 @@ def ProcesarArchivoMontosCSV(archivo, tipo_carga, usuario, carga_origen):
                 if abs(suma_redondeada - Decimal('1.000000')) <= Decimal('0.0001'):  # Tolerancia de 0.01%
                     exitosos += 1
                     accion = "creado" if instrumento_creado else "actualizado"
-                    print(f"✅ {instrumento_val}: Factores {accion} correctamente (suma: {suma_redondeada:.6f})")
+                    print(f" {instrumento_val}: Factores {accion} correctamente (suma: {suma_redondeada:.6f})")
                 elif suma_redondeada > Decimal('1.000000'):
                     errores.append(f"Fila {total}: suma factores 8-19 = {suma_redondeada:.6f} > 1.000000 para '{instrumento_val}'")
                 else:

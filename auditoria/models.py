@@ -7,11 +7,6 @@ from declaraciones.models import CargaArchivo
 
 class CalificacionTributaria(models.Model):
 
-    Estado_validacion_Choices = [
-    ('Pendiente', 'Pendiente'),
-    ('Validado', 'Validado'),
-    ('Rechazado', 'Rechazado'),
-]
     instrumento = models.ForeignKey(Instrumento, on_delete=models.CASCADE, blank= True, null=True)
     declaracion = models.ForeignKey(DeclaracionJurada, on_delete=models.CASCADE, null=True, blank=True)
     fecha_pago = models.DateTimeField()
