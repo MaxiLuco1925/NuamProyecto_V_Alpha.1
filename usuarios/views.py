@@ -99,6 +99,7 @@ def registro(request):
     else:
         form = RegisterForm()
         return render(request, 'registro.html', {'form': form})
+    
 @csrf_protect
 def iniciarSesion(request):
     if request.method == 'POST':

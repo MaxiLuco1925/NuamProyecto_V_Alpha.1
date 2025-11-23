@@ -15,6 +15,7 @@ class RegisterForm(forms.ModelForm):
         label = "Confirmar Conteraseña",
         widget= forms.PasswordInput(attrs={'class' : 'form-input'})
     )
+    
 
     class Meta:
         model = Usuario
@@ -34,25 +35,19 @@ class RegisterForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        pais = cleaned_data.get('pais')
         documento = cleaned_data.get('documento_identidad')
 
-        if not (pais and documento):
+        if not documento:
+            self.add_error('documento_identidad', 'El RUT es obligatorio de colocar')
             return cleaned_data
-        
-        reglas ={
-            'Chile' : {
-                'patron' : r'^\d{1,2}\.?\d{3}\.?\d{3}-[\dkK]$',
-                'mensaje' : 'El RUT Chileno debe contener verse de la siguiente manera 9.000.000-4, 10.000.000-6 o con un digito K'
-            },
-        
-            }
 
-        if pais in reglas:
-            regla = reglas[pais]
-            if not re.match(regla['patron'], documento):
-                self.add_error('documento_identidad', regla['mensaje'])
-        return cleaned_data
+
+        patron_rut = r'^\d{1,2}\.?\d{3}\.?\d{3}-[\dkK]$'   
+
+        if not re.match(patron_rut, str(documento).strip()):
+                self.add_error('documento_identidad', 'El RUT Chileno debe tener el siguiente formato: 12.345.678-0 o 12345678-0')
+        return cleaned_data             
+
     
     def clean_password2(self):
         contraseña1 = self.cleaned_data.get('password1')
