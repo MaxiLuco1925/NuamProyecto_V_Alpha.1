@@ -473,7 +473,7 @@ def ProcesarArchivoMontosCSV(archivo, tipo_carga, usuario, carga_origen):
                 mercados_dict[nombre_mercado] = nuevo_mercado
                 print(f" Mercado creado automáticamente: {nombre_mercado}")
         
-        print(f"✅ Mercados disponibles: {list(mercados_dict.keys())}")
+        print(f" Mercados disponibles: {list(mercados_dict.keys())}")
         
     except Exception as e:
         errores.append(f"Error configurando mercados: {e}")
@@ -792,6 +792,7 @@ def carga_masiva_montos_Admin(request):
         "rango_montos": list(range(1, 30)),
         "rango_factores": list(range(8, 38)),
     })
+
 
 
 
