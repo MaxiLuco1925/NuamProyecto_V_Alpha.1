@@ -1,0 +1,6 @@
+#Instale las siguientes librerias para usar el sistema en su totalidad
+#pip install reportlab
+#pip install django
+#pip install pymysql <- en caso de que ocupe mariaDB o MySql
+#pip install cryptography
+#pip install yfinances <- para datos financieros que se toman de la pagina de Nasdaq
