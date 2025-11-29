@@ -30,7 +30,15 @@
                 <input type="text" class="form-control" value="{{ Usuario.nombre|default:Usuario.nombre }}" readonly>
 
                 <label>Correo electrónico</label>
-                <input type="email" class="form-control" value="{{ Usuario.email }}" readonly>
+                <div class="input-group mb-3">
+                    <input type="email" class="form-control" value="{{ Usuario.email }}" readonly>
+                    <a href="{% url 'actualizar_correo' %}" 
+                    class="btn btn-custom" 
+                    title="Editar correo"
+                    onclick="return confirmarActualizacion('{{ Usuario.email }}');">
+                        <i class="bi bi-pencil"></i>
+                    </a>    
+                </div>
 
                 <label>Número de teléfono</label>
                 <input type="tel" class="form-control" value="{{ Usuario.telefono|default:'No registrado' }}" readonly>
@@ -44,7 +52,7 @@
 
             <div class="profile-icon">
                 <img src="{% static 'image/USUARIO.png' %}" alt="Usuario">
-                <p class="mt-3 text-muted">Foto de perfil</p>
+                <p class="mt-3 text-white">Foto de perfil</p>
             </div>
         </div>
         {% else %}
@@ -58,6 +66,6 @@
 
         <div class="brand-footer">NUAM</div>
     </div>
-
+    <script src="{% static 'js/Configuracion.js' %}"></script>
 </body>
 </html>

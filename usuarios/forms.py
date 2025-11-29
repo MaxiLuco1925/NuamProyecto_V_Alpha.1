@@ -149,3 +149,16 @@ class CustomContraseñaForm(SetPasswordForm):
                 'placeholder' : 'Repite tu nueva contraseña'
             }),
         )
+
+
+class ActualizarCorreoForm(forms.ModelForm):
+        class Meta:
+            model = Usuario
+            fields = ['email']
+            widgets = {
+                'email' : forms.EmailInput(attrs={'class' : 'form-input'})
+            }
+
+
+
+

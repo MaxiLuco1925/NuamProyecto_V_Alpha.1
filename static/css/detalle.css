@@ -1,0 +1,269 @@
+/* Estilos futuristas para Detalle Calificación */
+body {
+    background: linear-gradient(135deg, #414152 0%, #2a2a3a 100%);
+    min-height: 100vh;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Efectos de partículas futuristas */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(227, 120, 84, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(227, 120, 84, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+}
+
+.card {
+    border: none;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+}
+
+.card-header {
+    background: linear-gradient(135deg, #e37854 0%, #ff8c6b 100%) !important;
+    border-radius: 20px 20px 0 0 !important;
+    position: relative;
+    padding: 1.5rem;
+    border: none;
+    color: white;
+}
+
+.card-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+}
+
+.card-header h4 {
+    font-weight: 700;
+    font-size: 1.5rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    letter-spacing: -0.5px;
+    margin: 0;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+.card-footer {
+    background: rgba(255, 255, 255, 0.8);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+}
+
+/* Estilos para la información */
+p {
+    margin-bottom: 0.8rem;
+    font-size: 1rem;
+    color: #2d3748;
+}
+
+p strong {
+    color: #e37854;
+    font-weight: 600;
+}
+
+hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(90deg, #e37854, transparent);
+    margin: 2rem 0;
+}
+
+h5 {
+    color: #e37854;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+}
+
+/* Tabla futurista */
+.table {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.table thead {
+    background: linear-gradient(135deg, #e37854 0%, #ff8c6b 100%);
+}
+
+.table th {
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 1rem;
+    text-align: center;
+}
+
+.table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(227, 120, 84, 0.05);
+    transform: translateX(5px);
+}
+
+.table td {
+    border-color: rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Botones futuristas */
+.btn {
+    border: none;
+    border-radius: 12px;
+    padding: 12px 30px;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #8b939b 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4);
+    color: white;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #e37854 0%, #ff8c6b 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(227, 120, 84, 0.3);
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(227, 120, 84, 0.4);
+    color: white;
+    background: linear-gradient(135deg, #ff8c6b 0%, #e37854 100%);
+}
+
+/* Efectos de animación */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Badges y estados */
+.badge {
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+    }
+    
+    .card-header {
+        padding: 1rem;
+    }
+    
+    .card-header h4 {
+        font-size: 1.3rem;
+    }
+    
+    .btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+        width: 100%;
+    }
+    
+    .table {
+        font-size: 0.9rem;
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.75rem 0.5rem;
+    }
+}
+
+/* Efectos de texto */
+.text-muted {
+    color: #6c757d !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Mejoras visuales para datos numéricos */
+p strong {
+    min-width: 180px;
+    display: inline-block;
+}
+
+/* Efecto de brillo en hover para toda la card */
+.card:hover {
+    box-shadow: 
+        0 30px 60px -12px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}

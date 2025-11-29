@@ -17,8 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
+from django.contrib.auth import views as auth_views
 from django.conf.urls.static import static
-from usuarios.views import portada, iniciarSesion, registro, interfazinicio, market_data_api, Administrador, panel, panelAdmin, EditarRolusuario, adminEliminarUsuario, listausuarios,salir, descargar_calificacion,ver_detalle_calificacion,editar_calificacion_manual,eliminar_calificacion, verificar_codigo, auditoriaSesiones,panelArchivoXFactor, panelArchivoXFactorAdmin, descargar_calificacion_Admin, ver_detalle_calificacion_Admin, editar_calificacion_manual_Admin
+from usuarios.views import portada, iniciarSesion, registro, interfazinicio, market_data_api, Administrador, panel, panelAdmin, EditarRolusuario, adminEliminarUsuario, listausuarios,salir, descargar_calificacion,ver_detalle_calificacion,editar_calificacion_manual,eliminar_calificacion, verificar_codigo, auditoriaSesiones,panelArchivoXFactor, panelArchivoXFactorAdmin, descargar_calificacion_Admin, ver_detalle_calificacion_Admin, editar_calificacion_manual_Admin, actualizarCorreo, verificar_codigo_contraseña, cambiar_password, password_reset_request
 from auditoria.views import cargaArchivos, Configuración, ConfiguraciónAdmin, verificacionUsuario, reportes, Factor,lecturaReportes,listadoUsuario, FactorAdmin, revisar_reporte
 from declaraciones.views  import ingresarCalificacion, x_factorCalculo, ingresarCalificacionAdmin, x_factorCalculoAdmin,ProcesarArchivoCSV, carga_masiva_factores_view, carga_masiva_montos_view, ProcesarArchivoMontosCSV, carga_masiva_montos_Admin, carga_masiva_factores_Admin
 
@@ -67,7 +68,15 @@ urlpatterns = [
     path('carga/montos_Admin/', carga_masiva_montos_Admin, name='carga_montos_Admin'),
     path('carga/factores_Admin/', carga_masiva_factores_Admin, name='carga_factores_Admin'),
     path('panel/archivo-x-factor_admin/', panelArchivoXFactorAdmin,  name='panelArchivoXFactorAdmin'),
+    path('actualizar-correo/', actualizarCorreo, name='actualizar_correo'),
 
+        path('password-reset_form/', password_reset_request, name='password_reset_form'),
+    path('verificar-codigo/',verificar_codigo_contraseña, name='verificar_codigo'),
+    path('cambiar-password/', cambiar_password, name='cambiar_password'),
+    path('password-reset-complete/', 
+         auth_views.PasswordResetCompleteView.as_view(
+             template_name='registration/password_reset_complete.html'
+         ), name='password_reset_complete'),
 ]
 
 if settings.DEBUG:

@@ -1,0 +1,240 @@
+/* Estilos para Contraseña Cambiada Exitosamente - Misma gama de colores */
+body {
+    background: linear-gradient(135deg, #414152 0%, #2a2a3a 100%);
+    min-height: 100vh;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Efectos de fondo con los colores de la paleta */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(227, 120, 84, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(227, 120, 84, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+}
+
+.row {
+    min-height: 80vh;
+}
+
+.alert {
+    border: none;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    padding: 3rem;
+    text-align: center;
+}
+
+.alert:hover {
+    box-shadow: 
+        0 30px 60px -12px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.15);
+    transform: translateY(-5px);
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    border-left: 6px solid #28a745;
+    position: relative;
+}
+
+.alert-success::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #28a745, #20c997, #28a745);
+}
+
+.alert h4 {
+    color: #155724;
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.alert p {
+    color: #0f5132;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 2.5rem;
+    font-weight: 500;
+}
+
+/* Icono de éxito */
+.success-icon {
+    font-size: 4rem;
+    color: #28a745;
+    margin-bottom: 1.5rem;
+    display: block;
+    animation: bounceIn 1s ease;
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Botón con el color #e37854 */
+.btn-primary {
+    background: linear-gradient(135deg, #e37854 0%, #ff8c6b 100%);
+    border: none;
+    border-radius: 12px;
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(227, 120, 84, 0.3);
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 1rem;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #ff8c6b 0%, #e37854 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(227, 120, 84, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+/* Efectos de animación para la alerta */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert {
+    animation: fadeInUp 0.8s ease;
+}
+
+/* Efecto de confeti */
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #e37854;
+    opacity: 0.7;
+    animation: confettiFall 5s linear infinite;
+}
+
+@keyframes confettiFall {
+    0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+    
+    .alert {
+        padding: 2rem 1.5rem;
+        margin: 0 10px;
+    }
+    
+    .alert h4 {
+        font-size: 1.6rem;
+    }
+    
+    .alert p {
+        font-size: 1.1rem;
+    }
+    
+    .success-icon {
+        font-size: 3rem;
+    }
+    
+    .btn-primary {
+        padding: 0.875rem 2rem;
+        font-size: 1rem;
+        width: 100%;
+        max-width: 200px;
+    }
+}
+
+/* Efecto de pulso para el botón */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(227, 120, 84, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(227, 120, 84, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(227, 120, 84, 0);
+    }
+}
+
+.btn-primary {
+    animation: pulse 2s infinite;
+}
+
+/* Mensaje adicional */
+.additional-info {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(40, 167, 69, 0.3);
+}
+
+.additional-info p {
+    font-size: 0.9rem;
+    color: #0f5132;
+    margin-bottom: 0.5rem;
+    opacity: 0.8;
+}

@@ -509,3 +509,15 @@ body {
 .form-fields input:invalid:not(:focus):not(:placeholder-shown) {
     border-color: rgba(244, 67, 54, 0.3);
 }
+
+.btn-custom {
+    color: #e37854;
+    border-color: #e37854;
+    background-color: transparent;
+}
+
+.btn-custom:hover {
+    color: #fff;
+    background-color: #e37854;
+    border-color: #e37854;
+}

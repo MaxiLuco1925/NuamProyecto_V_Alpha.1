@@ -27,10 +27,15 @@ from django.db.models import Prefetch
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
+from .forms import ActualizarCorreoForm
 import json
 from django.http import HttpResponse
 import csv
 from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmView
+import secrets
+from django.contrib.auth.hashers import make_password
+from django.utils import timezone
+from datetime import timedelta
 
 def portada(request):
     return render(request, "index.html")
@@ -681,6 +686,102 @@ def panelArchivoXFactorAdmin(request):
 
 
 
+def actualizarCorreo(request):
+    try:
+        usuario = Usuario.objects.get(id=request.session.get('usuario_id'))
+    except Usuario.DoesNotExist:
+        messages.error(request, "Usuario no encontrado.")
+        return redirect('configuracion')
+        
+    if request.method == "POST":
+        form = ActualizarCorreoForm(request.POST, instance=usuario)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Correo actualizado correctamente.")
+            return redirect('Configuración')
+        else:
+            messages.error(request, "Error al actualizar el correo. Verifica los datos.")
+    else:
+        form = ActualizarCorreoForm(instance=usuario)
+    return render(request, 'actualizar_correo.html', {'form': form})
 
 
+def password_reset_request(request):
+    if request.method == "POST":
+        email = request.POST.get('email')
+        
+        try:
+            usuario = Usuario.objects.get(email=email, verificado=True)
+            
+            codigo = str(random.randint(100000, 999999))
+            usuario.codigo_verificacion = codigo
+            usuario.save()
+            
+            send_mail(
+                'Código de verificación para restablecer contraseña',
+                f'Hola {usuario.nombre},\n\nTu código de verificación es: {codigo}\n\nIngresa este código en la página de verificación.\n\nEste código expirará en 10 minutos.',
+                'noreply@tusitio.com',
+                [usuario.email],
+                fail_silently=False,
+            )
+            
+            request.session['reset_email'] = email
+            request.session['reset_codigo'] = codigo
+            
+            messages.success(request, 'Se ha enviado un código de verificación a tu email.')
+            return redirect('verificar_codigo')
+            
+        except Usuario.DoesNotExist:
+            messages.error(request, 'No existe un usuario con ese email o no está verificado.')
+    
+    return render(request, 'registration/password_reset_form.html')
 
+
+def verificar_codigo_contraseña(request):
+    if request.method == "POST":
+        codigo_ingresado = request.POST.get('codigo')
+        email = request.session.get('reset_email')
+        codigo_correcto = request.session.get('reset_codigo')
+        
+        if not email:
+            messages.error(request, 'Sesión expirada. Solicita un nuevo código.')
+            return redirect('password_reset')
+        
+        if codigo_ingresado == codigo_correcto:
+
+            return redirect('cambiar_password')
+        else:
+            messages.error(request, 'Código incorrecto. Intenta nuevamente.')
+    
+    return render(request, 'registration/verificar_codigo_contraseña.html')
+
+def cambiar_password(request):
+    email = request.session.get('reset_email')
+    
+    if not email:
+        messages.error(request, 'Sesión expirada. Solicita un nuevo código.')
+        return redirect('password_reset')
+    
+    if request.method == "POST":
+        nueva_contraseña = request.POST.get('new_password1')
+        confirmar_contraseña = request.POST.get('new_password2')
+        
+        if nueva_contraseña and nueva_contraseña == confirmar_contraseña:
+            try:
+                usuario = Usuario.objects.get(email=email)
+                usuario.contraseña_hash = make_password(nueva_contraseña)
+                usuario.codigo_verificacion = None  
+                usuario.save()
+                
+                del request.session['reset_email']
+                del request.session['reset_codigo']
+                
+                messages.success(request, 'Tu contraseña ha sido actualizada exitosamente.')
+                return redirect('password_reset_complete')
+                
+            except Usuario.DoesNotExist:
+                messages.error(request, 'Error al actualizar la contraseña.')
+        else:
+            messages.error(request, 'Las contraseñas no coinciden.')
+    
+    return render(request, 'registration/cambiar_password.html')

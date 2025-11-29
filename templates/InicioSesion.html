@@ -53,6 +53,9 @@
                             <div class="text-danger">{{ form.contraseña.errors }}</div>
                         {% endif %}
                     </div>
+                    <div class="mb-4">
+                        <a href="{% url 'password_reset_form' %}">¿Olvidaste tu contraseña?</a>
+                    </div>
                     
                     <div class="d-grid">
                         <button type="submit" class="btn btn-primary">

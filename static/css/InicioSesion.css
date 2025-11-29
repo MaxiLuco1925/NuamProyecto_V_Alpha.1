@@ -90,6 +90,17 @@ h2::after {
     border-radius: 2px;
 }
 
+/* === CAMPOS DE FORMULARIO CON LA MISMA ALTURA === */
+.form-group-equal {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.mb-4 {
+    margin-bottom: 0 !important; /* Eliminamos el margin-bottom original */
+}
+
 .form-label {
     font-weight: 600;
     color: #CFCFCF;
@@ -97,6 +108,7 @@ h2::after {
     font-size: 14px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    display: block;
 }
 
 .form-control {
@@ -107,6 +119,8 @@ h2::after {
     padding: 14px 18px !important;
     transition: all 0.3s ease;
     font-size: 15px;
+    height: 52px; /* Altura fija para ambos campos */
+    width: 100%;
 }
 
 .form-control:focus {
@@ -121,6 +135,47 @@ h2::after {
     color: rgba(255, 255, 255, 0.5) !important;
 }
 
+/* Contenedor especial para mantener consistencia */
+.form-field-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 90px; /* Altura mínima consistente para ambos campos */
+}
+
+/* === ENLACE OLVIDÉ CONTRASEÑA === */
+.mb-4:last-of-type {
+    margin-top: 0.5rem;
+}
+
+.mb-4 a {
+    color: #8aa8c4 !important;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    position: relative;
+    display: inline-block;
+}
+
+.mb-4 a:hover {
+    color: #e37854 !important;
+}
+
+.mb-4 a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #e37854;
+    transition: width 0.3s ease;
+}
+
+.mb-4 a:hover::after {
+    width: 100%;
+}
+
+/* === BOTÓN INGRESAR === */
 .btn-primary {
     background: linear-gradient(135deg, #e37854 0%, #d06a48 100%) !important;
     border: none !important;
@@ -132,6 +187,10 @@ h2::after {
     width: 100%;
     position: relative;
     overflow: hidden;
+    height: 52px; /* Misma altura que los campos de texto */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-primary::before {
@@ -153,34 +212,6 @@ h2::after {
     background: linear-gradient(135deg, #d06a48 0%, #bf5c40 100%) !important;
     transform: translateY(-3px);
     box-shadow: 0 8px 25px rgba(227, 120, 84, 0.4) !important;
-}
-
-/* === ENLACE OLVIDÉ CONTRASEÑA === */
-.text-light {
-    color: #8aa8c4 !important;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    font-weight: 500;
-    position: relative;
-}
-
-.text-light:hover {
-    color: #e37854 !important;
-}
-
-.text-light::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0;
-    height: 1px;
-    background: #e37854;
-    transition: width 0.3s ease;
-}
-
-.text-light:hover::after {
-    width: 100%;
 }
 
 /* === FOOTER MODERNO === */
@@ -207,6 +238,7 @@ h2::after {
     width: auto;
     border-radius: 25px !important;
     box-shadow: 0 6px 20px rgba(138, 168, 196, 0.3) !important;
+    height: auto; /* Altura automática para el botón del footer */
 }
 
 .footer-logo .btn-primary:hover {
@@ -234,6 +266,7 @@ h2::after {
     margin-top: 0.5rem;
     color: #ff6b6b !important;
     font-weight: 500;
+    min-height: 20px; /* Espacio consistente para errores */
 }
 
 /* === RESPONSIVE DESIGN === */
@@ -277,6 +310,15 @@ h2::after {
     h2 {
         font-size: 24px;
     }
+    
+    .form-control {
+        padding: 12px 15px !important;
+        height: 48px; /* Altura ajustada para móviles */
+    }
+    
+    .btn-primary {
+        height: 48px; /* Misma altura ajustada para móviles */
+    }
 }
 
 @media (max-width: 576px) {
@@ -312,6 +354,16 @@ h2::after {
     
     .form-control {
         padding: 12px 15px !important;
+        height: 46px; /* Altura más compacta para móviles pequeños */
+    }
+    
+    .btn-primary {
+        height: 46px; /* Misma altura más compacta */
+        font-size: 15px !important;
+    }
+    
+    .form-field-container {
+        min-height: 85px; /* Altura mínima ajustada para móviles */
     }
 }
 
@@ -348,4 +400,17 @@ h2::after {
 
 ::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(135deg, #d06a48 0%, #bf5c40 100%);
+}
+
+/* Asegurar que todos los elementos de formulario tengan la misma altura */
+.form-control, .btn-primary {
+    box-sizing: border-box;
+}
+
+/* Contenedor principal del formulario para mantener consistencia */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 370px;
 }
