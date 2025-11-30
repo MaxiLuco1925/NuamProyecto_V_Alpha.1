@@ -143,9 +143,9 @@ pymysql.install_as_MySQLdb()
 DATABASES ={
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
+        'NAME': 'nuam_sql3',
+        'USER': 'root',
+        'PASSWORD': 'Darklinkoscuroofward45@',
         'HOST':'localhost',
         'PORT':3306
 
@@ -156,8 +156,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_USER = 'darklink.fircelink345@gmail.com'
+EMAIL_HOST_PASSWORD = 'prdc pjtz tmrx phka'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 LOGIN_URL = 'iniciarSesion'
 SERVER_EMAIL = EMAIL_HOST_USER

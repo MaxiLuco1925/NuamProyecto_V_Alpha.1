@@ -21,8 +21,65 @@
         <h2>Ingreso Manual de Calificaciones Tributarias</h2>
         <form method="POST" novalidate>
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Guardar Calificación</button>
+
+            <div class="mb-3">
+                {{ form.descripcion.label_tag }}
+                {{ form.descripcion }}
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    {{ form.fecha_pago.label_tag }}
+                    {{ form.fecha_pago }}
+                </div>
+                <div class="col-md-6 mb-3">
+                    {{ form.secuencia_evento.label_tag }}
+                    {{ form.secuencia_evento }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    {{ form.dividendo.label_tag }}
+                    {{ form.dividendo }}
+                </div>
+                <div class="col-md-6 mb-3">
+                    {{ form.valor_historico.label_tag }}
+                    {{ form.valor_historico }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    {{ form.año_tributario.label_tag }}
+                    {{ form.año_tributario }}
+                </div>
+                <div class="col-md-6 d-flex align-items-center mt-4 mb-3">
+                    {{ form.isfut }}
+                    <label class="ms-2">{{ form.isfut.label }}</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    {{ form.mercado.label_tag }}
+                    {{ form.mercado }}
+                </div>
+                <div class="col-md-4 mb-3">
+                    {{ form.instrumento.label_tag }}
+                    {{ form.instrumento }}
+                </div>
+                <div class="col-md-4 mb-3">
+                    {{ form.factor_valor.label_tag }}
+                    {{ form.factor_valor }}
+                </div>
+            </div>
+
+            <div class="form-buttons mt-3">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save me-2"></i>Guardar Calificación
+                </button>
+            </div>
         </form>
 </body>
 </html>

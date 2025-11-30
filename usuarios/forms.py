@@ -159,6 +159,12 @@ class ActualizarCorreoForm(forms.ModelForm):
                 'email' : forms.EmailInput(attrs={'class' : 'form-input'})
             }
 
-
+class ActualizarTelefonoForm(forms.ModelForm):
+        class Meta:
+            model = Usuario
+            fields = ['telefono']
+            widgets = {
+                'telefono' : forms.TextInput(attrs={'class' : 'form-input'})
+            }
 
 

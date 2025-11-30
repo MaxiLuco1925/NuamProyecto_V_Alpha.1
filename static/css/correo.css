@@ -148,11 +148,12 @@ body::before {
     padding: 15px;
     font-size: 1rem;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    background: rgba(255, 255, 255, 0.8);
+    background: gba(255, 255, 255, 0.8);
+    border-color: #000000;
 }
 
 .form-control:focus {
-    border-color: #e37854;
+    border-color: #000000;
     box-shadow: 
         0 0 0 3px rgba(227, 120, 84, 0.1),
         0 4px 20px rgba(227, 120, 84, 0.15);

@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <link href="{% static 'css/perfilUsuario.css' %}" rel="stylesheet">
     <title>Perfil de Usuario del administrador</title>
@@ -24,7 +25,15 @@
                 <input type="text" class="form-control" value="{{ Usuario.nombre|default:Usuario.nombre }}" readonly>
 
                 <label>Correo electrónico</label>
-                <input type="email" class="form-control" value="{{ Usuario.email }}" readonly>
+                <div class="input-group mb-3">
+                    <input type="email" class="form-control" value="{{ Usuario.email }}" readonly>
+                    <a href="{% url 'actualizar_correo_admin' %}" 
+                    class="btn btn-custom" 
+                    title="Editar correo"
+                    onclick="return confirmarActualizacion('{{ Usuario.email }}');">
+                        <i class="bi bi-pencil"></i>
+                    </a>    
+                </div>
 
                 <label>Número de teléfono</label>
                 <input type="tel" class="form-control" value="{{ Usuario.telefono|default:'No registrado' }}" readonly>

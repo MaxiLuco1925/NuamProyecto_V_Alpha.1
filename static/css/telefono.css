@@ -1,0 +1,395 @@
+/* ===== VARIABLES CON TUS COLORES ===== */
+:root {
+    --primary-color: #e37854;
+    --primary-dark: #d06a48;
+    --primary-gradient: linear-gradient(135deg, #e37854 0%, #ff8c6b 100%);
+    --secondary-gradient: linear-gradient(135deg, #ff9b7b 0%, #e37854 100%);
+    --dark-bg: #414152;
+    --dark-bg-light: #2a2a3a;
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --text-dark: #2d3748;
+    --text-light: #64748b;
+    --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    --shadow-xl: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
+    --border-radius: 20px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== RESET Y BASE ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-bg-light) 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Añadido para centrar vertical y horizontalmente */
+    padding: 20px;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Efectos de partículas futuristas */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(227, 120, 84, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(227, 120, 84, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.container {
+    max-width: 600px;
+    width: 100%; /* Asegura que ocupe el ancho completo hasta el max-width */
+    position: relative;
+    z-index: 1;
+    margin: 0 auto; /* Centra el contenedor horizontalmente */
+}
+
+/* ===== TARJETA ===== */
+.card {
+    border: none;
+    border-radius: var(--border-radius);
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+    animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%; /* Asegura que la tarjeta ocupe todo el ancho del contenedor */
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 
+        0 35px 60px -15px rgba(0, 0, 0, 0.3),
+        0 0 30px rgba(227, 120, 84, 0.2);
+}
+
+/* ===== HEADER DE LA TARJETA ===== */
+.card-header {
+    background: var(--primary-gradient) !important;
+    border-radius: 20px 20px 0 0 !important;
+    position: relative;
+    padding: 1.5rem;
+    border: none;
+}
+
+.card-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+}
+
+.card-header h4 {
+    font-weight: 700;
+    font-size: 1.5rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    letter-spacing: -0.5px;
+    color: white;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Estilo futurista para "nuam" */
+.nuam-brand {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    font-style: italic;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.4rem;
+    text-shadow: 
+        0 0 20px rgba(255, 255, 255, 0.5),
+        2px 2px 4px rgba(0, 0, 0, 0.2);
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, #fff 0%, #ffeae1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ===== CUERPO DE LA TARJETA ===== */
+.card-body {
+    padding: 2.5rem;
+}
+
+/* ===== FORMULARIO ===== */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    color: var(--text-dark);
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.form-control {
+    border-radius: 12px;
+    border: 2px solid #e9ecef;
+    padding: 15px;
+    font-size: 1rem;
+    transition: var(--transition);
+    background: rgba(255, 255, 255, 0.8);
+    width: 100%; /* Asegura que el input ocupe todo el ancho disponible */
+    color: var(--text-dark);
+    border-color: #000000;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 
+        0 0 0 3px rgba(227, 120, 84, 0.1),
+        0 4px 20px rgba(227, 120, 84, 0.15);
+    background: rgba(255, 255, 255, 0.95);
+    transform: translateY(-1px);
+    outline: none;
+}
+
+.form-control::placeholder {
+    color: #94a3b8;
+}
+
+/* ===== BOTONES ===== */
+.button-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    justify-content: center; /* Centra los botones */
+}
+
+.btn {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: var(--transition);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    max-width: 200px;
+}
+
+.btn-custom{
+    background-color: #e37854;
+    color: white;
+    width: auto;
+    height: 45px;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn-primary {
+    background: var(--primary-gradient);
+    color: white;
+    box-shadow: 
+        0 4px 15px rgba(227, 120, 84, 0.3),
+        0 0 0 1px rgba(227, 120, 84, 0.1);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 8px 25px rgba(227, 120, 84, 0.4),
+        0 0 0 1px rgba(227, 120, 84, 0.2);
+    background: linear-gradient(135deg, #ff8c6b 0%, #e37854 100%);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #8b939b 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.2);
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(108, 117, 125, 0.3);
+}
+
+/* ===== MENSAJES DE ERROR ===== */
+.error-messages {
+    margin-top: 0.5rem;
+}
+
+.error-text {
+    color: #ef4444;
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 0.25rem;
+}
+
+/* ===== ANIMACIONES ===== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+    
+    .card-body {
+        padding: 2rem 1.5rem;
+    }
+    
+    .card-header {
+        padding: 1rem;
+    }
+    
+    .card-header h4 {
+        font-size: 1.3rem;
+    }
+    
+    .nuam-brand {
+        font-size: 1.2rem;
+        right: 15px;
+    }
+    
+    .button-group {
+        flex-direction: column;
+        align-items: center; /* Centra los botones en móvil */
+    }
+    
+    .btn {
+        flex: none;
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        max-width: 250px; /* Un poco más ancho en móvil */
+        width: 100%; /* Ocupa todo el ancho disponible */
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 15px;
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+    }
+    
+    .card-header {
+        padding: 1.25rem;
+    }
+    
+    .card-header h4 {
+        font-size: 1.2rem;
+    }
+    
+    .form-control {
+        padding: 12px 15px;
+    }
+    
+    .button-group {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn {
+        width: 100%;
+        max-width: none; /* Sin límite máximo en móvil muy pequeño */
+    }
+}
+
+/* ===== ESTADOS DE CARGA ===== */
+.btn.loading {
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+.btn.loading::after {
+    content: '';
+    width: 16px;
+    height: 16px;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ===== MEJORAS DE ACCESIBILIDAD ===== */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ===== SCROLLBAR PERSONALIZADO ===== */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-gradient);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-gradient);
+}

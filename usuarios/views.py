@@ -23,6 +23,7 @@ from instrumentos.models import Mercado
 from django.conf import settings
 import requests
 import os
+from .forms import ActualizarTelefonoForm
 from django.db.models import Prefetch
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
@@ -317,6 +318,20 @@ def panelAdmin(request):
         calificaciones = calificaciones.filter(instrumento__id=instrumento)
     if año:
         calificaciones = calificaciones.filter(año_tributario=año)
+
+    instrumentos_db = Instrumento.objects.all()
+    
+    # Crear lista de instrumentos que incluya la opción especial
+    instrumentos_con_opcion = list(instrumentos_db)
+    
+    # Crear objeto ficticio para "Instrumento no inscrito"
+    InstrumentoFicticio = type('InstrumentoFicticio', (), {})
+    instrumento_no_inscrito = InstrumentoFicticio()
+    instrumento_no_inscrito.id = 'no_inscrito'
+    instrumento_no_inscrito.nombre = 'Instrumento no inscrito'
+    
+    # Agregar al inicio de la lista
+    instrumentos_con_opcion.insert(0, instrumento_no_inscrito)
 
     return render(request, 'panelCalificacionAdmin.html', {
         'calificaciones': calificaciones,  
@@ -699,6 +714,43 @@ def actualizarCorreo(request):
             form.save()
             messages.success(request, "Correo actualizado correctamente.")
             return redirect('Configuración')
+        else:
+            messages.error(request, "Error al actualizar el correo. Verifica los datos.")
+    else:
+        form = ActualizarCorreoForm(instance=usuario)
+    return render(request, 'actualizar_correo.html', {'form': form})
+
+def actualizarTelefono(request):
+    try:
+        usuario = Usuario.objects.get(id=request.session.get('usuario_id'))
+    except Usuario.DoesNotExist:
+        messages.error(request, "Usuario no encontrado.")
+        return redirect('configuracion')
+    if request.method == "POST":
+        form = ActualizarTelefonoForm(request.POST, instance=usuario)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Teléfono actualizado correctamente.")
+            return redirect('Configuración')
+        else:
+            messages.error(request, "Error al actualizar el teléfono. Verifica los datos.")
+    else:
+        form = ActualizarTelefonoForm(instance=usuario)
+    return render(request, 'actualizar_telefono.html', {'form': form})
+
+def actualizarCorreoAdmin(request):
+    try:
+        usuario = Usuario.objects.get(id=request.session.get('usuario_id'))
+    except Usuario.DoesNotExist:
+        messages.error(request, "Usuario no encontrado.")
+        return redirect('ConfiguraciónAdmin')
+        
+    if request.method == "POST":
+        form = ActualizarCorreoForm(request.POST, instance=usuario)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Correo actualizado correctamente.")
+            return redirect('ConfiguraciónAdmin')
         else:
             messages.error(request, "Error al actualizar el correo. Verifica los datos.")
     else:

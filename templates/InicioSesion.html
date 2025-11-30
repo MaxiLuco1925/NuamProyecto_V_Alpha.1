@@ -32,27 +32,32 @@
         </header>
         
         <div class="d-flex justify-content-center align-items-center flex-grow-1">
-            <div class="card" style="width: 100%; max-width: 420px;">
+            <div class="card">
                 <h2>Iniciar Sesión</h2>
 
                 <form method="post">
                     {% csrf_token %}
 
                     <div class="mb-4">
-                        <label for="{{ form.documento_identidad.id_for_label }}" class="form-label">RUT</label>
-                        {{ form.documento_identidad }}
-                        {% if form.documento_identidad.errors %}
-                            <div class="text-danger">{{ form.documento_identidad.errors }}</div>
-                        {% endif %}
+                        <div class="form-field-container">
+                            <label for="{{ form.documento_identidad.id_for_label }}" class="form-label">RUT</label>
+                            {{ form.documento_identidad }}
+                            {% if form.documento_identidad.errors %}
+                                <div class="text-danger">{{ form.documento_identidad.errors }}</div>
+                            {% endif %}
+                        </div>
                     </div>
 
                     <div class="mb-4">
-                        <label for="{{ form.contraseña.id_for_label }}" class="form-label">Contraseña</label>
-                        {{ form.contraseña }}
-                        {% if form.contraseña.errors %}
-                            <div class="text-danger">{{ form.contraseña.errors }}</div>
-                        {% endif %}
+                        <div class="form-field-container">
+                            <label for="{{ form.contraseña.id_for_label }}" class="form-label">Contraseña</label>
+                            {{ form.contraseña }}
+                            {% if form.contraseña.errors %}
+                                <div class="text-danger">{{ form.contraseña.errors }}</div>
+                            {% endif %}
+                        </div>
                     </div>
+                    
                     <div class="mb-4">
                         <a href="{% url 'password_reset_form' %}">¿Olvidaste tu contraseña?</a>
                     </div>
@@ -65,6 +70,7 @@
                 </form>
 
                 <div class="text-center mt-4">
+                    <!-- Espacio para contenido adicional si es necesario -->
                 </div>
             </div>
         </div>

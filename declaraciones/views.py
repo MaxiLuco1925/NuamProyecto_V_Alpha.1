@@ -130,7 +130,7 @@ def ingresarCalificacionAdmin(request):
             calificacion.save()
             
             request.session['calificacion_id'] = calificacion.id
-            return redirect('factorListado')
+            return redirect('factorAdmin')
     else:
         form = forms.IngresoCalificacionManualForm()
     return render(request, 'CalificacionManualAdmin.html', {'form': form})

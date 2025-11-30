@@ -11,7 +11,6 @@
     <title>Perfil de Usuario - NUAM</title>
 </head>
 <body>
-    <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-logo">
             <img src="{% static 'image/NUAM.png' %}" alt="Logo NUAM">
@@ -21,7 +20,6 @@
         </a>
     </div>
 
-    <!-- Contenido Principal -->
     <div class="main-container">
         {% if Usuario.documento_identidad %}
         <div class="perfil-form">
@@ -41,7 +39,15 @@
                 </div>
 
                 <label>Número de teléfono</label>
-                <input type="tel" class="form-control" value="{{ Usuario.telefono|default:'No registrado' }}" readonly>
+                <div class="input-group mb-3">
+                    <input type="email" class="form-control" value="{{ Usuario.telefono }}" readonly>
+                    <a href="{% url 'actualizar_telefono' %}" 
+                    class="btn btn-custom" 
+                    title="Editar telefono"
+                    onclick="return confirmarActualizacion('{{ Usuario.telefono }}');">
+                        <i class="bi bi-pencil"></i>
+                    </a>    
+                </div>
 
                 <label>Documento de Identidad</label>
                 <input type="text" class="form-control" value="{{ Usuario.documento_identidad|default:'No registrado' }}" readonly>

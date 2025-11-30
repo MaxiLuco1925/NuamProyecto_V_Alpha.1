@@ -3,6 +3,7 @@ from auditoria.models import CalificacionTributaria, DeclaracionJurada
 from instrumentos.models import Mercado, Instrumento
 from auditoria.models import FactorMensual
 from datetime import date
+import random
 
 class IngresoCalificacionManualForm(forms.ModelForm):
 
@@ -41,7 +42,7 @@ class IngresoCalificacionManualForm(forms.ModelForm):
         widgets = {
             'descripcion' : forms.TextInput(attrs={'class' : 'form-control'}),
             'fecha_pago' : forms.DateInput(attrs={'type' : 'date', 'class' : 'form.control'}),
-            'secuencia_evento' : forms.NumberInput(attrs={'class' : 'form-control'}),
+            'secuencia_evento' : forms.NumberInput(attrs={'class' : 'form-control','id' : 'id_secuencia_evento'}),
             'dividendo' : forms.NumberInput(attrs= {'class' : 'form-control', 'step' : '0.01'}),
             'valor_historico' : forms.NumberInput(attrs={'class' : 'form-control', 'step' : '0.01'}),
             'isfut' : forms.CheckboxInput(attrs={'class' : 'form-check-input'}),
@@ -49,6 +50,11 @@ class IngresoCalificacionManualForm(forms.ModelForm):
 
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
+
+            numero_aleatorio = random.randint(1000000, 999999)
+            self.fields['secuencia_evento'].initial = numero_aleatorio
+
+
             if 'mercado' in self.data:
                 try:
                     mercado_id = int(self.data.get('mercado'))
@@ -70,7 +76,6 @@ class IngresoCalificacionManualForm(forms.ModelForm):
                 usuario = user,
                 valor_factor = self.cleaned_data['factor_valor'],
                 fecha_factor = date.today(),
-                regimen = "Manual"
             )
 
             calificacion = super().save(commit=False)
