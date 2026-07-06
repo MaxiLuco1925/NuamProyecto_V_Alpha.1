@@ -1,0 +1,15 @@
+Django==5.2.7
+PyMySQL==1.1.1
+django-extensions==3.2.3
+yfinance
+reportlab
+
+# --- Login facial ---
+cmake==3.31.4
+dlib==19.24.6
+face_recognition==1.3.0
+face_recognition_models==0.3.0
+opencv-python-headless==4.10.0.84
+Pillow==11.0.0
+numpy==1.26.4
+cryptography==43.0.3

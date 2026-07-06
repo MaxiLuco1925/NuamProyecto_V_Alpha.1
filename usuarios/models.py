@@ -99,3 +99,12 @@ class AuditoriaSesion(models.Model):
     
 
 
+class PerfilFacial(models.Model):
+    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='perfil_facial')
+    embedding_cifrado = models.BinaryField()
+    creado = models.DateTimeField(auto_now_add=True)
+    actualizado = models.DateTimeField(auto_now=True)
+    activo = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"Perfil facial de {self.usuario.nombre}"

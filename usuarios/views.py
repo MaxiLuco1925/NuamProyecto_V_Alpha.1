@@ -37,6 +37,9 @@ import secrets
 from django.contrib.auth.hashers import make_password
 from django.utils import timezone
 from datetime import timedelta
+from usuarios.models import PerfilFacial
+from usuarios.crypto_utils import encriptar_embedding, desencriptar_embedding
+from usuarios.face_utils import generar_embedding, comparar_embeddings, RostroNoDetectadoError
 
 def portada(request):
     return render(request, "index.html")
@@ -837,3 +840,124 @@ def cambiar_password(request):
             messages.error(request, 'Las contraseñas no coinciden.')
     
     return render(request, 'registration/cambiar_password.html')
+
+
+
+
+@require_http_methods(["GET", "POST"])
+def registrar_rostro(request):
+
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        messages.error(request, "Debes iniciar sesión primero.")
+        return redirect('iniciarSesion')
+
+    usuario = get_object_or_404(Usuario, id=usuario_id)
+
+    if request.method == "GET":
+        ya_registrado = PerfilFacial.objects.filter(usuario=usuario, activo=True).exists()
+        return render(request, 'registrar_rostro.html', {'ya_registrado': ya_registrado})
+
+    # POST: viene como AJAX con JSON { "imagen": "data:image/jpeg;base64,..." }
+    try:
+        cuerpo = json.loads(request.body)
+        imagen_base64 = cuerpo.get("imagen")
+        if not imagen_base64:
+            return JsonResponse({"ok": False, "error": "No se recibió ninguna imagen."}, status=400)
+
+        embedding = generar_embedding(imagen_base64)
+        embedding_cifrado = encriptar_embedding(embedding)
+
+        PerfilFacial.objects.update_or_create(
+            usuario=usuario,
+            defaults={"embedding_cifrado": embedding_cifrado, "activo": True},
+        )
+
+        AuditoriaSesion.objects.create(
+            usuario=usuario,
+            documento_intentado=usuario.documento_identidad,
+            exito=True,
+            rol=usuario.rol.descripcion if usuario.rol else "Sin rol",
+        )
+
+        return JsonResponse({"ok": True, "mensaje": "Rostro registrado correctamente."})
+
+    except RostroNoDetectadoError as e:
+        return JsonResponse({"ok": False, "error": str(e)}, status=422)
+    except Exception as e:
+        return JsonResponse({"ok": False, "error": f"Error inesperado: {e}"}, status=500)
+
+
+@require_http_methods(["GET", "POST"])
+@csrf_protect
+def login_facial(request):
+    """
+    Login alternativo por reconocimiento facial.
+    GET  -> muestra el formulario (RUT) + cámara.
+    POST -> recibe documento_identidad + imagen (base64) vía AJAX y compara contra
+            el embedding guardado del usuario.
+    """
+    if request.method == "GET":
+        return render(request, 'login_facial.html')
+
+    try:
+        cuerpo = json.loads(request.body)
+        documento = (cuerpo.get("documento_identidad") or "").strip()
+        imagen_base64 = cuerpo.get("imagen")
+
+        if not documento or not imagen_base64:
+            return JsonResponse({"ok": False, "error": "Faltan datos (RUT o imagen)."}, status=400)
+
+        try:
+            usuario = Usuario.objects.get(documento_identidad=documento)
+        except Usuario.DoesNotExist:
+            AuditoriaSesion.objects.create(
+                usuario=None, documento_intentado=documento, exito=False, rol=""
+            )
+            return JsonResponse({"ok": False, "error": "El documento no existe."}, status=404)
+
+        perfil = PerfilFacial.objects.filter(usuario=usuario, activo=True).first()
+        if not perfil:
+            return JsonResponse(
+                {"ok": False, "error": "Este usuario no tiene un rostro registrado."}, status=404
+            )
+
+        try:
+            embedding_actual = generar_embedding(imagen_base64)
+        except RostroNoDetectadoError as e:
+            return JsonResponse({"ok": False, "error": str(e)}, status=422)
+
+        embedding_guardado = desencriptar_embedding(perfil.embedding_cifrado)
+        coincide, distancia = comparar_embeddings(embedding_guardado, embedding_actual)
+
+        if not coincide:
+            AuditoriaSesion.objects.create(
+                usuario=usuario,
+                documento_intentado=documento,
+                exito=False,
+                rol=usuario.rol.descripcion if usuario.rol else "Sin rol",
+            )
+            return JsonResponse({"ok": False, "error": "El rostro no coincide."}, status=401)
+
+        if not usuario.verificado:
+            return JsonResponse(
+                {"ok": False, "error": "Debes verificar tu correo antes de iniciar sesión."}, status=403
+            )
+
+        # Éxito: se crea la sesión igual que en el login por contraseña
+        request.session['usuario_id'] = usuario.id
+        request.session['usuario_nombre'] = usuario.nombre
+        request.session['usuario_documento'] = usuario.documento_identidad
+
+        AuditoriaSesion.objects.create(
+            usuario=usuario,
+            documento_intentado=documento,
+            exito=True,
+            rol=usuario.rol.descripcion if usuario.rol else "Sin rol",
+        )
+
+        destino = "interfazAdmin" if (usuario.rol and usuario.rol.descripcion == "Administrador") else "interfazinicio"
+        return JsonResponse({"ok": True, "redirect": destino})
+
+    except Exception as e:
+        return JsonResponse({"ok": False, "error": f"Error inesperado: {e}"}, status=500)

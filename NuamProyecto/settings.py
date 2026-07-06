@@ -23,6 +23,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-g(mh#an^bwx)c0b^$veid1uxpy+q)iorp@4dggx7ifusz8)4h9'
 
+# Clave simétrica (Fernet) usada para cifrar los embeddings faciales antes de guardarlos.
+# NUNCA se debe hardcodear ni subir al repo. Se define como variable de entorno en el
+# servidor (ver instrucciones de despliegue). Generar una con:
+#   python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+import os
+FACE_ENCRYPTION_KEY = os.environ.get('FACE_ENCRYPTION_KEY')
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -143,8 +150,8 @@ pymysql.install_as_MySQLdb()
 DATABASES ={
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': '',
-        'USER': '',
+        'NAME': 'prueba_nuam',
+        'USER': 'root',
         'PASSWORD': '',
         'HOST':'localhost',
         'PORT':3306
@@ -161,10 +168,5 @@ EMAIL_HOST_PASSWORD = ''
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 LOGIN_URL = 'iniciarSesion'
 SERVER_EMAIL = EMAIL_HOST_USER
-
-
-
-
-
 
 
