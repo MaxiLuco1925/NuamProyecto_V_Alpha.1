@@ -28,12 +28,12 @@ SECRET_KEY = 'django-insecure-g(mh#an^bwx)c0b^$veid1uxpy+q)iorp@4dggx7ifusz8)4h9
 # servidor (ver instrucciones de despliegue). Generar una con:
 #   python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
 import os
-FACE_ENCRYPTION_KEY = os.environ.get('FACE_ENCRYPTION_KEY')
+FACE_ENCRYPTION_KEY ='FoAbDLnDULjd1JcjLUFAfQCt3LL_X3ztHj-k5qjl1Ac='
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['32.198.111.54', 'localhost', '127.0.0.1','nuam.duckdns.org']
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -141,7 +141,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -152,7 +152,7 @@ DATABASES ={
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'prueba_nuam',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': '1234',
         'HOST':'localhost',
         'PORT':3306
 
@@ -170,3 +170,6 @@ LOGIN_URL = 'iniciarSesion'
 SERVER_EMAIL = EMAIL_HOST_USER
 
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://nuam.duckdns.org',
+]

@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-    <link href="{% static 'css/inicioSesion.css' %}" rel="stylesheet">
+    <link href="{% static 'css/iniciosesion.css' %}" rel="stylesheet">
     <title>Iniciar Sesión - NUAM</title>
 </head>
 <body>
@@ -70,7 +70,9 @@
                 </form>
 
                 <div class="text-center mt-4">
-                    <!-- Espacio para contenido adicional si es necesario -->
+                    <a href="{% url 'login_facial' %}" class="btn btn-facial">
+                        <i class="bi bi-person-video2 me-2"></i>Iniciar sesión por reconocimiento facial
+                    </a>
                 </div>
             </div>
         </div>
