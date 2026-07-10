@@ -40,6 +40,9 @@ from datetime import timedelta
 from usuarios.models import PerfilFacial
 from usuarios.crypto_utils import encriptar_embedding, desencriptar_embedding
 from usuarios.face_utils import generar_embedding, comparar_embeddings, RostroNoDetectadoError
+from NuamProyecto.servicios.dynamodb_service import DynamoDBService
+dynamo = DynamoDBService()
+
 
 def portada(request):
     return render(request, "index.html")
@@ -111,6 +114,7 @@ def registro(request):
     
 @csrf_protect
 def iniciarSesion(request):
+    ip_origen = get_client_ip(request)
     if request.method == 'POST':
         form = InicioSesionForm(request.POST)
         if form.is_valid():
@@ -126,6 +130,13 @@ def iniciarSesion(request):
                     exito = False,
                     rol=""
                 )
+                dynamo.registrar_auditoria(
+                    documento=documento,
+                    tipo_evento='LOGIN_FALLIDO',
+                    resultado='FALLIDO',
+                    ip_origen=ip_origen,
+                    detalles={'razon': 'documento_no_existe', 'metodo': 'contraseña'}
+                )
                 messages.error(request, " El Documento no existe.")
                 return render(request, 'InicioSesion.html', {'form': form})
 
@@ -135,6 +146,13 @@ def iniciarSesion(request):
                     documento_intentado=documento,
                     exito = True,
                     rol = usuario.rol.descripcion if usuario.rol else "Sin rol"
+                )
+                dynamo.registrar_auditoria(
+                    documento=documento,
+                    tipo_evento='LOGIN_EXITOSO',
+                    resultado='EXITOSO',
+                    ip_origen=ip_origen,
+                    detalles={'metodo': 'contraseña'}
                 )
 
                 if not usuario.verificado:
@@ -156,6 +174,13 @@ def iniciarSesion(request):
                     documento_intentado = documento,
                     exito = False,
                     rol = usuario.rol.descripcion if usuario.rol else "Sin rol"
+                )
+                dynamo.registrar_auditoria(
+                    documento=documento,
+                    tipo_evento='LOGIN_FALLIDO',
+                    resultado='FALLIDO',
+                    ip_origen=ip_origen,
+                    detalles={'razon': 'contraseña_incorrecta', 'metodo': 'contraseña'}
                 )
                 messages.error(request, " Contraseña incorrecta.")
         else:
@@ -961,3 +986,12 @@ def login_facial(request):
 
     except Exception as e:
         return JsonResponse({"ok": False, "error": f"Error inesperado: {e}"}, status=500)
+
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0].strip()
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip

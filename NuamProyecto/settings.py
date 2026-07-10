@@ -33,7 +33,7 @@ FACE_ENCRYPTION_KEY ='FoAbDLnDULjd1JcjLUFAfQCt3LL_X3ztHj-k5qjl1Ac='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['32.198.111.54', 'localhost', '127.0.0.1','nuam.duckdns.org']
+ALLOWED_HOSTS = ['32.198.111.54', 'localhost', '127.0.0.1','nuam.duckdns.org','localhost:127.0.0.1',]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -150,11 +150,17 @@ pymysql.install_as_MySQLdb()
 DATABASES ={
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'prueba_nuam',
-        'USER': 'root',
-        'PASSWORD': '1234',
-        'HOST':'localhost',
-        'PORT':3306
+        'NAME': 'prueba_nuam_1',
+        'USER': 'nuamadmin',
+        'PASSWORD': 'Maxi2026@',
+        'HOST':'nuam-mysql-server-2026.mysql.database.azure.com',
+        'PORT':3306,
+        'OPTIONS': {
+            'ssl': {
+                'check_hostname': False,
+            },
+            'charset': 'utf8mb4',
+        }
 
     }
 }
@@ -173,3 +179,28 @@ SERVER_EMAIL = EMAIL_HOST_USER
 CSRF_TRUSTED_ORIGINS = [
     'https://nuam.duckdns.org',
 ]
+
+
+
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_SESSION_TOKEN = os.environ.get('AWS_SESSION_TOKEN')
+AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME', 'us-east-1')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME', 'nuam-media-storage-maxi')
+
+
+# DynamoDB Tables
+DYNAMODB_SESSIONS_TABLE = 'NUAM-Sessions'
+DYNAMODB_AUDIT_TABLE = 'nuam_auditoria_seguridad'
+
+
+# Configuración de S3 para archivos Media
+STORAGES = {
+    'default': {
+        'BACKEND': 'storages.backends.s3boto3.S3Boto3Storage',
+    },
+    'staticfiles': {
+        'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
+    },
+}
+MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/'
