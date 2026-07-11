@@ -6,19 +6,24 @@ from django.conf import settings
 
 class DynamoDBService:
     def __init__(self):
-        self.dynamodb = boto3.resource(
-            'dynamodb',
-            region_name=settings.AWS_S3_REGION_NAME,
-            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-            aws_session_token=getattr(settings, 'AWS_SESSION_TOKEN', '')
-        )
+        # Si las variables AWS no existen, boto3 usa el perfil configurado con
+        # ``aws configure``. Esto evita enviar credenciales vacías al cliente.
+        parametros = {'region_name': settings.AWS_S3_REGION_NAME}
+        if settings.AWS_ACCESS_KEY_ID and settings.AWS_SECRET_ACCESS_KEY:
+            parametros.update({
+                'aws_access_key_id': settings.AWS_ACCESS_KEY_ID,
+                'aws_secret_access_key': settings.AWS_SECRET_ACCESS_KEY,
+            })
+            if getattr(settings, 'AWS_SESSION_TOKEN', ''):
+                parametros['aws_session_token'] = settings.AWS_SESSION_TOKEN
+
+        self.dynamodb = boto3.resource('dynamodb', **parametros)
         
         # Tabla de Sesiones (ya existente)
-        self.table_sesiones = self.dynamodb.Table('NUAM-Sessions')
+        self.table_sesiones = self.dynamodb.Table(settings.DYNAMODB_SESSIONS_TABLE)
         
         # Tabla de Auditoría (la que creamos)
-        self.table_auditoria = self.dynamodb.Table('nuam_auditoria_seguridad')
+        self.table_auditoria = self.dynamodb.Table(settings.DYNAMODB_AUDIT_TABLE)
 
     def crear_sesion(self, usuario_id, documento, ip_origen, user_agent='N/A'):
         """Guarda la sesión en NUAM-Sessions"""
