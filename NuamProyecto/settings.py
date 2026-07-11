@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+from decouple import config
 from pathlib import Path
 import os
 import pymysql
@@ -21,12 +21,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-g(mh#an^bwx)c0b^$veid1uxpy+q)iorp@4dggx7ifusz8)4h9'
+SECRET_KEY = ''
+
+# Clave simétrica (Fernet) usada para cifrar los embeddings faciales antes de guardarlos.
+# NUNCA se debe hardcodear ni subir al repo. Se define como variable de entorno en el
+# servidor (ver instrucciones de despliegue). Generar una con:
+#   python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+import os
+FACE_ENCRYPTION_KEY =''
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['32.198.111.54', 'localhost', '127.0.0.1','nuam.duckdns.org']
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -134,7 +141,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -143,13 +150,19 @@ pymysql.install_as_MySQLdb()
 DATABASES ={
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST':'localhost',
-        'PORT':3306
+        'NAME': 'prueba_nuam_1',
+        'USER': 'nuamadmin',
+        'PASSWORD': 'Maxi2026@',
+        'HOST':'nuam-mysql-server-2026.mysql.database.azure.com',
+        'PORT':3306,
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+            'ssl': {
+                'ca': str(BASE_DIR / 'certificado' / 'DigiCertGlobalRootG2.crt.pem'),
+            },
 
     }
+}
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -163,8 +176,42 @@ LOGIN_URL = 'iniciarSesion'
 SERVER_EMAIL = EMAIL_HOST_USER
 
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://nuam.duckdns.org',
+]
 
+# ============================================
+# AWS CONFIGURATION
+# ============================================
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID', default='')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY', default='')
+AWS_SESSION_TOKEN = config('AWS_SESSION_TOKEN', default='')
+AWS_S3_REGION_NAME = config('AWS_S3_REGION_NAME', default='us-east-1')
+AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME', default='nuam-media-storage-maxi')
 
+# DynamoDB: copia de respaldo de sesiones y auditorías.
+DYNAMODB_SESSIONS_TABLE = config('DYNAMODB_SESSIONS_TABLE', default='NUAM-Sessions')
+DYNAMODB_AUDIT_TABLE = config('DYNAMODB_AUDIT_TABLE', default='nuam_auditoria_seguridad')
 
+# Azure Cosmos DB (NoSQL): sesiones y telemetría de seguridad.
+# Use la cadena de conexión O el par endpoint/key; nunca suba esos secretos al repositorio.
+COSMOS_DB_ENABLED = config('COSMOS_DB_ENABLED', default=False, cast=bool)
+COSMOS_DB_CONNECTION_STRING = config('COSMOS_DB_CONNECTION_STRING', default='')
+COSMOS_DB_ENDPOINT = config('COSMOS_DB_ENDPOINT', default='')
+COSMOS_DB_KEY = config('COSMOS_DB_KEY', default='')
+COSMOS_DB_DATABASE = config('COSMOS_DB_DATABASE', default='nuam')
+COSMOS_SESSIONS_CONTAINER = config('COSMOS_SESSIONS_CONTAINER', default='sesiones')
+COSMOS_AUDIT_CONTAINER = config('COSMOS_AUDIT_CONTAINER', default='auditoria_seguridad')
+# Solo para desarrollo: crea base y contenedores si no existen.
+COSMOS_AUTO_CREATE_CONTAINERS = config('COSMOS_AUTO_CREATE_CONTAINERS', default=False, cast=bool)
 
-
+# S3 Storage
+STORAGES = {
+    'default': {
+        'BACKEND': 'storages.backends.s3boto3.S3Boto3Storage',
+    },
+    'staticfiles': {
+        'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
+    },
+}
+MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/'

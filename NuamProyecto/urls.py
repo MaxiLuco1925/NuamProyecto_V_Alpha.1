@@ -19,7 +19,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.contrib.auth import views as auth_views
 from django.conf.urls.static import static
-from usuarios.views import portada, iniciarSesion, registro, interfazinicio, market_data_api, Administrador, panel, panelAdmin, EditarRolusuario, adminEliminarUsuario, listausuarios,salir, descargar_calificacion,ver_detalle_calificacion,editar_calificacion_manual,eliminar_calificacion, verificar_codigo, auditoriaSesiones,panelArchivoXFactor, panelArchivoXFactorAdmin, descargar_calificacion_Admin, ver_detalle_calificacion_Admin, editar_calificacion_manual_Admin, actualizarCorreo, verificar_codigo_contraseña, cambiar_password, password_reset_request,actualizarTelefono, actualizarCorreoAdmin
+from usuarios.views import portada, iniciarSesion, registro, interfazinicio, market_data_api, Administrador, panel, panelAdmin, EditarRolusuario, adminEliminarUsuario, listausuarios,salir, descargar_calificacion,ver_detalle_calificacion,editar_calificacion_manual,eliminar_calificacion, verificar_codigo, auditoriaSesiones,panelArchivoXFactor, panelArchivoXFactorAdmin, descargar_calificacion_Admin, ver_detalle_calificacion_Admin, editar_calificacion_manual_Admin, actualizarCorreo, verificar_codigo_contraseña, cambiar_password, password_reset_request,actualizarTelefono, actualizarCorreoAdmin, registrar_rostro, login_facial
 from auditoria.views import cargaArchivos, Configuración, ConfiguraciónAdmin, verificacionUsuario, reportes, Factor,lecturaReportes,listadoUsuario, FactorAdmin, revisar_reporte
 from declaraciones.views  import ingresarCalificacion, x_factorCalculo, ingresarCalificacionAdmin, x_factorCalculoAdmin,ProcesarArchivoCSV, carga_masiva_factores_view, carga_masiva_montos_view, ProcesarArchivoMontosCSV, carga_masiva_montos_Admin, carga_masiva_factores_Admin
 
@@ -27,6 +27,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', portada, name='portada'),
     path('iniciarSesion/', iniciarSesion, name='iniciarSesion'),
+    path('registrar-rostro/', registrar_rostro, name='registrar_rostro'),
+    path('login-facial/', login_facial, name='login_facial'),
     path('registro/', registro, name = 'registro' ),
     path('interfazinicio/', interfazinicio,name='interfazinicio'),
     path('api/acciones_data/', market_data_api, name='acciones_data'),

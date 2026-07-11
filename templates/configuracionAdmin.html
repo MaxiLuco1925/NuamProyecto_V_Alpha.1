@@ -47,6 +47,9 @@
 
             <div class="profile-icon">
                 <img src="{% static 'image/USUARIO.png' %}" alt="Usuario">
+                <a href="{% url 'registrar_rostro' %}" class="btn btn-primary mt-3">
+                    <i class="bi bi-person-bounding-box me-2"></i>Registrar rostro
+                </a>
             </div>
         </div>
         {% else %}

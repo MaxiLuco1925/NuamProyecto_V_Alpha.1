@@ -1,0 +1,171 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #414152 0%, #2d2d3d 100%);
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Contenedor de la Tarjeta con Animación */
+.card-login-facial {
+    background: linear-gradient(135deg, rgba(248, 249, 250, 0.95) 0%, rgba(233, 236, 239, 0.95) 100%);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    width: 100%;
+    max-width: 520px;
+    padding: 30px !important;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Título */
+.card-login-facial h3 {
+    color: #414152;
+    font-weight: 800;
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #e37854;
+    padding-bottom: 15px;
+}
+
+.card-login-facial h3 i {
+    color: #e37854;
+}
+
+/* Formularios y Etiquetas */
+.form-label {
+    color: #414152;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.form-control {
+    border-radius: 10px;
+    border: 2px solid #dee2e6;
+    padding: 12px;
+    font-weight: 600;
+    color: #2d2d3d;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #e37854;
+    box-shadow: 0 0 0 0.25rem rgba(227, 120, 84, 0.25);
+}
+
+/* Contenedor de la Cámara */
+.video-container {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    border: 3px solid #ff8c00;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    display: inline-block;
+    background: #000;
+    margin-bottom: 20px;
+}
+
+#video {
+    display: block;
+    width: 100%;
+    max-width: 360px;
+    height: auto;
+}
+
+/* Botonera */
+.btn-validar-rostro {
+    background: linear-gradient(135deg, #e37854 0%, #d06a48 100%) !important;
+    color: white !important;
+    font-weight: 700;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 14px !important;
+    font-size: 15px;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 15px rgba(227, 120, 84, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-validar-rostro:hover {
+    background: linear-gradient(135deg, #d06a48 0%, #bf5c40 100%) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(227, 120, 84, 0.6);
+}
+
+.btn-validar-rostro:active {
+    transform: translateY(0);
+}
+
+/* Botón alternativo (Contraseña) */
+.btn-alternativo {
+    background: linear-gradient(135deg, #9cc4dc 0%, #7baed1 100%) !important;
+    color: #414152 !important;
+    font-weight: 600;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 12px !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 12px rgba(156, 196, 220, 0.3);
+}
+
+.btn-alternativo:hover {
+    background: linear-gradient(135deg, #8bb8d4 0%, #6a9ec7 100%) !important;
+    color: #2d2d3d !important;
+    transform: translateY(-2px);
+}
+
+/* Alertas personalizadas estilo Toast */
+.alert {
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 12px;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.alert-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.alert-success {
+    background: #28a745;
+    color: white;
+}
+
+/* Animación de entrada */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Media Query para pantallas pequeñas */
+@media (max-width: 480px) {
+    .card-login-facial {
+        padding: 20px !important;
+    }
+    
+    #video {
+        max-width: 100%;
+    }
+}

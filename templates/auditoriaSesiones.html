@@ -1,118 +1,285 @@
-<!DOCTYPE html>
 {% load static %}
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{% static 'css/listado.css' %}" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.js"></script>
-    <title>Auditoría de Sesiones</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{% static 'css/listadoadmin.css' %}">
+    <title>NUAM - Centro de Auditoría de Seguridad</title>
 </head>
+<body class="theme-nuam-dark">
 
-<body class="bg-light">
-      <header class="nuam-header">
-        <div class="container-fluid d-flex justify-content-between align-items-center p-3">
-            <img src="{% static 'image/NUAM.png' %}" alt="Logo NUAM" class="nuam-logo-header">
-            <h1 class="nuam-title">NUAM</h1>
-            <a href="{% url 'interfazAdmin' %}" class="btn btn-info">Regresar al Menú Principal</a>
+    <header class="main-header">
+        <div class="brand-logo">
+            <img src="{% static 'image/NUAM.png' %}" alt="Logo NUAM" class="nuam-logo-mini">
+            <span class="brand-text">NUAM<span class="text-accent">/ Security</span></span>
+            <span class="admin-badge">Auditoría Cloud</span>
         </div>
+        <a href="{% url 'interfazAdmin' %}" class="btn-volver">
+            <i class="bi bi-arrow-left me-1"></i>Volver al panel
+        </a>
     </header>
 
-<div class="main-content">
+    <main class="container-fluid px-md-5 pt-4 mt-3 pb-4">
+        <div class="page-title-section mb-4">
+            <h1><i class="bi bi-shield-lock text-accent me-2"></i>Centro de Auditoría de Seguridad</h1>
+            <p class="text-muted-soft">Análisis pericial y telemetría de accesos indexados en Azure Cosmos DB · Últimos {{ auditorias|length }} eventos capturados</p>
+        </div>
 
-    <h2 class="section-title mb-4">Auditoría de Seguridad</h2>
+        <div class="kpi-grid mb-4">
+            <div class="kpi-card border-success-custom">
+                <i class="bi bi-check-circle kpi-icon color-success"></i>
+                <div class="kpi-value color-success" id="cnt-exitosos">—</div>
+                <div class="kpi-label">Accesos Exitosos</div>
+            </div>
+            <div class="kpi-card border-danger-custom">
+                <i class="bi bi-x-circle kpi-icon color-danger"></i>
+                <div class="kpi-value color-danger" id="cnt-fallidos">—</div>
+                <div class="kpi-label">Accesos Fallidos</div>
+            </div>
+            <div class="kpi-card border-warning-custom">
+                <i class="bi bi-exclamation-triangle kpi-icon color-warning"></i>
+                <div class="kpi-value color-warning" id="cnt-sql">—</div>
+                <div class="kpi-label">Intentos SQL Injection</div>
+            </div>
+            <div class="kpi-card border-info-custom">
+                <i class="bi bi-code-slash kpi-icon color-info"></i>
+                <div class="kpi-value color-info" id="cnt-xss">—</div>
+                <div class="kpi-label">Intentos XSS</div>
+            </div>
+            <div class="kpi-card border-secondary-custom">
+                <i class="bi bi-shield-exclamation kpi-icon color-secondary"></i>
+                <div class="kpi-value color-secondary" id="cnt-csrf">—</div>
+                <div class="kpi-label">Intentos CSRF</div>
+            </div>
+            <div class="kpi-card border-total-custom">
+                <i class="bi bi-shield-shaded kpi-icon color-total"></i>
+                <div class="kpi-value color-total">{{ auditorias|length }}</div>
+                <div class="kpi-label">Total Logs de Auditoría</div>
+            </div>
+        </div>
 
-    <table class="table table-bordered table-striped table-hover">
-        <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Usuario Involucrado</th>
-                <th>Dirección IP</th>
-                <th>Fecha y Hora</th>
-                <th>Tipo de Amenaza</th>
-                <th>Rol</th>
-                <th>Documento Intentado</th>
-                <th>Resultado</th>
-            </tr>
-        </thead>
+        <div class="filtros-bar mb-4">
+            <div class="filtros-buttons">
+                <span class="filter-label">Filtrar por amenaza:</span>
+                <button class="filtro-btn activo" data-tipo="todos">Todos</button>
+                <button class="filtro-btn" data-tipo="sql_inyection">
+                    <i class="bi bi-database me-1"></i>SQL Injection
+                </button>
+                <button class="filtro-btn" data-tipo="xss">
+                    <i class="bi bi-code-slash me-1"></i>XSS
+                </button>
+                <button class="filtro-btn" data-tipo="csrf">
+                    <i class="bi bi-shield-exclamation me-1"></i>CSRF
+                </button>
+                <button class="filtro-btn" data-tipo="sin_amenaza">
+                    <i class="bi bi-check-circle me-1"></i>Sin Amenaza
+                </button>
+            </div>
+            <div class="search-box">
+                <i class="bi bi-search search-icon"></i>
+                <input class="search-input" type="text" id="buscarUsuario" placeholder="Buscar por usuario o IP..." />
+            </div>
+        </div>
 
-        <tbody>
-            {% for a in auditorias %}
-            <tr>
-                <td>{{ a.id }}</td>
+        <div class="tabla-section">
+            <div class="table-responsive">
+                <table class="tabla-eventos mb-0" id="tablaEventos">
+                    <thead>
+                        <tr>
+                            <th style="width: 12%;">Timestamp</th>
+                            <th style="width: 20%;">Identidad del Usuario</th>
+                            <th style="width: 15%;">Tipo de Amenaza</th>
+                            <th style="width: 12%;">Dirección IP</th>
+                            <th style="width: 15%;">Documento Intentado</th>
+                            <th style="width: 13%;">Rol</th>
+                            <th style="width: 13%;">Resultado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for a in auditorias %}
+                        <tr data-tipo="{{ a.tipo_ataque|lower|default:'sin_amenaza' }}"
+                            data-usuario="{{ a.usuario.nombre|lower|default:'' }}"
+                            data-ip="{{ a.ip_address|default:'' }}">
+
+                            <td class="timestamp-cell">
+                                <i class="bi bi-clock me-1 text-muted-soft"></i>
+                                {{ a.fecha|date:"d/m/Y H:i" }}
+                            </td>
+
+                            <td>
+                                <div class="user-cell">
+                                    <div class="user-avatar">
+                                        {% if a.usuario %}
+                                            {{ a.usuario.nombre|first|upper }}
+                                        {% else %}
+                                            ?
+                                        {% endif %}
+                                    </div>
+                                    <div class="user-info">
+                                        <div class="user-name">
+                                            {% if a.usuario %}
+                                                {{ a.usuario.nombre }}
+                                            {% else %}
+                                                <span class="text-danger-soft">Desconocido</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="user-email">
+                                            {% if a.usuario.email %}
+                                                {{ a.usuario.email }}
+                                            {% else %}
+                                                Sin email registrado
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                {% if a.tipo_ataque %}
+                                    <span class="badge-evento badge-{{ a.tipo_ataque|lower }}">
+                                        {% if a.tipo_ataque == 'SQL_INYECTION' %}
+                                            <i class="bi bi-database me-1"></i>SQL INJECTION
+                                        {% elif a.tipo_ataque == 'XSS' %}
+                                            <i class="bi bi-code-slash me-1"></i>XSS
+                                        {% elif a.tipo_ataque == 'CSRF' %}
+                                            <i class="bi bi-shield-exclamation me-1"></i>CSRF
+                                        {% else %}
+                                            <i class="bi bi-question-circle me-1"></i>{{ a.tipo_ataque }}
+                                        {% endif %}
+                                    </span>
+                                {% else %}
+                                    <span class="badge-evento badge-sin-amenaza">
+                                        <i class="bi bi-check-circle me-1"></i>SIN AMENAZA
+                                    </span>
+                                {% endif %}
+                            </td>
+
+                            <td class="ip-code">
+                                <i class="bi bi-globe me-1 text-muted-soft"></i>
+                                {% if a.ip_address %}
+                                    {{ a.ip_address }}
+                                {% else %}
+                                    <span class="text-muted-soft">No registrada</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if a.documento_intentado %}
+                                    <span class="font-monospace text-accent">{{ a.documento_intentado }}</span>
+                                {% else %}
+                                    <span class="text-muted-soft">N/A</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if a.usuario and a.usuario.rol %}
+                                    <span class="badge-rol">{{ a.usuario.rol.descripcion }}</span>
+                                {% else %}
+                                    <span class="text-muted-soft">-</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if a.exito %}
+                                    <span class="badge-resultado badge-exitoso">
+                                        <i class="bi bi-check-circle me-1"></i>EXITOSO
+                                    </span>
+                                {% else %}
+                                    <span class="badge-resultado badge-fallido">
+                                        <i class="bi bi-x-circle me-1"></i>FALLIDO
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7">
+                                <div class="empty-state">
+                                    <i class="bi bi-shield-slash-fill text-muted-soft display-4 mb-3"></i>
+                                    <h5>Sin Registros de Telemetría</h5>
+                                    <p class="text-muted-soft mb-0">No se registran eventos estructurados en el contenedor de Azure Cosmos DB para este criterio.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer class="page-footer">
+        &copy; 2026 NUAM · Infraestructura de Ciberseguridad y Gestión de Datos NoSQL.
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const rows = document.querySelectorAll('#tablaEventos tbody tr[data-tipo]');
+            
+            let exitosos = 0, fallidos = 0, sql = 0, xss = 0, csrf = 0;
+            
+            rows.forEach(row => {
+                const resultado = row.querySelector('.badge-resultado');
+                const tipo = row.getAttribute('data-tipo');
                 
-                <!-- Usuario Involucrado -->
-                <td>
-                    {% if a.usuario %}
-                        {{ a.usuario.nombre }}
-                    {% else %}
-                        <span class="text-danger">Desconocido</span>
-                    {% endif %}
-                </td>
+                if (resultado && resultado.classList.contains('badge-exitoso')) exitosos++;
+                if (resultado && resultado.classList.contains('badge-fallido')) fallidos++;
+                if (tipo === 'sql_inyection') sql++;
+                if (tipo === 'xss') xss++;
+                if (tipo === 'csrf') csrf++;
+            });
+            
+            document.getElementById('cnt-exitosos').textContent = exitosos;
+            document.getElementById('cnt-fallidos').textContent = fallidos;
+            document.getElementById('cnt-sql').textContent = sql;
+            document.getElementById('cnt-xss').textContent = xss;
+            document.getElementById('cnt-csrf').textContent = csrf;
+            
+            const filtros = document.querySelectorAll('.filtro-btn');
+            const filas = document.querySelectorAll('#tablaEventos tbody tr');
+            
+            filtros.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    filtros.forEach(b => b.classList.remove('activo'));
+                    this.classList.add('activo');
+                    
+                    const tipo = this.getAttribute('data-tipo');
+                    
+                    filas.forEach(fila => {
+                        if (tipo === 'todos') {
+                            fila.style.display = '';
+                        } else {
+                            const filaTipo = fila.getAttribute('data-tipo');
+                            if (tipo === 'sin_amenaza') {
+                                fila.style.display = (!filaTipo || filaTipo === 'none' || filaTipo === '') ? '' : 'none';
+                            } else {
+                                fila.style.display = filaTipo === tipo ? '' : 'none';
+                            }
+                        }
+                    });
+                });
+            });
+            
+            const buscarInput = document.getElementById('buscarUsuario');
+            buscarInput.addEventListener('input', function() {
+                const texto = this.value.toLowerCase();
                 
-                <!-- Dirección IP -->
-                <td>
-                    {% if a.ip_address %}
-                        <span class="font-monospace">{{ a.ip_address }}</span>
-                    {% else %}
-                        <span class="text-muted">No registrada</span>
-                    {% endif %}
-                </td>
-                
-                <!-- Fecha y Hora -->
-                <td>{{ a.fecha|date:"d/m/Y H:i:s" }}</td>
-                
-                <!-- Tipo de Amenaza -->
-                <td>
-                    {% if a.tipo_ataque %}
-                        <span class="badge 
-                            {% if a.tipo_ataque == 'SQL_INYECTION' %}bg-danger
-                            {% elif a.tipo_ataque == 'XSS' %}bg-warning
-                            {% elif a.tipo_ataque == 'CSRF' %}bg-info
-                            {% else %}bg-secondary{% endif %}">
-                            {% if a.tipo_ataque == 'SQL_INYECTION' %}Inyección SQL
-                            {% elif a.tipo_ataque == 'XSS' %}Cross-Site Scripting
-                            {% elif a.tipo_ataque == 'CSRF' %}CSRF
-                            {% else %}{{ a.tipo_ataque|default:"N/A" }}{% endif %}
-                        </span>
-                    {% else %}
-                        <span class="badge bg-light text-dark">Sin amenaza</span>
-                    {% endif %}
-                </td>
-                
-                <!-- Rol -->
-                <td>
-                    {% if a.usuario and a.usuario.rol %}
-                        {{ a.usuario.rol.descripcion }}
-                    {% else %}
-                        -
-                    {% endif %}
-                </td>
-                
-                <!-- Documento Intentado -->
-                <td>{{ a.documento_intentado }}</td>
-
-                <!-- Resultado -->
-                <td>
-                    {% if a.exito %}
-                        <span class="badge bg-success">EXITOSO</span>
-                    {% else %}
-                        <span class="badge bg-danger">FALLIDO</span>
-                    {% endif %}
-                </td>
-
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="8" class="text-center">No hay auditorías registradas.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-
-    </table>
-
-</div>
-
+                filas.forEach(fila => {
+                    const usuario = fila.getAttribute('data-usuario');
+                    const ip = fila.getAttribute('data-ip');
+                    
+                    if (usuario.includes(texto) || ip.includes(texto)) {
+                        fila.style.display = '';
+                    } else {
+                        fila.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
