@@ -40,8 +40,34 @@ from datetime import timedelta
 from usuarios.models import PerfilFacial
 from usuarios.crypto_utils import encriptar_embedding, desencriptar_embedding
 from usuarios.face_utils import generar_embedding, comparar_embeddings, RostroNoDetectadoError
+from NuamProyecto.servicios.cosmos_service import CosmosDBService
 from NuamProyecto.servicios.dynamodb_service import DynamoDBService
+cosmos = CosmosDBService()
 dynamo = DynamoDBService()
+
+
+def registrar_sesion_cosmos(request, usuario):
+    """Persiste una copia de la sesión iniciada sin afectar el acceso si Cosmos falla."""
+    request.session.save()
+    cosmos.crear_sesion(
+        usuario_id=usuario.id,
+        documento=usuario.documento_identidad,
+        ip_origen=get_client_ip(request),
+        user_agent=request.META.get('HTTP_USER_AGENT', 'N/A'),
+        session_key=request.session.session_key or '',
+    )
+    dynamo.crear_sesion(
+        usuario_id=usuario.id,
+        documento=usuario.documento_identidad,
+        ip_origen=get_client_ip(request),
+        user_agent=request.META.get('HTTP_USER_AGENT', 'N/A'),
+    )
+
+
+def registrar_auditoria_cloud(*args, **kwargs):
+    """Mantiene Cosmos DB y DynamoDB sincronizados para los eventos de acceso."""
+    cosmos.registrar_auditoria(*args, **kwargs)
+    dynamo.registrar_auditoria(*args, **kwargs)
 
 
 def portada(request):
@@ -130,7 +156,7 @@ def iniciarSesion(request):
                     exito = False,
                     rol=""
                 )
-                dynamo.registrar_auditoria(
+                registrar_auditoria_cloud(
                     documento=documento,
                     tipo_evento='LOGIN_FALLIDO',
                     resultado='FALLIDO',
@@ -147,7 +173,7 @@ def iniciarSesion(request):
                     exito = True,
                     rol = usuario.rol.descripcion if usuario.rol else "Sin rol"
                 )
-                dynamo.registrar_auditoria(
+                registrar_auditoria_cloud(
                     documento=documento,
                     tipo_evento='LOGIN_EXITOSO',
                     resultado='EXITOSO',
@@ -162,6 +188,7 @@ def iniciarSesion(request):
                 request.session['usuario_id'] = usuario.id
                 request.session['usuario_nombre'] = usuario.nombre
                 request.session['usuario_documento'] = usuario.documento_identidad
+                registrar_sesion_cosmos(request, usuario)
 
                 if usuario.rol and usuario.rol.descripcion == "Administrador":
                     return redirect("interfazAdmin")  
@@ -175,7 +202,7 @@ def iniciarSesion(request):
                     exito = False,
                     rol = usuario.rol.descripcion if usuario.rol else "Sin rol"
                 )
-                dynamo.registrar_auditoria(
+                registrar_auditoria_cloud(
                     documento=documento,
                     tipo_evento='LOGIN_FALLIDO',
                     resultado='FALLIDO',
@@ -973,6 +1000,7 @@ def login_facial(request):
         request.session['usuario_id'] = usuario.id
         request.session['usuario_nombre'] = usuario.nombre
         request.session['usuario_documento'] = usuario.documento_identidad
+        registrar_sesion_cosmos(request, usuario)
 
         AuditoriaSesion.objects.create(
             usuario=usuario,

@@ -1,5 +1,86 @@
+# ============================================
+# PYTHON
+# ============================================
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+*.so
+.Python
 venv/
+env/
+.venv/
+ENV/
+
+# Distribución/empaquetado
+build/
+dist/
+*.egg-info/
+*.egg
+
+# ============================================
+# VARIABLES DE ENTORNO (⚠️ CRÍTICO)
+# ============================================
 .env
+.env.local
+.env.production
+.env.development
+!.env.example
+
+# ============================================
+# CREDENCIALES Y CERTIFICADOS (⚠️ CRÍTICO)
+# ============================================
+.aws/
+*.pem
+*.key
+*.p12
+*.crt
+*.csr
+credentials
+
+# ============================================
+# BASE DE DATOS
+# ============================================
+db.sqlite3
+*.sqlite3
+
+# ============================================
+# ARCHIVOS GENERADOS
+# ============================================
+media/
+uploads/
 staticfiles/
+collected_static/
+*.log
+logs/
+
+# ============================================
+# FRONTEND (si aplica)
+# ============================================
+node_modules/
+package-lock.json
+yarn.lock
+
+# ============================================
+# IDEs Y EDITORES
+# ============================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ============================================
+# DJANGO
+# ============================================
+local_settings.py
+
+# ============================================
+# TEMPORALES
+# ============================================
+*.tmp
+*.bak
+*.cache
+.coverage
+htmlcov/
